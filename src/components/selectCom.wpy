@@ -1,0 +1,23 @@
+<style>
+
+</style>
+<template>
+  <view>
+    <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
+    <view class="picker">
+      当前选择：{{array[index]}}
+    </view>
+  </picker>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class SelectCom extends wepy.page {
+  data = {
+    array: [1, 2, 3, 4]
+  }
+  props = {}
+  methods = {}
+  watch = {}
+}
+</script>

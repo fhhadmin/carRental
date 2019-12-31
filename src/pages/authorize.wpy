@@ -1,0 +1,74 @@
+<style>
+.header {
+  margin: 90rpx 0 90rpx 50rpx;
+  border-bottom: 1px solid #ccc;
+  text-align: center;
+  width: 650rpx;
+  height: 300rpx;
+  line-height: 450rpx;
+}
+.content {
+  margin-left: 50rpx;
+  margin-bottom: 90rpx;
+}
+.content text {
+  display: block;
+  color: #9d9d9d;
+  margin-top: 40rpx;
+}
+.bottom {
+  border-radius: 80rpx;
+  margin: 70rpx 50rpx;
+  font-size: 35rpx;
+}
+</style>
+
+<template>
+  <view wx:if="{{canIUse}}">
+    <view class="header">
+
+    </view>
+    <view class="centent">
+      <view>申请获取以下权限</view>
+      <text>获取你的公开信息（昵称、头像等）</text>
+    </view>
+    <button class="bottom" type="primary" open-type="getUserInfo" lang="zh_CN" @getUserInfo="bindGetUserInfo">
+      授权登录
+    </button>
+  </view>
+  <view wx:else>请升级微信版本</view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class Authorize extends wepy.page {
+  config = {
+    'navigationBarTitleText': '授权登录'
+  }
+  data = {
+    canIUse: wx.canIUse('button.open-type.getUserInfo')
+  }
+  onLoad(options) {
+
+  }
+  bindGetUserInfo(e) {
+    if (e.detail.userInfo) {
+
+    }
+  }
+  onReady() {
+
+  }
+  onShow() {
+
+  }
+  onHide() {
+
+  }
+  onUnload() {
+
+  }
+  onPullDownRefresh() {
+
+  }
+}
+</script>

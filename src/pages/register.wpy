@@ -1,0 +1,156 @@
+<style>
+.container {
+  width: 100%;
+  height: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(rgb(253, 176, 59), #ffffff)
+}
+.main {
+  width: 85%;
+  background-color: #ffffff;
+  position: absolute;
+  top: 10rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.title {
+  color: #FC9F37;
+  font-size: 20px;
+  font-weight: 500;
+  margin: 30rpx 0;
+}
+.logo {
+  width: 71px;
+  height: 71px;
+}
+.input {
+  border-bottom: 1px solid #999999;
+  width: 90%;
+  padding: 0 20rpx;
+}
+.input_icon {
+  display: flex;
+  flex-direction: row;
+  margin: 30rpx 0;
+}
+.icon {
+  width: 15px;
+  height: 17px;
+  padding-bottom: 5px;
+  padding-right: 15rpx;
+  padding-left: 15rpx;
+  border-bottom: solid #999797 2rpx;
+}
+checkbox .wx-checkbox-input {
+  width: 25rpx;
+  height: 25rpx;
+  margin-top: -20rpx;
+}
+.agreement {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin: 10rpx 0;
+}
+.userAgree {
+  color: #52A7DA;
+}
+.userAgree:hover {
+  color: #52A7DA;
+  border-bottom: solid #52A7DA 1rpx;
+}
+.register_btn {
+  width: 75%;
+  background: #52A7DA;
+  color: #fff;
+  margin-top: 30rpx;
+}
+</style>
+<template>
+  <view class="container">
+    <view class="main">
+      <view class="title">兰州大学约车信息管理系统</view>
+      <image src="../images/logo.png" class="logo" />
+      <view class="input_icon">
+        <image src="../images/login_icon_username.png" class="icon" />
+        <input placeholder="请输入手机号" data-name="mobile" @input="inputMobile" class="input" />
+      </view>
+      <view class="input_icon">
+        <image src="../images/login_icon_username.png" class="icon" style="padding-bottom: 6px;" />
+        <input placeholder="请输入验证码" class="input" />
+      </view>
+      <view class="input_icon">
+        <view>
+          <slider></slider>
+        </view>
+      </view>
+      <view class="input_icon">
+        <image src="../images/login_icon_password.png" class="icon" style="padding-bottom: 6px;" />
+        <input type="password" placeholder="请设置密码" data-name="password" @input="inputPsw" class="input" />
+      </view>
+      <view class="agreement">
+        <checkbox-group @change="checkboxChange">
+          <checkbox value="1"></checkbox>
+        </checkbox-group>
+        <text style="color: #4D4D4D; font-size: 10px;">我已阅读并同意“<text class="userAgree">用户协议条款</text>”</text>
+      </view>
+      <button size="mini" disabled="{{isAgree}}" @tap="tapToRegister" class="register_btn">注 册</button>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import slider from '../components/slider'
+import { userRegister } from '../utils/api'
+export default class Register extends wepy.page {
+  config = {
+    'navigationBarBackgroundColor': '#FCAE35'
+  }
+  data = {
+    isAgree: true,
+    mobile: '',
+    password: ''
+  }
+  components = {
+    slider: slider
+  }
+  methods = {
+    checkboxChange(e) {
+      if (e.detail.value.length === 1) {
+        this.isAgree = false
+      } else {
+        this.isAgree = true
+      }
+    },
+    inputPsw(e) {
+      this.password = e.detail.value
+    },
+    inputMobile(e) {
+      this.mobile = e.detail.value
+    },
+    async tapToRegister() {
+      if (!this.password || !this.mobile) {
+        return
+      }
+      let res = await userRegister(this.mobile, this.password)
+      if (res.status === 1) {
+        wx.navigateTo({
+          url: './index'
+        })
+        // wx.navigateTo({
+        //   url: `./index?mobile=` + this.mobile + '&psw=' + this.password
+        // })
+      }
+    }
+  }
+}
+</script>

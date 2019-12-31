@@ -1,254 +1,319 @@
-<style lang="less">
-  .userinfo {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+<style>
+.container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: -1;
+}
+.title {
+  color: #FC9F37;
+  font-size: 20px;
+  font-weight: 500;
+  position: absolute;
+  top: 100px;
+}
+.logo {
+  width: 71px;
+  height: 71px;
+  position: absolute;
+  top: 145px;
+}
+.tabs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  width: 600rpx;
+  /* margin-top: 256px; */
+  margin-top: 210px;
+  padding: 10rpx;
+}
+.tab-item {
+  padding: 20rpx;
+  color: #999999;
+  font-size: 30rpx;
+  font-weight: bold;
+  text-align: center;
+}
+.tab-item.active {
+  color: #333333;
+  font-size: 32rpx;
+  font-weight: bold;
+  border-bottom: solid #F4B559 1rpx;
+}
+.login-panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+}
+.login-panel {
+  background-color: #fff;
+}
+.input {
+  border-bottom: solid #999797 2rpx;
+  width: 90%;
+}
+.input-icon {
+  display: flex;
+  flex-direction: row;
+  margin: 30rpx 0;
+}
+.icon {
+  width: 15px;
+  height: 17px;
+  padding-bottom: 6px;
+  padding-right: 15rpx;
+  border-bottom: solid #999797 2rpx;
+}
+checkbox .wx-checkbox-input {
+  width: 25rpx;
+  height: 25rpx;
+  margin-top: -20rpx;
+}
+.agreement {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin: 10rpx 0;
+}
+.userAgree {
+  color: #52A7DA;
+}
+.userAgree:hover {
+  color: #52A7DA;
+  border-bottom: solid #52A7DA 1rpx;
+}
 
-  .userinfo-avatar {
-    width: 80rpx;
-    height: 80rpx;
-    border-radius: 50%;
-  }
-
-  .userinfo-nickname {
-    color: #aaa;
-  }
+.login_btn {
+  width: 80%;
+  background-color: #52A7DA;
+  border-radius: 26rpx;
+  color: #fff;
+  margin: 15rpx 0;
+}
+.register {
+  color: #999999;
+  font-size: 14px;
+  margin: 20px 0;
+}
+.forget {
+  cursor: pointer;
+}
+.forget:hover {
+  color: #52A7DA;
+  border-bottom: solid #52A7DA 1rpx;
+}
 </style>
 <template>
   <view class="container">
-    <view class="userinfo" @tap="handleViewTap">
-      <image class="userinfo-avatar" src="{{ userInfo.avatarUrl }}" background-size="cover"/>
-      <view class="userinfo-nickname">{{ userInfo.nickName }}</view>
+    <image src='../images/login_backgroundImage.png' class="bg" mode='widthFill' />
+    <text class="title">兰州大学约车信息管理系统</text>
+    <image src="../images/logo.png" class="logo" />
+    <view class="tabs">
+      <text class="tab-item {{currentPage===0?'active':''}}" @tap="onTabClick" data-index="0">老 师</text>
+      <text class="tab-item {{currentPage===1?'active':''}}" @tap="onTabClick" style="margin-left: 120rpx;" data-index="1">办 公 室</text>
     </view>
-
-    <panel>
-      <view class="title" slot="title">测试数据绑定</view>
-
-      <text class="info">{{normalTitle}}</text>
-      <text class="info">{{setTimeoutTitle}}</text>
-      <text class="info">{{mixin}}</text>
-      <text class="info">{{mynum}}</text>
-      <text class="info">{{now}}</text>
-      <text class="info">{{num}}</text>
-      <text class="info">{{asyncNum}}</text>
-      <text class="info">{{sumNum}}</text>
-      <button @tap="plus('a')" size="mini">  +  </button>
-    </panel>
-
-    <panel>
-      <view class="title" slot="title">其它测试</view>
-      <button @tap="toast" size="mini">第三方组件</button>
-      <button @tap="communicate" size="mini">组件通信</button>
-      <button @tap="tap" size="mini">混合TAP事件</button>
-    </panel>
-
-    <panel>
-      <view class="title" slot="title">测试并发网络请求</view>
-      <view>返回结果: <text>{{netrst}}</text></view>
-      <button @tap="request" size="mini"> 点我发起10个请求 </button>
-    </panel>
-
-    <panel>
-      <view class="title" slot="title">测试组件</view>
-
-      <text class="testcounter">计数组件1: </text>
-      <view class="counterview">
-        <counter1 @index-emit.user="counterEmit" />
-      </view>
-
-      <text class="testcounter">计数组件2: </text>
-
-      <view class="counterview">
-        <counter2 :num.sync="mynum"></counter2>
-      </view>
-    </panel>
-
-    <panel>
-      <view class="title" slot="title">测试组件Repeat</view>
-      <repeat for="" index="index" item="item" key="key">
-        <group :grouplist="item" :indexa="index"></group>
-      </repeat>
-    </panel>
-
-    <panel>
-      <view class="title" slot="title">测试列表</view>
-      <list></list>
-    </panel>
-
-    <toast />
+    <swiper current="{{currentPage}}" style="height: 600rpx; width: 620rpx;" @change="onChange">
+      <block>
+        <swiper-item>
+          <view class="login-panel">
+            <view class="input-icon">
+              <image src="../images/login_icon_username.png" class="icon" />
+              <input placeholder="请输入登录账号" @input="inputAccount" class="input" />
+            </view>
+            <view class="input-icon">
+              <image src="../images/login_icon_password.png" class="icon" style="padding-bottom: 5px;" />
+              <input type="password" placeholder="请输入登录密码" @input="inputPwd" class="input" />
+            </view>
+            <view class="agreement">
+              <checkbox-group @change="checkboxUserChange">
+                <checkbox value="1"></checkbox>
+              </checkbox-group>
+              <text style="color: #4D4D4D; font-size: 10px;">我已阅读并同意“<text class="userAgree">用户协议条款</text>”</text>
+            </view>
+            <button size="mini" disabled="{{isUserAgree}}" class="login_btn" @tap="onUserLogin">登 录</button>
+            <view class="register">
+              <text @tap="forgetPass" class="forget">忘记密码?</text>
+              <text style="margin: 0 30rpx;">|</text>
+              <text @tap="goToRegister" class="forget">现在注册</text>
+            </view>
+          </view>
+        </swiper-item>
+        <swiper-item>
+          <view class="login-panel">
+            <view class="login-panel">
+              <view class="input-icon">
+                <image src="../images/login_icon_username.png" class="icon" />
+                <input placeholder="请输入登录账号" @input="inputAdminAccount" data-name="adminAccount" class="input" />
+              </view>
+              <view class="input-icon">
+                <image src="../images/login_icon_password.png" class="icon" style="padding-bottom: 5px;" />
+                <input type="password" data-name="adminPassword" @input="inputAdminPwd" placeholder="请输入登录密码" class="input" />
+              </view>
+              <view class="agreement">
+                <checkbox-group @change="checkboxAdminChange">
+                  <checkbox value="1"></checkbox>
+                </checkbox-group>
+                <text style="color: #4D4D4D; font-size: 10px;">我已阅读并同意“<text class="userAgree">用户协议条款</text>”</text>
+              </view>
+              <button size="mini" disabled="{{isAdminAgree}}" class="login_btn" @tap="onAdminLogin">登 录</button>
+              <view class="register">
+                <text @tap="forgetPass" class="forget">忘记密码?</text>
+                <text style="margin: 0 30rpx;">|</text>
+                <text @tap="goToRegister" class="forget">现在注册</text>
+              </view>
+            </view>
+          </view>
+        </swiper-item>
+      </block>
+    </swiper>
   </view>
 </template>
-
 <script>
-  import wepy from 'wepy'
-  import { connect } from 'wepy-redux'
-  import Panel from '@/components/panel' // alias example
-  import Counter from 'counter' // alias example
-  import List from '../components/list' // aliasFields example
-  import moduleA from 'module-a' // aliasFields ignore module example
-  import Group from '../components/group'
-  import Toast from 'wepy-com-toast'
-  import testMixin from '../mixins/test'
+import wepy from 'wepy'
+import { adminLogin, wxLogin } from '../utils/api.js'
+export default class Index extends wepy.page {
+  config = {
+    navigationStyle: 'custom',
+    disableScroll: true
+  }
 
-  console.log('moduleA ignored: ', moduleA) // => moduleA ignored: {}
+  data = {
+    currentPage: 0,
+    account: '',
+    password: '',
+    adminAccount: '',
+    adminPassword: '',
+    isUserAgree: true,
+    isAdminAgree: true
+  }
 
-  @connect({
-    num (state) {
-      return state.counter.num
+  methods = {
+    onTabClick(e) {
+      this.currentPage = Number.parseInt(e.currentTarget.dataset.index)
     },
-    asyncNum (state) {
-      return state.counter.asyncNum
+    onChange(e) {
+      this.currentPage = e.detail.current
     },
-    sumNum (state) {
-      return state.counter.num + state.counter.asyncNum
-    }
-  })
-
-  export default class Index extends wepy.page {
-    config = {
-      navigationBarTitleText: 'test'
-    }
-    components = {
-      panel: Panel,
-      counter1: Counter,
-      counter2: Counter,
-      list: List,
-      group: Group,
-      toast: Toast
-    }
-
-    mixins = [testMixin]
-
-    data = {
-      mynum: 20,
-      userInfo: {
-        nickName: '加载中...'
-      },
-      normalTitle: '原始标题',
-      setTimeoutTitle: '标题三秒后会被修改',
-      count: 0,
-      netrst: '',
-      groupList: [
-        {
-          id: 1,
-          name: '点击改变',
-          list: [
-            {
-              childid: '1.1',
-              childname: '子项，点我改变'
-            }, {
-              childid: '1.2',
-              childname: '子项，点我改变'
-            }, {
-              childid: '1.3',
-              childname: '子项，点我改变'
-            }
-          ]
-        },
-        {
-          id: 2,
-          name: '点击改变',
-          list: [
-            {
-              childid: '2.1',
-              childname: '子项，点我改变'
-            }, {
-              childid: '2.2',
-              childname: '子项，点我改变'
-            }, {
-              childid: '2.3',
-              childname: '子项，点我改变'
-            }
-          ]
-        },
-        {
-          id: 3,
-          name: '点击改变',
-          list: [
-            {
-              childid: '3.1',
-              childname: '子项，点我改变'
-            }
-          ]
-        }
-      ]
-    }
-
-    computed = {
-      now () {
-        return +new Date()
+    checkboxUserChange(e) {
+      if (e.detail.value.length === 1) {
+        this.isUserAgree = false
+      } else {
+        this.isUserAgree = true
       }
-    }
-
-    methods = {
-      plus () {
-        this.mynum++
-      },
-      toast () {
-        let promise = this.$invoke('toast', 'show', {
-          title: '自定义标题',
-          img: 'https://raw.githubusercontent.com/kiinlam/wetoast/master/images/star.png'
+    },
+    checkboxAdminChange(e) {
+      if (e.detail.value.length === 1) {
+        this.isAdminAgree = false
+      } else {
+        this.isAdminAgree = true
+      }
+    },
+    inputAccount(e) {
+      this.account = e.detail.value
+      this.adminAccount = e.detail.value
+    },
+    inputPwd(e) {
+      this.password = e.detail.value
+      this.adminPassword = e.detail.value
+    },
+    inputAdminAccount(e) {
+      this.adminAccount = e.detail.value
+    },
+    inputAdminPwd(e) {
+      this.adminPassword = e.detail.value
+    },
+    // 用户登录
+    async onUserLogin() {
+      if (!this.account) {
+        return
+      }
+      if (!this.password) {
+        return
+      }
+      let res = await wxLogin(this.account, this.password)
+      if (res.status === 1) {
+        wx.redirectTo({
+          url: './homePage'
         })
-
-        promise.then((d) => {
-          console.log('toast done')
+        // 在此处判断登录用户角色 决定接下来显示哪些页面
+      }
+    },
+    // 管理员登录
+    async onAdminLogin() {
+      if (!this.adminAccount) {
+        return
+      }
+      if (!this.adminPassword) {
+        return
+      }
+      let res = await adminLogin(this.adminAccount, this.adminPassword)
+      if (res.status === 1) {
+        wx.redirectTo({
+          url: './homePage'
         })
-      },
-      tap () {
-        console.log('do noting from ' + this.$name)
-      },
-      communicate () {
-        console.log(this.$name + ' tap')
-
-        this.$invoke('counter2', 'minus', 45, 6)
-        this.$invoke('counter1', 'plus', 45, 6)
-
-        this.$broadcast('index-broadcast', 1, 3, 4)
-      },
-      request () {
-        let self = this
-        let i = 10
-        let map = ['MA==', 'MQo=', 'Mg==', 'Mw==', 'NA==', 'NQ==', 'Ng==', 'Nw==', 'OA==', 'OQ==']
-        while (i--) {
-          wepy.request({
-            url: 'https://www.madcoder.cn/tests/sleep.php?time=1&t=css&c=' + map[i] + '&i=' + i,
-            success: function (d) {
-              self.netrst += d.data + '.'
-              self.$apply()
-            }
-          })
-        }
-      },
-      counterEmit (...args) {
-        let $event = args[args.length - 1]
-        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`)
+        // 在此处判断登录用户角色 决定接下来显示哪些页面
       }
-    }
+    },
+    forgetPass() {
 
-    events = {
-      'index-emit': (...args) => {
-        let $event = args[args.length - 1]
-        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`)
-      }
-    }
-
-    onLoad() {
-      let self = this
-      this.$parent.getUserInfo(function (userInfo) {
-        if (userInfo) {
-          self.userInfo = userInfo
-        }
-        self.normalTitle = '标题已被修改'
-
-        self.setTimeoutTitle = '标题三秒后会被修改'
-        setTimeout(() => {
-          self.setTimeoutTitle = '到三秒了'
-          self.$apply()
-        }, 3000)
-
-        self.$apply()
+    },
+    goToRegister() {
+      wx.navigateTo({
+        url: './register'
       })
     }
   }
+
+  watch = {
+
+  }
+  onLoad() {
+    console.log(wx.checkSession({
+      success: function(res) {
+        console.log(res, 'res')
+      },
+      fail: function(error) {
+        console.log(error, 'error')
+      }
+    }))
+  //   wx.getSetting({
+  //     success: (res) => {
+  //       if (res.authSetting['scope.userInfo']) {
+  //         wx.wx.getUserInfo({
+  //           success: (res) => {
+  //             console.log(res)
+  //           }
+  //         })
+  //       } else {
+  //         wx.redirectTo({
+  //           url: './authorize' // 授权页面
+  //         })
+  //       }
+  //     }
+  //   })
+  }
+
+  onReady() {
+    // console.log(wx.getAccountInfoSync())
+  }
+}
 </script>

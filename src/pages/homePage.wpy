@@ -1,0 +1,132 @@
+<style>
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.notice {
+  width: 662rpx;
+  background-color: #FFF8DB;
+  padding: 15rpx;
+  color: #4D4D4D;
+  font-size: 18rpx;
+  border-radius: 16rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.notice_icon {
+  width: 24rpx; 
+  height: 24rpx; 
+  margin: 0 14rpx;
+}
+.homePanel {
+  width: 100%;
+  height: 180rpx; 
+  margin: 20rpx 0
+}
+.pickers {
+  width: 80%;
+}
+.pickerContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 60rpx;
+  border-bottom: solid rgb(230, 223, 223) 2rpx;
+  margin: 19rpx 0;
+}
+.options {
+  font-size: 22rpx; 
+  color: #1A1A1A;
+  padding: 0 20rpx;
+}
+.icon {
+  width: 44rpx;
+  height: 44rpx;
+}
+.priceList {
+  width: 660rpx;
+  height: 80rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  line-height: 80rpx;
+  color: #1A1A1A;
+  font-size: 24rpx;
+}
+.bottomPanel {
+
+}
+</style>
+<template>
+  <view class="container">
+    <view class="notice">
+      <image src="../images/notice.png" class="notice_icon" />
+      <text>您好，您还未实名认证！<text style="color: #FC9F37">立即认证</text></text>
+    </view>
+    <image src="../images/home.png" class="homePanel" />
+    <view class="pickers">
+      <view class="pickerContainer">
+        <image src="../images/userCar.png" class="icon" />
+        <picker bindchange="bindPickerChange1" value="{{index1}}" range="{{array1}}">
+          <view class="options">{{array1[index1]}}</view>
+        </picker>
+      </view>
+      <view class="pickerContainer">
+        <image src="../images/goBack.png" class="icon" />
+        <picker bindchange="bindPickerChange2" value="{{index2}}" range="{{array2}}">
+          <view class="options">{{array2[index2]}}</view>
+        </picker>
+      </view>
+      <view class="pickerContainer">
+        <image src="../images/carType.png" class="icon" />
+        <picker bindchange="bindPickerChange3" value="{{index3}}" range="{{array3}}">
+          <view class="options">{{array3[index3]}}</view>
+        </picker>
+      </view>
+    </view>
+    <view class="priceList">
+      <text>紧凑型轿车</text>
+      <text> | </text>
+      <text>2.3元/公里</text>
+      <text>580元/天</text>
+      <text>300元/半天</text>
+    </view>
+    <view class="bottomPanel"></view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class HomePage extends wepy.page {
+  config = {
+    navigationBarTitleText: '兰州大学约车信息管理系统',
+    navigationBarTextStyle: 'black'
+  }
+  data = {
+    index1: 0,
+    index2: 0,
+    index3: 0,
+    array3: ['甘肃公航旅汽车租赁有限公司', '甘肃公航旅汽车租赁公司', '甘肃公航旅租赁有限公司'],
+    array1: [4, 5, 6],
+    array2: [7, 8, 9]
+  }
+  methods = {
+    bindPickerChange1(e) {
+      this.index1 = e.detail.value
+    },
+    bindPickerChange2(e) {
+      this.index2 = e.detail.value
+    },
+    bindPickerChange3(e) {
+      this.index3 = e.detail.value
+    }
+  }
+  onLoad() {
+
+  }
+}
+</script>
