@@ -1,0 +1,101 @@
+<style lang="less" scoped>
+.image-picker {
+  display: flex;
+  flex-direction: column;
+  width: 295rpx;
+  height: 203rpx;
+  border: 2rpx dashed #FF4500;
+  border-radius: 6rpx;
+  background-color: rgba(242,246,249,1);
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  font-size: 20rpx;
+  color: #1A1A1A;
+  .image {
+    width: 40rpx;
+    height: 30rpx;
+  }
+  .onlyImage {
+    width: 100%;
+    height: 100%;
+  }
+}
+</style>
+<template>
+  <view>
+    <view wx:if="{{hasPicture}}" class="image-picker">
+      <image class="onlyImage" lazy-mode src="{{imageUrl}}" @tap="onItemClick" />
+    </view>
+    <view wx:else class="image-picker">
+      <view style="font-size: 20rpx; color: #333333; margin-top: 27rpx; margin-bottom: 24rpx;">兰州大学校园卡</view>
+      <image class="image" lazy-mode src="{{imageUrl}}" @tap="onItemClick" />
+      <view style="font-size: 20rpx; color: #333333; margin-top: 35rpx; margin-bottom: 26rpx;">正面</view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { HOST } from '../utils/http'
+export default class GridImage extends wepy.component {
+  data = {
+    imageUrl: '../images/logo.png',
+    hasPicture: false
+  }
+  chooseImage() {
+    let self = this
+    wx.chooseImage({
+      count: 1, // 默认为9
+      sizeType: ['original', 'compressed'], // 指定原图或者压缩图
+      sourceType: ['album', 'camera'], // 指定图片来源
+      success: function(res) {
+        if (res.errMsg === 'chooseImage:ok') {
+          self.getIocrDetail(res.tempFilePaths[0])
+          self.hasPicture = true
+          self.imageUrl = res.tempFilePaths[0]
+          self.$apply()
+        }
+      },
+      fail: e => {
+        console.log(e, 'error')
+      }
+    })
+  }
+  async getIocrDetail(url) {
+    let that = this
+    wx.uploadFile({
+      url: `${HOST}/base/queryIocr`,
+      filePath: url,
+      name: 'file',
+      success: function (res) {
+        wx.hideLoading()
+        if (res.statusCode === 200) {
+          let data = JSON.parse(res.data)
+          let cardDetail = JSON.parse(data.info.result).data.ret
+          let cardInfo = {}
+          cardDetail.map(e => {
+            cardInfo[e.word_name] = e.word
+          })
+          that.sendData(cardInfo)
+        } else {
+          console.log('上传失败')
+        }
+      },
+      fail: function (e) {
+        wx.hideLoading()
+      }
+    })
+  }
+  sendData(cardInfo) {
+    this.$emit('getCardDetail', cardInfo)
+  }
+  methods = {
+    onItemClick() {
+      this.chooseImage()
+    }
+  }
+  onLoad() {
+    this.$apply()
+  }
+}
+</script>

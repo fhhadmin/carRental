@@ -1,0 +1,62 @@
+<style>
+.counter {
+  width: 110rpx;
+  height: 32rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border: solid 1rpx #BFBFBF;
+  border-radius: 4rpx;
+}
+.countChange {
+  font-size: 18rpx;
+  width: 14rpx;
+  height: 14rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 9rpx 16rpx;
+}
+.number {
+  width: 24rpx;
+  height: 24rpx;
+  background-color: #00BE6E;
+  border-radius: 2rpx;
+  color: #FFFFFF;
+  font-size: 20rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 3rpx 7rpx;
+}
+</style>
+<template>
+  <view class="counter">
+    <view class="countChange" @tap="addNum"> + </view>
+    <view class="number">{{currentNum}}</view>
+    <view class="countChange" @tap="reduceNum"> - </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class DefaultCounter extends wepy.page {
+  data = {
+    currentNum: 0
+  }
+  methods = {
+    addNum() {
+      this.currentNum = this.currentNum + 1
+      this.$emit('getCurrentNum', this.currentNum)
+    },
+    reduceNum() {
+      if (this.currentNum > 0) {
+        this.currentNum = this.currentNum - 1
+        this.$emit('getCurrentNum', this.currentNum)
+      }
+    }
+  }
+}
+</script>

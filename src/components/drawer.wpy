@@ -1,0 +1,121 @@
+<style>
+.mask{
+  position:fixed;
+  width:100%;
+  height:100%;
+  z-index: 100;
+}
+.Drawer{
+  position:fixed;
+  background:#FFFFFF;
+  width:280rpx;
+  height:100%;
+  left: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.list {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 36rpx 0;
+}
+</style>
+<template>
+  <view>
+    <view class='mask' bindtap="powerDrawer" data-statu="close" wx:if="{{showModalStatus}}"></view>
+    <view class='Drawer' animation="{{animationData}}" wx:if="{{showModalStatus}}">
+      <image src="../images/logo1.png" style="width: 120rpx; height: 103rpx; margin-top: 60rpx;" />
+      <view style="font-size: 24rpx; margin-top: 20rpx; margin-bottom: 19rpx">{{account}}</view>
+      <view>
+        <view class="list">
+          <image src="../images/smallOrders.png" style="width: 36rpx; height: 39rpx; margin-right: 26rpx;" />
+          <text style="color: #1A1A1A; font-size: 24rpx;">我的订单</text>
+        </view>
+        <view class="list">
+          <image src="../images/smallHistory.png" style="width: 36rpx; height: 39rpx; margin-right: 26rpx;" />
+          <text style="color: #1A1A1A; font-size: 24rpx;">历史撤单</text>
+        </view>
+        <view class="list">
+          <image src="../images/smallReject.png" style="width: 36rpx; height: 39rpx; margin-right: 26rpx;" />
+          <text style="color: #1A1A1A; font-size: 24rpx;">驳回订单</text>
+        </view>
+        <view class="list">
+          <image src="../images/smallHistory.png" style="width: 36rpx; height: 39rpx; margin-right: 26rpx;" />
+          <text style="color: #1A1A1A; font-size: 24rpx;">历史约车</text>
+        </view>
+        <view class="list">
+          <image src="../images/personalCenter.png" style="width: 36rpx; height: 39rpx; margin-right: 26rpx;" />
+          <text style="color: #1A1A1A; font-size: 24rpx;">个人中心</text>
+        </view>
+        <view class="list" style="margin-right: 40rpx;">
+          <image src="../images/shezhi.png" style="width: 36rpx; height: 39rpx; margin-right: 26rpx;" />
+          <text style="color: #1A1A1A; font-size: 24rpx;">设置</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class Drawer extends wepy.page {
+  data = {
+    showModalStatus: false,
+    account: '17693186884'
+  }
+  props = {
+    isOpen: {
+      type: String,
+      default: false
+    }
+  }
+  methods = {
+    powerDrawer(e) {
+      var currentStatu = e.currentTarget.dataset.statu
+      this.util(currentStatu)
+    }
+  }
+  util(currentStatu) {
+    /* 动画部分 */
+    // 第1步：创建动画实例
+    var animation = wx.createAnimation({
+      duration: 200, // 动画时长
+      timingFunction: 'linear', // 线性
+      delay: 0 // 0则不延迟
+    })
+    // 第2步：这个动画实例赋给当前的动画实例
+    this.animation = animation
+    // 第3步：执行第一组动画：x轴不偏移；
+    animation.translateX(0).step()
+    // 第4步：导出动画对象赋给数据对象储存
+    this.animationData = animation.export()
+    // this.setData({
+    //   animationData: animation.export()
+    // })
+    // 第5步：设置定时器到指定时候后，执行第二组动画
+    setTimeout(function () {
+      // 执行第二组动画：X轴偏移22px，停
+      animation.translateX(220).step()
+      // 给数据对象储存的第一组动画，更替为执行完第二组动画的动画对象
+      this.animationData = animation
+      // 关闭抽屉
+      if (currentStatu === 'close') {
+        this.showModalStatus = false
+      }
+    }.bind(this), 200)
+    // 显示抽屉
+    if (currentStatu === 'open') {
+      this.account = this.account.replace(this.account.substring(3, 7), '****')
+      this.showModalStatus = true
+    }
+  }
+  watch = {
+    'isOpen'(e) {
+      this.util(e)
+    }
+  }
+}
+</script>

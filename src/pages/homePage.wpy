@@ -7,10 +7,33 @@
   align-items: center;
   justify-content: center;
 }
+.navBar {
+  width: 100%;
+  height: 156rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.barTitle {
+  margin-top: 83rpx;
+  margin-bottom: 43rpx;
+  font-size: 32rpx;
+  color: #1A1A1A
+}
+.selfSetting {
+  position: absolute;
+  top: 85rpx;
+  left: 20rpx;
+}
+.line {
+  height: 4rpx;
+  background-color: #1B1B1B
+}
 .notice {
   width: 662rpx;
   background-color: #FFF8DB;
-  padding: 15rpx;
+  padding: 4rpx 4rpx 4rpx 24rpx;
   color: #4D4D4D;
   font-size: 18rpx;
   border-radius: 16rpx;
@@ -19,30 +42,39 @@
   align-items: center;
 }
 .notice_icon {
-  width: 24rpx; 
-  height: 24rpx; 
+  width: 24rpx;
+  height: 24rpx;
   margin: 0 14rpx;
+}
+.approve {
+  color: #FC9F37
+}
+.approve:hover {
+  border-bottom: solid #FC9F37 1rpx;
 }
 .homePanel {
   width: 100%;
-  height: 180rpx; 
-  margin: 20rpx 0
+  height: 180rpx;
+  margin: 10rpx 0
 }
 .pickers {
-  width: 80%;
+  margin: 21rpx 92rpx;
 }
 .pickerContainer {
   display: flex;
   flex-direction: row;
   align-items: center;
   height: 60rpx;
-  border-bottom: solid rgb(230, 223, 223) 2rpx;
-  margin: 19rpx 0;
+  margin: 21rpx 0;
 }
 .options {
-  font-size: 22rpx; 
+  width: 484rpx;
+  font-size: 20rpx;
   color: #1A1A1A;
-  padding: 0 20rpx;
+  padding: 0 10rpx;
+  margin: 0 10rpx;
+  padding-bottom: 11rpx;
+  border-bottom: solid #E6E6E6 2rpx;
 }
 .icon {
   width: 44rpx;
@@ -58,63 +90,178 @@
   color: #1A1A1A;
   font-size: 24rpx;
 }
+.carNum {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-left: 37rpx;
+}
+.text {
+  margin: 0 5rpx
+}
+.carInfo {
+  margin: 0 22rpx;
+}
+.applyCar {
+  width: 600rpx;
+  height: 68rpx;
+  background-color: #FF8F37;
+  border-radius: 10rpx;
+  color: #FEFEFE;
+  font-size: 28rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.bottomContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 39rpx;
+}
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
 .bottomPanel {
-
+  width: 290rpx;
+  height: 200rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #F2F6F9;
+  border-radius: 12rpx;
+  margin: 0 20rpx 20rpx 0;
+}
+.describeFont {
+  font-size: 30rpx;
+  color: #333333;
+  font-weight: 400;
+  line-height: 44rpx;
 }
 </style>
 <template>
   <view class="container">
+    <view class="navBar">
+      <view class="selfSetting" catchtap="openSetting">
+        <view class="line" style="width: 28rpx;"></view>
+        <view class="line" style="width: 20rpx; margin: 8rpx 0;"></view>
+        <view class="line" style="width: 26rpx;"></view>
+      </view>
+      <drawer :clientHeight.sync="clientHeight" :isOpen.sync="isOpen"></drawer>
+      <view class="barTitle">兰州大学约车信息管理系统</view>
+    </view>
     <view class="notice">
       <image src="../images/notice.png" class="notice_icon" />
-      <text>您好，您还未实名认证！<text style="color: #FC9F37">立即认证</text></text>
+      <view style="display: flex; flex-direction: row;">您好，您还未实名认证！<view class="approve" @tap="gotoApprove">立即认证</view></view>
     </view>
     <image src="../images/home.png" class="homePanel" />
     <view class="pickers">
       <view class="pickerContainer">
         <image src="../images/userCar.png" class="icon" />
-        <picker bindchange="bindPickerChange1" value="{{index1}}" range="{{array1}}">
-          <view class="options">{{array1[index1]}}</view>
+        <picker range="{{carrierUnit}}" @change="bindPickerChange1" range-key="name">
+          <view class="options" wx:if="{{index1}}">{{carrierUnit[index1].name}}</view>
+          <view class="options" wx:else>选择承运单位</view>
         </picker>
       </view>
       <view class="pickerContainer">
         <image src="../images/goBack.png" class="icon" />
-        <picker bindchange="bindPickerChange2" value="{{index2}}" range="{{array2}}">
-          <view class="options">{{array2[index2]}}</view>
+        <picker range="{{allPath}}" @change="bindPickerChange2" range-key="name">
+          <view class="options" wx:if="{{index2}}">{{allPath[index2].name}}</view>
+          <view class="options" wx:else>选择行驶路线</view>
         </picker>
       </view>
       <view class="pickerContainer">
         <image src="../images/carType.png" class="icon" />
-        <picker bindchange="bindPickerChange3" value="{{index3}}" range="{{array3}}">
-          <view class="options">{{array3[index3]}}</view>
+        <picker range="{{carType}}" @change="bindPickerChange3" range-key="name">
+          <view class="options" wx:if="{{index3}}" style="width: 260rpx;">{{carType[index3].name}}</view>
+          <view class="options" wx:else style="width: 260rpx;">选择车型</view>
         </picker>
+        <view class="carNum">
+          <text style="font-size: 20rpx; color: #333333;">车辆数：</text>
+          <defaultCounter @getCurrentNum.user="getCurrentNum"></defaultCounter>
+        </view>
       </view>
     </view>
     <view class="priceList">
-      <text>紧凑型轿车</text>
-      <text> | </text>
-      <text>2.3元/公里</text>
-      <text>580元/天</text>
-      <text>300元/半天</text>
+      <view class="text">紧凑型轿车</view>
+      <view class="text" class="carInfo">|</view>
+      <view class="text">2.3元/公里</view>
+      <view class="text" class="carInfo">|</view>
+      <view class="text">580元/天</view>
+      <view class="text" class="carInfo">|</view>
+      <view class="text">300元/半天</view>
     </view>
-    <view class="bottomPanel"></view>
+    <button class="applyCar">立即申请用车</button>
+    <view class="bottomContainer">
+      <view class="row">
+        <view class="bottomPanel">
+          <image src="../images/order.png" style="width: 68rpx; height: 71rpx;" />
+          <text class="describeFont">我的订单</text>
+        </view>
+        <view class="bottomPanel">
+          <image src="../images/reject.png" style="width: 68rpx; height: 71rpx;" />
+          <text class="describeFont">驳回订单</text>
+        </view>
+      </view>
+      <view class="row">
+        <view class="bottomPanel">
+          <image src="../images/historyOrder.png" style="width: 68rpx; height: 71rpx;" />
+          <text class="describeFont">历史约车</text>
+        </view>
+        <view class="bottomPanel">
+          <image src="../images/history.png" style="width: 68rpx; height: 71rpx;" />
+          <text class="describeFont">历史撤单</text>
+        </view>
+      </view>
+    </view>
   </view>
 </template>
 <script>
 import wepy from 'wepy'
+import defaultCounter from '../components/defaultCounter'
+import { getAllCarrier, getAllPath, getCarType, getCarDetail } from '../utils/api.js'
+import drawer from '../components/drawer'
 export default class HomePage extends wepy.page {
   config = {
-    navigationBarTitleText: '兰州大学约车信息管理系统',
-    navigationBarTextStyle: 'black'
+    navigationStyle: 'custom'
   }
   data = {
-    index1: 0,
-    index2: 0,
-    index3: 0,
-    array3: ['甘肃公航旅汽车租赁有限公司', '甘肃公航旅汽车租赁公司', '甘肃公航旅租赁有限公司'],
-    array1: [4, 5, 6],
-    array2: [7, 8, 9]
+    index1: null,
+    index2: null,
+    index3: null,
+    carrierUnit: null,
+    allPath: null,
+    carType: null,
+    carNum: 0,
+    clientHeight: 0,
+    isOpen: 'close'
+  }
+  components = {
+    defaultCounter: defaultCounter,
+    drawer: drawer
   }
   methods = {
+    // 个人设置
+    openSetting() {
+      if (this.isOpen === 'close') {
+        this.isOpen = 'open'
+      } else {
+        this.isOpen = 'close'
+      }
+    },
+    // 立即认证
+    gotoApprove() {
+      wx.navigateTo({
+        url: './authentication'
+      })
+    },
     bindPickerChange1(e) {
       this.index1 = e.detail.value
     },
@@ -123,10 +270,53 @@ export default class HomePage extends wepy.page {
     },
     bindPickerChange3(e) {
       this.index3 = e.detail.value
+    },
+    getCurrentNum(e) {
+      this.carNum = e
     }
   }
-  onLoad() {
-
+  async carDetail(unitId, routeId, carId) {
+    unitId = unitId ? unitId : ''
+    routeId = routeId ? routeId : ''
+    carId = carId ? carId : ''
+    let res = await getCarDetail(carId, unitId, routeId)
+    console.log(res, './././')
+  }
+  async onLoad() {
+    this.clientHeight = wx.getSystemInfoSync().windowHeight
+    let carrier = await getAllCarrier(0)
+    if (carrier.status === 1) {
+      this.carrierUnit = carrier.info
+    }
+    let path = await getAllPath()
+    if (path.status === 1) {
+      this.allPath = path.info
+    }
+    let types = await getCarType()
+    if (types.status === 1) {
+      this.carType = types.info
+    }
+  }
+  watch = {
+    'index1'(e) {
+      if (this.index2 || this.index3) {
+        let routeId = this.index2 ? this.allPath[this.index2].id : ''
+        let carId = this.index3 ? this.carType[this.index3].id : ''
+        this.carDetail(this.carrierUnit[e].id, routeId, carId)
+      }
+    },
+    'index2'(e) {
+      if (this.index1) {
+        let carId = this.index3 ? this.carType[this.index3].id : ''
+        this.carDetail(this.carrierUnit[this.index1].id, this.allPath[e].id, carId)
+      }
+    },
+    'index3'(e) {
+      if (this.index1) {
+        let routeId = this.index2 ? this.allPath[this.index2].id : ''
+        this.carDetail(this.carrierUnit[this.index1].id, routeId, this.carType[e].id)
+      }
+    }
   }
 }
 </script>

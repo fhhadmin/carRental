@@ -35,48 +35,48 @@ export const adminLogin = async (account, pwd) => {
  * 用户注册
  */
 export const userRegister = async (mobile, password) => {
-    try {
-      return await post('/base/register',
-          { mobile: mobile, password: password },
-            true)
-    } catch (error) {
-      return error
-    }
+  try {
+    return await post('/base/register',
+        { mobile: mobile, password: password },
+          true)
+  } catch (error) {
+    return error
   }
+}
 
 /**
  * @description 发送验证码
  * @param {String} mobile
  */
 export const sendSms = async (mobile) => {
-    try {
-        return await get('/base/findSmsCode', { mobile }, false)
-    } catch (error) {
-        return error
-    }
+  try {
+    return await get('/base/findSmsCode', { mobile }, false)
+  } catch (error) {
+    return error
+  }
 }
 
 /**
- * @description 获取图形验证码
+ * @description 获取图形验证码 (本项目暂时没用到)
  */
 export const getRandomCode = async () => {
-    try {
-        return await get('/base/getImgCode', {}, false)
-    } catch (error) {
-        return error
-    }
+  try {
+    return await get('/base/getImgCode', {}, false)
+  } catch (error) {
+    return error
+  }
 }
 
 /**
- * @description 检查图形验证码是否正确
+ * @description 检查图形验证码是否正确 (本项目暂时没用到)
  * @param {String} code
  */
 export const checkCode = async (code) => {
-    try {
-        return await get('/base/checkRandCode', { code }, false)
-    } catch (error) {
-        return error
-    }
+  try {
+    return await get('/base/checkRandCode', { code }, false)
+  } catch (error) {
+    return error
+  }
 }
 
 /**
@@ -86,75 +86,69 @@ export const checkCode = async (code) => {
  * @param {String} password
  */
 export const updatePassWd = async (mobile, msgCode, password) => {
-    try {
-        return await post('/base/forgetPwd', { mobile, msgCode, password }, true)
-    } catch (error) {
-        return error
-    }
+  try {
+    return await post('/base/forgetPwd', { mobile, msgCode, password }, true)
+  } catch (error) {
+    return error
+  }
 }
 
 /**
- * @description 查询全部的巡检类型
+ * @description 查询全部的承运单位
  */
-export const getReportType = async () => {
-    try {
-        return await get('/wx/queryInsTypes', {}, false)
-    } catch (error) {
-        return error;
-    }
-};
-
-
-/**
- *
- * @param {Float} latitude 纬度
- * @param {Float} longitude 经度
- * @description 根据经纬度查询区域
- */
-export const getLocationArea = async (latitude, longitude) => {
-    try {
-        return await get('/wx/findGpsRegion', { lat: latitude, lon: longitude }, true)
-    } catch (error) {
-        return error;
-    }
-};
+export const getAllCarrier = async (state) => {
+  try {
+    return await get('/base/queryCarrier', { state }, true)
+  } catch (error) {
+    return error
+  }
+}
 
 /**
- * @description 查询一级区域
+ * @description 查询全部的行驶路线
  */
-export const getFirstArea = async () => {
-    try {
-        return await get('/base/queryRegionOne', {}, false)
-    } catch (error) {
-        return error;
-    }
-};
+export const getAllPath = async () => {
+  try {
+    return await get('/base/queryRoute', {}, false)
+  } catch (error) {
+    return error
+  }
+}
 
 /**
- *
- * @param {Number} regionOneId
- * @description 查询二级区域
+ * @description 查询全部的行驶路线
  */
-export const getSecondArea = async (regionOneId) => {
-    try {
-        return await get('/base/queryRegionTwo', { regionOneId: regionOneId }, false)
-    } catch (error) {
-        return error;
-    }
-};
+export const getCarType = async () => {
+  try {
+    return await get('/base/queryCarType', {}, false)
+  } catch (error) {
+    return error
+  }
+}
 
 /**
- *
- * @param {Number} regionTwoId
- * @description 查询三级区域
+ * @description 查询已选车辆详情
  */
-export const getThirdArea = async (regionTwoId) => {
-    try {
-        return await get('/base/queryRegionThree', { regionTwoId: regionTwoId }, false)
-    } catch (error) {
-        return error;
-    }
-};
+export const getCarDetail = async (carTypeId, carrierId, routeTypeId) => {
+  try {
+    return await get('/base/queryCarDetail', {carTypeId: carTypeId, carrierId: carrierId, routeTypeId: routeTypeId}, false)
+  } catch (error) {
+    return error
+  }
+}
+
+/**
+ * 获取图文详情
+ * @param {Number} file 文件名
+ * @description 获取图文详情
+ */
+export const getIocr = async (file) => {
+  try {
+    return await post('/base/queryIocr', { file: file }, false)
+  } catch (error) {
+    return error
+  }
+}
 
 /**
  * @param {Number} regionId

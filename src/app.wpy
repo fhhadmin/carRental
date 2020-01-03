@@ -22,9 +22,10 @@ setStore(store)
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/authentication',
       'pages/homePage',
       'pages/index',
-      'pages/register',
+      'pages/register'
     ],
     window: {
       backgroundTextStyle: 'light',
