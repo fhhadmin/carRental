@@ -201,21 +201,21 @@
     <button class="applyCar">立即申请用车</button>
     <view class="bottomContainer">
       <view class="row">
-        <view class="bottomPanel">
+        <view class="bottomPanel" @tap="clickMyOrders">
           <image src="../images/order.png" style="width: 68rpx; height: 71rpx;" />
           <text class="describeFont">我的订单</text>
         </view>
-        <view class="bottomPanel">
+        <view class="bottomPanel" @tap="clcikRejectOrders">
           <image src="../images/reject.png" style="width: 68rpx; height: 71rpx;" />
           <text class="describeFont">驳回订单</text>
         </view>
       </view>
       <view class="row">
-        <view class="bottomPanel">
+        <view class="bottomPanel" @tap="clickHistoryList">
           <image src="../images/historyOrder.png" style="width: 68rpx; height: 71rpx;" />
           <text class="describeFont">历史约车</text>
         </view>
-        <view class="bottomPanel">
+        <view class="bottomPanel" @tap="clickHistoryBack">
           <image src="../images/history.png" style="width: 68rpx; height: 71rpx;" />
           <text class="describeFont">历史撤单</text>
         </view>
@@ -273,6 +273,26 @@ export default class HomePage extends wepy.page {
     },
     getCurrentNum(e) {
       this.carNum = e
+    },
+    clickMyOrders() {
+      wx.navigateTo({
+        url: './orders/myOrders'
+      })
+    },
+    clcikRejectOrders() {
+      wx.navigateTo({
+        url: './orders/rejectOrders'
+      })
+    },
+    clickHistoryList() {
+      wx.navigateTo({
+        url: './orders/historyOrders'
+      })
+    },
+    clickHistoryBack() {
+      wx.navigateTo({
+        url: './orders/historyBackOrders'
+      })
     }
   }
   async carDetail(unitId, routeId, carId) {

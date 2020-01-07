@@ -1,0 +1,24 @@
+<style>
+
+</style>
+<template>
+
+</template>
+<script>
+import wepy from 'wepy'
+export default class HistoryOders extends wepy.page {
+  config = {
+    'navigationBarTitleText': '历史撤单',
+    'navigationBarBackgroundColor': '#F2F6F9'
+  }
+  data = {
+
+  }
+  methods = {
+
+  }
+  onLoad() {
+
+  }
+}
+</script>

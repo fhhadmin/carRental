@@ -1,0 +1,139 @@
+<style>
+.container {
+  display: flex;
+  flex-direction: column;
+  background-color: #F2F6F9;
+}
+.orderList {
+  background-color: #FFFFFF;
+  width: 680rpx;
+  height: 240rpx;
+  margin: 14rpx 0;
+  border-radius: 8rpx;
+  padding: 27rpx 11rpx;
+}
+.content {
+  display: flex;
+  flex-direction: row;
+  font-size: 28rpx;
+  color: #333333;
+  margin-bottom: 21rpx;
+}
+.progress {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 529rpx;
+  height: 76rpx;
+  opacity: 0.3;
+  position: absolute;
+  right: 11rpx;
+}
+.currentProgress {
+  width: 504rpx;
+  height: 20rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 18rpx;
+}
+.currentStateText {
+  width: 504rpx;
+  height: 20rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.currentState {
+  width: 97rpx;
+  height: 10rpx;
+  background-color: #B3B3B3;
+  border-radius: 4rpx;
+  margin: 0 2rpx;
+}
+.stateText {
+  width: 97rpx;
+  font-size: 24rpx;
+  color: #333333;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+</style>
+<template>
+  <view class="container" style="height: {{windowHeight}}px">
+    <block wx:for="orders">
+      <view class="orderList" @tap="clickInfo">
+        <view class="content">
+          <view style="margin-right: 20rpx;">林雨申</view>
+          <view style="margin-right: 23rpx;">15693884578</view>
+          <view style="margin-right: 160rpx;">兰州大学到会宁</view>
+          <view @tap="cancelOrder" style="color: #FF8F37;">撤单</view>
+        </view>
+        <view class="content">
+          <view style="margin-right: 35rpx;">紧凑型轿车</view>
+          <view style="margin-right: 20rpx;">捷达朗逸</view>
+          <view>2.3元/公里</view>
+        </view>
+        <view class="content">
+          <image src="../../images/shijian.png" style="width: 40rpx; height: 40rpx; margin-right: 14rpx;" />
+          <text style="color: #666666; font-size: 24rpx;">2019.12.4 09:30 - 2019.12.5</text>
+        </view>
+        <view style="position: relative; width: 680rpx; height: 67rpx; margin-bottom: 24rpx;">
+          <view class="progress">
+            <view style="width: 517rpx; height: 20rpx; border-radius: 5rpx;">
+              <view class="currentProgress">
+                <view class="currentState" style="background-color: #FF8F37;"></view>
+                <view class="currentState" style="background-color: red;"></view>
+                <view class="currentState" style="background-color: blue"></view>
+                <view class="currentState" style="background-color: yellow;"></view>
+                <view class="currentState" style="background-color: #FF8F37;"></view>
+              </view>
+              <view class="currentStateText">
+                <view class="stateText">审核中</view>
+                <view class="stateText">已接单</view>
+                <view class="stateText">用车中</view>
+                <view class="stateText">费用确认</view>
+                <view class="stateText">已完成</view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { getUserOders } from '../../utils/api'
+export default class MyOrders extends wepy.page {
+  config = {
+    'navigationBarTitleText': '我的订单',
+    'navigationBarBackgroundColor': '#F2F6F9'
+  }
+  data = {
+    windowHeight: null,
+    orders: []
+  }
+  methods = {
+    cancelOrder() {
+      console.log('撤单')
+    },
+    clickInfo(e) {
+      var detail = {}
+      wx.navigateTo({
+        url: `./orderDetail?detail` + detail
+      })
+    }
+  }
+  async onLoad() {
+    this.windowHeight = wx.getSystemInfoSync().windowHeight
+    // let res = await getUserOders()
+    // this.orders = res.info
+  }
+}
+</script>

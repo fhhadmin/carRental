@@ -13,8 +13,8 @@
   font-size: 20rpx;
   color: #1A1A1A;
   .image {
-    width: 40rpx;
-    height: 30rpx;
+    width: 55rpx;
+    height: 43rpx;
   }
   .onlyImage {
     width: 100%;

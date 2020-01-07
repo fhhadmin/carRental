@@ -151,16 +151,17 @@ export const getIocr = async (file) => {
 }
 
 /**
- * @param {Number} regionId
- * @description 查询区域负责人
+ * 用户订单列表
+ * @param { String } userId 用户id
+ * @param { String } state 订单状态
  */
-export const getAreaLeader = async (regionId) => {
-    try {
-        return await get('/base/queryRegionPerson', { regionId: regionId }, false)
-    } catch (error) {
-        return error;
-    }
-};
+export const getUserOders = async (userId, state) => {
+  try {
+    return await post('/wx/queryApplyOrder', { userId: userId, state: state }, false)
+  } catch (error) {
+    return error
+  }
+}
 
 /**
  * @description 上传巡检报告

@@ -31,19 +31,19 @@
       <image src="../images/logo1.png" style="width: 120rpx; height: 103rpx; margin-top: 60rpx;" />
       <view style="font-size: 24rpx; margin-top: 20rpx; margin-bottom: 19rpx">{{account}}</view>
       <view>
-        <view class="list">
+        <view class="list" @tap="clickOrders">
           <image src="../images/smallOrders.png" style="width: 36rpx; height: 39rpx; margin-right: 26rpx;" />
           <text style="color: #1A1A1A; font-size: 24rpx;">我的订单</text>
         </view>
-        <view class="list">
+        <view class="list" @tap="clickHistoryBack">
           <image src="../images/smallHistory.png" style="width: 36rpx; height: 39rpx; margin-right: 26rpx;" />
           <text style="color: #1A1A1A; font-size: 24rpx;">历史撤单</text>
         </view>
-        <view class="list">
+        <view class="list" @tap="clickRejectOders">
           <image src="../images/smallReject.png" style="width: 36rpx; height: 39rpx; margin-right: 26rpx;" />
           <text style="color: #1A1A1A; font-size: 24rpx;">驳回订单</text>
         </view>
-        <view class="list">
+        <view class="list" @tap="clickHistoryList">
           <image src="../images/smallHistory.png" style="width: 36rpx; height: 39rpx; margin-right: 26rpx;" />
           <text style="color: #1A1A1A; font-size: 24rpx;">历史约车</text>
         </view>
@@ -76,6 +76,26 @@ export default class Drawer extends wepy.page {
     powerDrawer(e) {
       var currentStatu = e.currentTarget.dataset.statu
       this.util(currentStatu)
+    },
+    clickOrders() {
+      wx.navigateTo({
+        url: './orders/myOrders'
+      })
+    },
+    clickRejectOders() {
+      wx.navigateTo({
+        url: './orders/rejectOrders'
+      })
+    },
+    clickHistoryList() {
+      wx.navigateTo({
+        url: './orders/historyOrders'
+      })
+    },
+    clickHistoryBack() {
+      wx.navigateTo({
+        url: './orders/historyBackOrders'
+      })
     }
   }
   util(currentStatu) {

@@ -22,10 +22,16 @@ setStore(store)
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/authentication',
+      'pages/orders/orderDetail',
       'pages/homePage',
-      'pages/index',
-      'pages/register'
+      'pages/login',
+      'pages/register',
+      'pages/orders/myOrders',
+      'pages/orders/rejectOrders',
+      'pages/orders/historyOrders',
+      'pages/orders/historyBackOrders',
+      // 'pages/orders/orderDetail',
+      'pages/authentication'
     ],
     window: {
       backgroundTextStyle: 'light',
