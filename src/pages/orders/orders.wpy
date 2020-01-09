@@ -25,19 +25,21 @@
   justify-content: center;
   align-items: center;
   width: 529rpx;
-  height: 76rpx;
+  height: 50rpx;
   opacity: 0.3;
   position: absolute;
   right: 11rpx;
 }
 .currentProgress {
-  width: 504rpx;
+  width: 515rpx;
   height: 20rpx;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   margin-bottom: 18rpx;
+  box-shadow: 10rpx 0rpx 10rpx #3d3636;
+  border-radius: 10rpx;
 }
 .currentStateText {
   width: 504rpx;
@@ -63,42 +65,47 @@
   justify-content: center;
   align-items: center;
 }
+.click {
+  position: absolute;
+  right: 20rpx;
+}
 </style>
 <template>
   <view class="container" style="height: {{windowHeight}}px">
     <block wx:for="orders">
-      <view class="orderList" @tap="clickInfo">
-        <view class="content">
+      <view class="orderList">
+        <view class="content" style="position: relative;">
           <view style="margin-right: 20rpx;">林雨申</view>
           <view style="margin-right: 23rpx;">15693884578</view>
-          <view style="margin-right: 160rpx;">兰州大学到会宁</view>
-          <view @tap="cancelOrder" style="color: #FF8F37;">撤单</view>
+          <view>兰州大学到会宁</view>
+          <view wx:if="{{pageState + '' === 1 + ''}}" catchtap="cancelOrder" class="click" style="color: #FF8F37;">撤单</view>
         </view>
-        <view class="content">
+        <view class="content" style="position: relative;">
           <view style="margin-right: 35rpx;">紧凑型轿车</view>
           <view style="margin-right: 20rpx;">捷达朗逸</view>
           <view>2.3元/公里</view>
+          <view catchtap="clickInfo" class="click" style="color: #0091FF;">详情</view>
         </view>
         <view class="content">
           <image src="../../images/shijian.png" style="width: 40rpx; height: 40rpx; margin-right: 14rpx;" />
           <text style="color: #666666; font-size: 24rpx;">2019.12.4 09:30 - 2019.12.5</text>
         </view>
-        <view style="position: relative; width: 680rpx; height: 67rpx; margin-bottom: 24rpx;">
+        <view wx:if="{{pageState + '' === 1 + ''}}" style="position: relative; width: 680rpx; height: 67rpx;">
           <view class="progress">
             <view style="width: 517rpx; height: 20rpx; border-radius: 5rpx;">
               <view class="currentProgress">
-                <view class="currentState" style="background-color: #FF8F37;"></view>
-                <view class="currentState" style="background-color: red;"></view>
-                <view class="currentState" style="background-color: blue"></view>
-                <view class="currentState" style="background-color: yellow;"></view>
-                <view class="currentState" style="background-color: #FF8F37;"></view>
+                <view class="currentState" style="background-color: #5BB531;"></view>
+                <view class="currentState" style="background-color: #FF4500;"></view>
+                <view class="currentState" style="background-color: #E7A100;"></view>
+                <view class="currentState" style="background-color: #BA2789;"></view>
+                <view class="currentState" style="background-color: #00B4C5;"></view>
               </view>
               <view class="currentStateText">
-                <view class="stateText">审核中</view>
-                <view class="stateText">已接单</view>
-                <view class="stateText">用车中</view>
-                <view class="stateText">费用确认</view>
-                <view class="stateText">已完成</view>
+                <view class="stateText" style="color: #5BB531">审核中</view>
+                <view class="stateText" style="color: #FF4500">已接单</view>
+                <view class="stateText" style="color: #E7A100">用车中</view>
+                <view class="stateText" style="color: #BA2789">费用确认</view>
+                <view class="stateText" style="color: #00B4C5">已完成</view>
               </view>
             </view>
           </view>
@@ -110,13 +117,14 @@
 <script>
 import wepy from 'wepy'
 import { getUserOders } from '../../utils/api'
-export default class MyOrders extends wepy.page {
+export default class orders extends wepy.page {
   config = {
-    'navigationBarTitleText': '我的订单',
+    'navigationBarTitleText': '',
     'navigationBarBackgroundColor': '#F2F6F9'
   }
   data = {
     windowHeight: null,
+    pageState: null,
     orders: []
   }
   methods = {
@@ -126,14 +134,29 @@ export default class MyOrders extends wepy.page {
     clickInfo(e) {
       var detail = {}
       wx.navigateTo({
-        url: `./orderDetail?detail` + detail
+        // url: `./orderDetail?detail` + detail + '&state=' + this.pageState
+        url: `./orderDetail?state=` + this.pageState
       })
     }
   }
-  async onLoad() {
+  async getOrders(userId, state) {
+    let res = await getUserOders(userId, state)
+    this.orders = res.info
+  }
+  onLoad(options) {
+    this.pageState = options.state
+    let userId = 2
+    if (options.state + '' === 1 + '') { // 我的订单
+      wx.setNavigationBarTitle({ title: '我的订单' })
+    } else if (options.state + '' === 2 + '') { // 驳回订单
+      wx.setNavigationBarTitle({ title: '驳回订单列表' })
+    } else if (options.state + '' === 3 + '') { // 历时约车
+      wx.setNavigationBarTitle({ title: '历时约车列表' })
+    } else if (options.state + '' === 4 + '') { // 历史撤单
+      wx.setNavigationBarTitle({ title: '历史撤单列表' })
+    }
     this.windowHeight = wx.getSystemInfoSync().windowHeight
-    // let res = await getUserOders()
-    // this.orders = res.info
+    this.getOrders(userId, options.state)
   }
 }
 </script>

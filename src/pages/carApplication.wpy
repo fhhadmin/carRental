@@ -1,0 +1,306 @@
+<style>
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.tip {
+  width: 634rpx;
+  height: 54rpx;
+  background-color: #FFF8DB;
+  border-radius: 40rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 14rpx 24rpx 12rpx 20rpx;
+  margin: 15rpx 0 27rpx 23rpx;
+}
+.selfInfo {
+  display: flex;
+  flex-direction: column;
+  margin-top: 3rpx;
+  margin-left: 20rpx;
+  margin-bottom: 62rpx;
+}
+.selfContent {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  font-size: 28rpx;
+  color: #333333;
+  margin-left: 34rpx;
+  margin-top: 44rpx;
+}
+.content {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  line-height: 68rpx;
+}
+.nameInput {
+  border-bottom: 2rpx solid #E6E6E6;
+  width: 151rpx;
+  padding-left: 19rpx;
+  margin-right: 96rpx;
+}
+.mobileInput {
+  width: 485rpx;
+  padding-left: 15rpx;
+  border-bottom: 2rpx solid #E6E6E6;
+}
+.dot {
+  width: 20rpx;
+  height: 20rpx;
+  border-radius: 50%;
+  margin-right: 6rpx;
+}
+.areaImg {
+  width: 30rpx;
+  margin-right: 12rpx;
+}
+.selection {
+  width: 615rpx;
+  height: 48rpx;
+  padding: 10rpx 15rpx;
+  border: 2rpx solid #E6E6E6;
+  border-radius: 4rpx;
+}
+.option {
+  width: 615rpx;
+  min-height: 60rpx;
+  padding: 10rpx 15rpx;
+  top: 72rpx;
+  background-color: #ffffff;
+  position: absolute;
+  z-index: 200;
+  border: 2rpx solid #E6E6E6;
+  border-top: none;
+}
+.noClick {
+  width: 18rpx;
+  height: 9rpx;
+  transform: rotate(180deg);
+  position: absolute;
+  right: 55rpx;
+  top: 30rpx;
+}
+.click {
+  width: 18rpx;
+  height: 9rpx;
+  position: absolute;
+  right: 55rpx;
+  top: 30rpx;
+}
+.cause {
+  border: 1rpx solid #E6E6E6;
+  margin-top: 44rpx;
+  margin-left: 34rpx;
+  padding: 15rpx;
+  height: 200rpx;
+  width: 615rpx;
+  font-size: 28rpx;
+  color: #333333;
+  border-radius: 4rpx;
+}
+.btn {
+  width: 400rpx;
+  height: 58rpx;
+  color: #ffffff;
+  font-size: 28rpx;
+  background-color: #FF8F37;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 69rpx;
+}
+</style>
+<template>
+  <view class="container" @tap="containerCatchtap">
+    <view class="tip">
+      <image src="../images/notice.png" mode="widthFix" style="width: 50rpx; margin-right: 15rpx;" />
+      <view style="font-size: 22rpx; color: #4C4C4C;">
+        您好！用户因自身原因需要取消用车计划的，应在约定出车时间前<text style="color: #FF8F37;">1个小时</text>取消用车计划，并电话告知驾驶员或承运单位。
+      </view>
+    </view>
+    <view class="selfInfo">
+      <text style="color: #1A1A1A; font-size: 36rpx;">个人信息：</text>
+      <view class="selfContent">
+        <view class="content">
+          <text>联 系 人：</text>
+          <input placeholder="申请人姓名" value={{linkMan}} @input="inputLinkMan" class="nameInput" />
+          <text>乘车人数：</text>
+          <counter @getCurrentNum.user="getCurrentNum"></counter>
+        </view>
+        <view class="content">
+          <text>联系电话：</text>
+          <input placeholder="申请人联系电话" value={{linkPhone}} @input="inputLinkPhone" class="mobileInput" />
+        </view>
+        <view class="content" style="line-height: 60rpx;">
+          <text>机构选择：</text>
+          <organSelect @organSelect.user="organSelect" />
+        </view>
+        <view class="content">
+          <view class="dot" style="background-color: #01CD78;"></view>
+          <picker mode="date" start="{{startDay}}" style="margin-right: 5rpx;" @change="onStartDateChange">
+            {{startDay ? startDay : '选择日期'}}
+          </picker>
+          <picker mode="time" start="{{startTime}}" style="margin-right: 25rpx;" @change="onStartTimeChange">
+            {{startTime ? startTime : '选择时间'}}出发
+          </picker>
+          <view class="dot" style="background-color: #FF8F37;"></view>
+          <picker mode="date" start="{{endDay}}" @change="onEndDateChange">{{endDay ? endDay : '选择日期'}}</picker>
+          <picker mode="time" start="{{endTime}}" style="margin-left: 5rpx;" @change="onEndTimeChange">
+            {{endTime ? endTime : '选择时间'}}结束
+          </picker>
+        </view>
+        <view class="content">
+          <image src="../images/startArea.png" mode="widthFix" style="width: 30rpx; margin-right: 12rpx;" />
+          <text>出发地：</text>
+          <input placeholder="请输入出发地点" class="mobileInput" value={{startArea}} @input="startAreaInput" style="width: 459rpx;" />
+        </view>
+        <view class="content">
+          <image src="../images/destination.png" mode="widthFix" class="areaImg" />
+          <text>目的地：</text>
+          <input placeholder="请输入目的地点" class="mobileInput" value={{endArea}} @input="endAreaInput" style="width: 459rpx;" />
+        </view>
+      </view>
+    </view>
+    <view class="selfInfo">
+      <text style="color: #1A1A1A; font-size: 36rpx;">经费来源：</text>
+      <view class="selfContent" style="position: relative;">
+        <input placeholder="{{isShow ? '' : '请选择或输入经费来源'}}" value="{{fundSource}}" @input= "onInput" data-name="fundSource" catchtap="clickInput" class="selection" />
+        <image wx:if="{{expend}}" src="../images/nabla.png" class="noClick" />
+        <image wx:else src="../images/nabla.png" class="click" />
+        <view wx:if="{{expend}}" class="option">
+          <block wx:for="{{options}}">
+            <view style="line-height: 50rpx;" @tap="selectOne({{index}})">{{item}}</view>
+          </block>
+        </view>
+      </view>
+    </view>
+    <view class="selfInfo">
+      <text style="color: #1A1A1A; font-size: 36rpx;">用车原因：</text>
+      <textarea placeholder="请输入用车原因" value={{useCause}} @input="causeInput" class="cause" />
+    </view>
+    <button class="btn" @tap="clickCarHailing">一 键 约 车</button>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import counter from '../components/defaultCounter'
+import { getToday } from '../utils/timeFormat'
+import { getFundSource } from '../utils/api'
+import organSelect from '../components/organSelect'
+export default class CarApplication extends wepy.page {
+  config = {
+    'navigationBarTitleText': '用车申请'
+  }
+  data = {
+    options: [],
+    expend: false,
+    isShow: false,
+    startDay: null,
+    startTime: null,
+    endDay: null,
+    endTime: null,
+    fundSource: null,
+    linkMan: null,
+    linkPhone: null,
+    carNum: null,
+    startArea: null,
+    endArea: null,
+    useCause: null,
+    firstOrganId: null,
+    secondOrganId: null
+  }
+  components = {
+    counter: counter,
+    organSelect: organSelect
+  }
+  methods = {
+    containerCatchtap() {
+      this.expend = false
+    },
+    clickInput() {
+      this.expend = !this.expend
+    },
+    // 输入联系人姓名
+    inputLinkMan(e) {
+      this.linkMan = e.detail.value
+    },
+    // 输入联系人电话
+    inputLinkPhone(e) {
+      this.linkPhone = e.detail.value
+    },
+    // 选择乘车人数
+    getCurrentNum(e) {
+      this.carNum = e
+    },
+    // 输入出发地
+    startAreaInput(e) {
+      this.startArea = e.detail.value
+    },
+    // 输入目的地
+    endAreaInput(e) {
+      this.endArea = e.detail.value
+    },
+    // 输入经费来源
+    onInput(e) {
+      this.fundSource = e.detail.value
+    },
+    // 选择经费来源
+    selectOne(index) {
+      this.isShow = true
+      this.fundSource = this.options[index]
+    },
+    // 获取已选择机构的一二级id
+    organSelect(oneId, twoId) {
+      this.firstOrganId = oneId
+      this.secondOrganId = twoId
+    },
+    // 选择出发日期
+    onStartDateChange(e) {
+      this.startDay = e.detail.value
+    },
+    // 选择出发时间
+    onStartTimeChange(e) {
+      this.startTime = e.detail.value
+    },
+    // 选择结束日期
+    onEndDateChange(e) {
+      this.endDay = e.detail.value
+    },
+    // 选择结束时间
+    onEndTimeChange(e) {
+      this.endTime = e.detail.value
+    },
+    causeInput(e) {
+      this.useCause = e.detail.value
+    },
+    clickCarHailing() {
+      console.log(this.linkMan, this.linkPhone, this.carNum, this.firstOrganId,
+      this.secondOrganId, this.startDay, this.startTime, this.endDay, this.endTime,
+      this.startArea, this.endArea, this.fundSource, this.useCause, '一键约车')
+    }
+  }
+  async onLoad() {
+    let day = getToday(new Date())
+    this.startDay = day.split(' ')[0]
+    this.startTime = day.split(' ')[1]
+    this.endDay = day.split(' ')[0]
+    this.endTime = day.split(' ')[1]
+    // 查询经费来源数据
+    let res = await getFundSource()
+    if (res.status === 1) {
+      this.options = res.info.map(item => {
+        return item.name
+      })
+    }
+  }
+}
+</script>

@@ -164,67 +164,36 @@ export const getUserOders = async (userId, state) => {
 }
 
 /**
- * @description 上传巡检报告
- * @param {Number} adminId
- * @param {String} title
- * @param {String} content
- * @param {String} fileUrl
- * @param {String} proposal
- * @param {Number} regionId
- * @param {Number} regionOneId
- * @param {Number} regionTwoId
- * @param {Number} typeId
+ * 查询一级机构
  */
-export const addInsReport = async (adminId, title, content, fileUrl, proposal, regionId, regionOneId, regionTwoId,
-    typeId) => {
-    try {
-        return await post('/wx/addInsReport', {
-            adminId,
-            title,
-            content,
-            fileUrl,
-            proposal,
-            regionId,
-            regionOneId,
-            regionTwoId,
-            typeId
-        }, true)
-    } catch (error) {
-        return error
-    }
-};
-/**
- * @param {Number} state
- * @param {Number} adminId
- * @param {Number} page
- * @param {Number} size
- * @param {Boolean} loading
- * @description 查询巡检记录
- */
-export const getInsReport = async (state, adminId, pageNum, pageSize, loading) => {
-    try {
-        return await get('/wx/queryInsReports', { state, adminId, pageNum, pageSize }, loading)
-    } catch (error) {
-        return error
-    }
-};
+export const getFirstOrgan = async () => {
+  try {
+    return await get('/base/queryInsOne', {}, true)
+  } catch (error) {
+    return error
+  }
+}
 
 /**
- *
- * @param {Number} orderState
- * @param {Number} pageNum
- * @param {Number} repairUid 报修人id
- * @param {Number} serviceUid 维修人id
- * @param {Number} pageSize
- * @param {Boolean} loading
- * @description 查询报修单
+ * 查询二级机构
  */
-export const getRepairList = async (orderState, serviceUid, repairUid,pageNum, pageSize, loading) => {
-    try {
-        return await get('/wx/queryOrders', { orderState, serviceUid, repairUid,pageNum, pageSize }, loading)
-    } catch (error) {
-        return error
-    }
+export const getSecondOrgan = async (parentId) => {
+  try {
+    return await get('/base/queryInsTwo', { parentId }, true)
+  } catch (error) {
+    return error
+  }
+}
+
+/**
+ * 查询经费来源
+ */
+export const getFundSource = async () => {
+  try {
+    return await get('/wx/queryFundSource', {}, true)
+  } catch (error) {
+    return error
+  }
 };
 
 /**

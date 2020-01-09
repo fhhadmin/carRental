@@ -7,8 +7,8 @@
 		"minified": false
 	},
 	"compileType": "miniprogram",
-	"appid": "wx7458c6c6f2f419b4",
-	"projectname": "car_rental",
+	"appid": "wx5ca39fcef54a308c",
+	"projectname": "carRental",
 	"miniprogramRoot": "dist/",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
