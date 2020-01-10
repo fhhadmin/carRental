@@ -264,6 +264,7 @@ export default class HomePage extends wepy.page {
     halfDayPrice: null,
     dayPrice: null,
     amount: null,
+    carDetailId: null,
     carNum: 0,
     clientHeight: 0,
     isOpen: 'close',
@@ -289,9 +290,30 @@ export default class HomePage extends wepy.page {
       })
     },
     toApplyUse() {
-      wx.navigateTo({
-        url: './carApplication'
-      })
+      if (this.carrierId && this.carTypeId) {
+        if (this.carNum > 0) {
+          if (this.amount > this.carNum) {
+            wx.navigateTo({
+              url: './carApplication?carrientId=' + this.carrierId + '&carDetailId=' + this.carDetailId + '&carNum=' + this.carNum
+            })
+          } else {
+            wx.showToast({
+              title: '该车当前数量不足，请选择其他车型',
+              icon: 'none'
+            })
+          }
+        } else {
+          wx.showToast({
+            title: '请选择需要的车的数量',
+            icon: 'none'
+          })
+        }
+      } else {
+        wx.showToast({
+          title: '请选择承运单位或车型',
+          icon: 'none'
+        })
+      }
     },
     // 选择承运单位
     bindPickerChange1(e) {
@@ -315,35 +337,45 @@ export default class HomePage extends wepy.page {
     // 我的订单
     clickMyOrders() {
       wx.navigateTo({
-        url: `./orders/orders?state=` + 1
+        url: `./orders/orders?state=` + 0
       })
     },
     // 驳回订单
     clcikRejectOrders() {
       wx.navigateTo({
-        url: `./orders/orders?state=` + 2
+        url: `./orders/orders?state=` + 6
       })
     },
     // 历时约车列表
     clickHistoryList() {
       wx.navigateTo({
-        url: `./orders/orders?state=` + 3
+        url: `./orders/orders?state=` + 5
       })
     },
     // 历史撤单
     clickHistoryBack() {
       wx.navigateTo({
-        url: `./orders/orders?state=` + 4
+        url: `./orders/orders?state=` + '-1'
       })
     }
   }
   // 获取所选车型的详情
   async carDetail(unitId, routeId, carId) {
     let res = await getCarDetail(carId, unitId, routeId)
-    this.mileagePrice = res.info[0].mileagePrice ? res.info[0].mileagePrice / 100 : 0
-    this.dayPrice = res.info[0].dayPrice ? res.info[0].dayPrice / 100 : 0
-    this.halfDayPrice = res.info[0].harfDayPrice ? res.info[0].harfDayPrice / 100 : 0
-    this.amount = res.info[0].amount ? res.info[0].amount : 0
+    if(res.status === 1 && res.info.length) {
+      this.mileagePrice = res.info[0].mileagePrice ? res.info[0].mileagePrice / 100 : 0
+      this.dayPrice = res.info[0].dayPrice ? res.info[0].dayPrice / 100 : 0
+      this.halfDayPrice = res.info[0].harfDayPrice ? res.info[0].harfDayPrice / 100 : 0
+      this.amount = res.info[0].amount ? res.info[0].amount : 0
+      this.carDetailId = res.info[0].id
+    } else {
+      this.mileagePrice = null
+      this.dayPrice = null
+      this.halfDayPrice = null
+      this.amount = 0
+      this.carDetailId = null
+    }
+
     this.$apply()
   }
   async onLoad() {

@@ -194,77 +194,110 @@ export const getFundSource = async () => {
   } catch (error) {
     return error
   }
-};
+}
 
 /**
- *
- * @param {Number} orderId
- * @description 查询报修单详情
+ * 添加用车申请单
+ * @param {*} userId 用户id
+ * @param {*} carrierId 承运单位id
+ * @param {*} carDetailId 车辆信息id
+ * @param {*} linkMan 联系人
+ * @param {*} linkMobile 联系人电话
+ * @param {*} personalAmount 乘车人数
+ * @param {*} startTime 开始时间
+ * @param {*} endTime 结束时间
+ * @param {*} destination 目的地
+ * @param {*} fundSource 经费来源
+ * @param {*} reason 用车原因
  */
-export const getOrderDetail = async (orderId) => {
-    try {
-        return await get('/wx/findOrder', { orderId }, true)
-    } catch (error) {
-        return error
-    }
-};
+export const addApplyOrder = async (userId, carrierId, carDetailId, amount, linkMan, linkMobile, personalAmount, parentId, parentName, institutionId, institutionName, startTime, endTime, address, destination, fundSource, reason) => {
+  try {
+    return await post('/wx/addApplyOrder', { userId, carrierId, carDetailId, amount, linkMan, linkMobile, personalAmount, parentId, parentName, institutionId, institutionName, startTime, endTime, address, destination, fundSource, reason }, true)
+  } catch (error) {
+    return error
+  }
+}
 
 /**
- * @description 添加巡检申诉
- * @param {Number} insReportId
- * @param {Number} adminId
- * @param {String} content
- * @param {String} fileUrl
- * @param {Boolean} loading
+ * 编辑用车申请单
+ * @param {*} id id
+ * @param {*} userId 用户id
+ * @param {*} carrierId 承运单位id
+ * @param {*} carDetailId 车辆信息id
+ * @param {*} linkMan 联系人
+ * @param {*} linkMobile 联系人电话
+ * @param {*} personalAmount 乘车人数
+ * @param {*} startTime 开始时间
+ * @param {*} endTime 结束时间
+ * @param {*} destination 目的地
+ * @param {*} fundSource 经费来源
+ * @param {*} reason 用车原因
  */
-export const addReportAppeal = async (insReportId, adminId, content, fileUrl, loading) => {
-    try {
-        return await post('/wx/addInsAppeal', { insReportId, adminId, content, fileUrl }, loading)
-    } catch (error) {
-        return error;
-    }
-};
+export const editApplyOrder = async (id, userId, carrierId, carDetailId, amount, linkMan, linkMobile, personalAmount, parentId, institutionId, startTime, endTime, address, destination, fundSource, reason) => {
+  try {
+    return await post('/wx/editApplyOrder', { id, userId, carrierId, carDetailId, amount, linkMan, linkMobile, personalAmount, parentId, institutionId, startTime, endTime, address, destination, fundSource, reason }, true)
+  } catch (error) {
+    return error
+  }
+}
 
 /**
- *
- * @param {Number} id
- * @description 根据id查询巡检报告
+ * 修改申请单状态
+ * @param { Integer } id 申请单id
+ * @param { Integer } state 申请单状态 -1=>撤单 2=>通过 6=>驳回
  */
-export const getReportById = async (id) => {
-    try {
-        return await get('/wx/findReport', { id }, true)
-    } catch (error) {
-        return error
-    }
-};
+export const editOrderState = async (id, state) => {
+  try {
+    return await post('/wx/editApplyOrder', { id, state }, true)
+  } catch (error) {
+    return error
+  }
+}
 
 /**
- * @description 查询报修类型
+ * 添加用车评价
+ * @param { Integer } applyOrderId 申请单id
+ * @param { Integer } carrierId 承运单位id
+ * @param { Integer } userId 用户id
+ * @param { String } content 评价内容
+ * @param { Integer } star 星级
  */
-export const getRepairType = async () => {
-    try {
-        return await get('/base/queryRepairType', {}, false)
-    } catch (error) {
-        return error
-    }
-};
+export const addEvaluate = async (applyOrderId, carrierId, userId, content, star) => {
+  try {
+    return await post('/wx/addEvaluate', { applyOrderId, carrierId, userId, content, star }, true)
+  } catch (error) {
+    return error
+  }
+}
+
+/**
+ * 查询申请单对应的评价内容
+ * @param { Integer } applyOrderId 申请单id
+ */
+export const getEvaluateContent = async (applyOrderId) => {
+  try {
+    return await get('/wx/findEvaluate', { applyOrderId }, true)
+  } catch (error) {
+    return error
+  }
+}
+
+/**
+ * 费用单确认
+ * @param { Integer } userId 用户id
+ * @param { Integer } costOrderId 费用单id
+ * @param { String } nameUrl 签名图片
+ */
+export const confirmCostOrder = async (userId, costOrderId, nameUrl) => {
+  try {
+    return await get('/wx/updateCostOrder', { userId, costOrderId, nameUrl }, false)
+  } catch (error) {
+    return error
+  }
+}
 
 /**
  * @description 添加报修单
- * @param {Number} repairTypeId
- * @param {String} address
- * @param {Number} isAppoint
- * @param {String} appointTime
- * @param {Number} areaId
- * @param {Number} regionOneId
- * @param {Number} regionTwoId
- * @param {String} audio
- * @param {String} pics
- * @param {String} repairMobile
- * @param {String} repairName
- * @param {String} repairReason
- * @param {Number} repairUid
- * @param {Number} payType
  */
 export const addRepair = async (repairTypeId, address, isAppoint, appointTime, areaId, regionOneId, regionTwoId,
     audio, pics, repairMobile, repairName, repairReason, repairUid,payType) => {
@@ -281,9 +314,6 @@ export const addRepair = async (repairTypeId, address, isAppoint, appointTime, a
 /**
  *
  * @param {Number} id 订单id
- * @param {Number} orderState 订单状态 2 维修中
- * @param {Number} serviceUid 维修员id
- * @description 抢单
  */
 export const getOrderBySelf = async (id, orderState, serviceUid) => {
     try {
@@ -307,10 +337,6 @@ export const getAreaById = async (id) => {
 
 /**
  * orderState 0 待抢单 1 已超时 2 维修中 3 待支付 4 已完成
- * @description 维修员确认价格并完成订单
- * @param {Number} id 订单id
- * @param {Number} orderState 订单状态 3 维修工已完成维修、并确认价格
- * @param {Number} price 价格 以分为单位
  */
 export const enterPrice = async (id, orderState, serviceFee) => {
     try {
@@ -322,8 +348,6 @@ export const enterPrice = async (id, orderState, serviceFee) => {
 
 /**
  * @description 完成订单（仅仅对于公共报修来说）
- * @param {Number} id
- * @param {Number} orderState 4
  */
 export const finishOrder = async (id, orderState) => {
     try {
@@ -335,12 +359,6 @@ export const finishOrder = async (id, orderState) => {
 
 /**
  * @description 添加投诉
- * @param {String} content
- * @param {String} fileUrl
- * @param {Number} regionId
- * @param {Number} regionOneId
- * @param {Number} regionTwoId
- * @param {Number} sysUserId
  */
 export const addComplain = async (content,fileUrl,regionId,regionOneId,regionTwoId,sysUserId) => {
     try {
@@ -352,10 +370,6 @@ export const addComplain = async (content,fileUrl,regionId,regionOneId,regionTwo
 
 /**
  * @description 添加申辩
- * @param {Number} complaintId
- * @param {String} content
- * @param {String} fileUrl
- * @param {Number} sysUserId
  */
 export const complainApply = async (complaintId,content,fileUrl,sysUserId) => {
     try {
@@ -368,10 +382,6 @@ export const complainApply = async (complaintId,content,fileUrl,sysUserId) => {
 /**
  *
  * @param {Number} pageNum
- * @param {Number} pageSize
- * @param {Number} pleadState
- * @param {Number} adminId
- * @description 查询投诉记录
  */
 export const getComplain = async (pageNum,pageSize,pleadState,adminId) => {
     try {
@@ -384,7 +394,6 @@ export const getComplain = async (pageNum,pageSize,pleadState,adminId) => {
 /**
  *
  * @param {Number} id
- * @description 查询投诉详情
  */
 export const getComplainById = async (id) => {
     try {
@@ -396,7 +405,6 @@ export const getComplainById = async (id) => {
 
 /**
  * @description 微信支付
- * @param {Number} orderId
  */
 export const wxPay = async (orderId) => {
     try {
@@ -408,8 +416,6 @@ export const wxPay = async (orderId) => {
 
 /**
  * @description 查询通知列表
- * @param {Number} pageNum
- * @param {Number} pageSize
  */
 export const getNotice = async (pageNum,pageSize) => {
     try {
@@ -417,7 +423,7 @@ export const getNotice = async (pageNum,pageSize) => {
     } catch (error) {
         return error
     }
-};
+}
 
 /**
  * @description 查询用户是否有未支付的报修单

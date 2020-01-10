@@ -344,13 +344,13 @@ export default class OrderDetail extends wepy.page {
   }
   onLoad(options) {
     this.currentPageState = options.state
-    if (options.state + '' === '1') { // 我的订单
+    if (options.state + '' === '0') { // 我的订单
 
-    } else if (options.state + '' === '2') { // 驳回订单
+    } else if (options.state + '' === '6') { // 驳回订单
 
-    } else if (options.state + '' === '3') { // 历时约车
+    } else if (options.state + '' === '5') { // 历时约车
 
-    } else if (options.state + '' === '4') { // 历史撤单
+    } else if (options.state + '' === '-1') { // 历史撤单
 
     }
   }

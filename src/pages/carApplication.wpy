@@ -32,7 +32,7 @@
   font-size: 28rpx;
   color: #333333;
   margin-left: 34rpx;
-  margin-top: 44rpx;
+  margin-top: 30rpx;
 }
 .content {
   display: flex;
@@ -194,7 +194,7 @@
 import wepy from 'wepy'
 import counter from '../components/defaultCounter'
 import { getToday } from '../utils/timeFormat'
-import { getFundSource } from '../utils/api'
+import { getFundSource, addApplyOrder, editApplyOrder } from '../utils/api'
 import organSelect from '../components/organSelect'
 export default class CarApplication extends wepy.page {
   config = {
@@ -211,12 +211,16 @@ export default class CarApplication extends wepy.page {
     fundSource: null,
     linkMan: null,
     linkPhone: null,
-    carNum: null,
+    ridingPerson: 0,
     startArea: null,
     endArea: null,
     useCause: null,
     firstOrganId: null,
-    secondOrganId: null
+    secondOrganId: null,
+    firstOrganName: null,
+    secondOrganName: null,
+    carrientId: null,
+    carNum: null,
   }
   components = {
     counter: counter,
@@ -239,7 +243,7 @@ export default class CarApplication extends wepy.page {
     },
     // 选择乘车人数
     getCurrentNum(e) {
-      this.carNum = e
+      this.ridingPerson = e
     },
     // 输入出发地
     startAreaInput(e) {
@@ -259,9 +263,11 @@ export default class CarApplication extends wepy.page {
       this.fundSource = this.options[index]
     },
     // 获取已选择机构的一二级id
-    organSelect(oneId, twoId) {
+    organSelect(oneId, oneName, twoId, twoName) {
       this.firstOrganId = oneId
       this.secondOrganId = twoId
+      this.firstOrganName = oneName
+      this.secondOrganName = twoName
     },
     // 选择出发日期
     onStartDateChange(e) {
@@ -282,18 +288,25 @@ export default class CarApplication extends wepy.page {
     causeInput(e) {
       this.useCause = e.detail.value
     },
-    clickCarHailing() {
-      console.log(this.linkMan, this.linkPhone, this.carNum, this.firstOrganId,
-      this.secondOrganId, this.startDay, this.startTime, this.endDay, this.endTime,
-      this.startArea, this.endArea, this.fundSource, this.useCause, '一键约车')
+    async clickCarHailing() {
+      if (this.linkMan && this.linkPhone && this.ridingPerson && this.firstOrganId &&
+      this.secondOrganId && this.startDay && this.startTime && this.endDay && this.endTime
+      && this.startArea && this.endArea && this.fundSource && this.useCause && this.carNum) {
+        let res = await addApplyOrder(2, this.carrientId, this.carDetailId, this.carNum, this.linkMan, this.linkPhone, this.ridingPerson, this.firstOrganId, this.firstOrganName, this.secondOrganId, this.secondOrganName, this.startDay + ' ' + this.startTime, this.endDay + ' ' + this.endTime, this.startArea, this.endArea, this.fundSource, this.useCause)
+        if (res.status === 1) {
+          wx.navigateTo({
+            url: './orders/orders?state=' + '1'
+          })
+        }
+      } else {
+        wx.showToast({
+          title: '请完善相关信息',
+          icon: 'none'
+        })
+      }
     }
   }
-  async onLoad() {
-    let day = getToday(new Date())
-    this.startDay = day.split(' ')[0]
-    this.startTime = day.split(' ')[1]
-    this.endDay = day.split(' ')[0]
-    this.endTime = day.split(' ')[1]
+  async getFundSource() {
     // 查询经费来源数据
     let res = await getFundSource()
     if (res.status === 1) {
@@ -301,6 +314,18 @@ export default class CarApplication extends wepy.page {
         return item.name
       })
     }
+  }
+  onLoad(options) {
+    this.carrientId = options.carrientId
+    this.carDetailId = options.carDetailId
+    this.carNum = options.carNum
+
+    let day = getToday(new Date())
+    this.startDay = day.split(' ')[0]
+    this.startTime = day.split(' ')[1]
+    this.endDay = day.split(' ')[0]
+    this.endTime = day.split(' ')[1]
+    this.getFundSource()
   }
 }
 </script>

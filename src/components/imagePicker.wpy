@@ -13,8 +13,7 @@
   font-size: 20rpx;
   color: #1A1A1A;
   .image {
-    width: 55rpx;
-    height: 43rpx;
+    width: 45rpx;
   }
   .onlyImage {
     width: 100%;
@@ -29,7 +28,7 @@
     </view>
     <view wx:else class="image-picker">
       <view style="font-size: 20rpx; color: #333333; margin-top: 27rpx; margin-bottom: 24rpx;">兰州大学校园卡</view>
-      <image class="image" lazy-mode src="{{imageUrl}}" @tap="onItemClick" />
+      <image class="image" mode="widthFix" src="../images/camera.png" @tap="onItemClick" />
       <view style="font-size: 20rpx; color: #333333; margin-top: 35rpx; margin-bottom: 26rpx;">正面</view>
     </view>
   </view>
@@ -39,7 +38,7 @@ import wepy from 'wepy'
 import { HOST } from '../utils/http'
 export default class GridImage extends wepy.component {
   data = {
-    imageUrl: '../images/logo.png',
+    imageUrl: '',
     hasPicture: false
   }
   chooseImage() {

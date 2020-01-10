@@ -2,12 +2,27 @@
 .container {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
   background-color: #F2F6F9;
+}
+.stateOption {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 28rpx;
+  color: #666666;
+  margin: 20rpx;
+}
+.currentState {
+  color: #EB5902;
+  border-bottom: 1rpx solid #EB5902;
 }
 .orderList {
   background-color: #FFFFFF;
   width: 680rpx;
-  height: 240rpx;
+  height: 130rpx;
   margin: 14rpx 0;
   border-radius: 8rpx;
   padding: 27rpx 11rpx;
@@ -17,53 +32,7 @@
   flex-direction: row;
   font-size: 28rpx;
   color: #333333;
-  margin-bottom: 21rpx;
-}
-.progress {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  width: 529rpx;
-  height: 50rpx;
-  opacity: 0.3;
-  position: absolute;
-  right: 11rpx;
-}
-.currentProgress {
-  width: 515rpx;
-  height: 20rpx;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 18rpx;
-  box-shadow: 10rpx 0rpx 10rpx #3d3636;
-  border-radius: 10rpx;
-}
-.currentStateText {
-  width: 504rpx;
-  height: 20rpx;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-}
-.currentState {
-  width: 97rpx;
-  height: 10rpx;
-  background-color: #B3B3B3;
-  border-radius: 4rpx;
-  margin: 0 2rpx;
-}
-.stateText {
-  width: 97rpx;
-  font-size: 24rpx;
-  color: #333333;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  margin-bottom: 30rpx;
 }
 .click {
   position: absolute;
@@ -72,43 +41,30 @@
 </style>
 <template>
   <view class="container" style="height: {{windowHeight}}px">
-    <block wx:for="orders">
-      <view class="orderList">
-        <view class="content" style="position: relative;">
-          <view style="margin-right: 20rpx;">林雨申</view>
-          <view style="margin-right: 23rpx;">15693884578</view>
-          <view>兰州大学到会宁</view>
-          <view wx:if="{{pageState + '' === 1 + ''}}" catchtap="cancelOrder" class="click" style="color: #FF8F37;">撤单</view>
-        </view>
-        <view class="content" style="position: relative;">
-          <view style="margin-right: 35rpx;">紧凑型轿车</view>
-          <view style="margin-right: 20rpx;">捷达朗逸</view>
-          <view>2.3元/公里</view>
-          <view catchtap="clickInfo" class="click" style="color: #0091FF;">详情</view>
-        </view>
+    <view wx:if="{{isShow}}" class="stateOption">
+      <view catchtap="clickFilt(1)" class="{{currentState+'' === '1' ? 'currentState' : ''}}">待审核</view>
+      <view catchtap="clickFilt(2)" class="{{currentState+'' === '2' ? 'currentState' : ''}}" style="margin: 0 30rpx;">已审核</view>
+      <view catchtap="clickFilt(3)" class="{{currentState+'' === '3' ? 'currentState' : ''}}">用车中</view>
+      <view catchtap="clickFilt(4)" class="{{currentState+'' === '4' ? 'currentState' : ''}}" style="margin: 0 30rpx;">费用待确认</view>
+      <view catchtap="clickFilt(5)" class="{{currentState+'' === '5' ? 'currentState' : ''}}">已完成</view>
+    </view>
+    <block wx:for="{{orders}}">
+      <view class="orderList" @tap="clickInfo">
         <view class="content">
-          <image src="../../images/shijian.png" style="width: 40rpx; height: 40rpx; margin-right: 14rpx;" />
-          <text style="color: #666666; font-size: 24rpx;">2019.12.4 09:30 - 2019.12.5</text>
+          <view style="margin-right: 20rpx;">{{item.linkMan}}</view>
+          <view style="margin-right: 23rpx;">{{item.linkMobile}}</view>
+          <view>{{item.address}}到{{item.destination}}</view>
         </view>
-        <view wx:if="{{pageState + '' === 1 + ''}}" style="position: relative; width: 680rpx; height: 67rpx;">
-          <view class="progress">
-            <view style="width: 517rpx; height: 20rpx; border-radius: 5rpx;">
-              <view class="currentProgress">
-                <view class="currentState" style="background-color: #5BB531;"></view>
-                <view class="currentState" style="background-color: #FF4500;"></view>
-                <view class="currentState" style="background-color: #E7A100;"></view>
-                <view class="currentState" style="background-color: #BA2789;"></view>
-                <view class="currentState" style="background-color: #00B4C5;"></view>
-              </view>
-              <view class="currentStateText">
-                <view class="stateText" style="color: #5BB531">审核中</view>
-                <view class="stateText" style="color: #FF4500">已接单</view>
-                <view class="stateText" style="color: #E7A100">用车中</view>
-                <view class="stateText" style="color: #BA2789">费用确认</view>
-                <view class="stateText" style="color: #00B4C5">已完成</view>
-              </view>
-            </view>
+        <view class="content" style="margin-bottom: 10rpx; position: relative;">
+          <image src="../../images/shijian.png" style="width: 40rpx; height: 40rpx; margin-right: 14rpx;" />
+          <text style="color: #666666; font-size: 24rpx;">{{item.startTime}} - {{item.endTime}}</text>
+          <view style="color: #666666; font-size: 24rpx; margin-left: 15rpx;">
+            {{item.state+'' === '1' ? '待审核' : item.state+'' === '2' ? '已审核' : item.state+'' === '3' ? '用车中' : item.state+'' === '4' ? '费用待确认' : item.state+'' === '5' ? '已完成' : ''}}
           </view>
+          <!-- 若约车状态为 审核中 撤单 -->
+          <view wx:if="{{item.state + '' === '1'}}" catchtap="cancelOrder({{item.id}})" class="click" style="color: #FF8F37;">撤单</view>
+          <!-- 状态为 费用待确认 时 可直接查看费用单并确认 -->
+          <view wx:if="{{item.state + '' === '4'}}" catchtap="confirmFee" class="click" style="color: #FF8F37;">费用单</view>
         </view>
       </view>
     </block>
@@ -116,47 +72,85 @@
 </template>
 <script>
 import wepy from 'wepy'
-import { getUserOders } from '../../utils/api'
+import { getUserOders, editOrderState } from '../../utils/api'
 export default class orders extends wepy.page {
   config = {
     'navigationBarTitleText': '',
     'navigationBarBackgroundColor': '#F2F6F9'
   }
   data = {
+    isShow: false,
     windowHeight: null,
-    pageState: null,
+    currentState: null,
     orders: []
   }
   methods = {
-    cancelOrder() {
-      console.log('撤单')
+    clickFilt(state) {
+      this.currentState = state
+      let userId = 2
+      this.getOrders(userId, this.currentState)
+    },
+    // 撤单
+    cancelOrder(id) {
+      wx.showModal({
+        title: '温馨提示',
+        content: '将取消此次约车行为，是否继续？',
+        success: e => {
+          if (e.confirm) {
+            this.editToCancel(id)
+          }
+        }
+      })
+    },
+    // 确认费用
+    confirmFee() {
+
     },
     clickInfo(e) {
-      var detail = {}
       wx.navigateTo({
-        // url: `./orderDetail?detail` + detail + '&state=' + this.pageState
-        url: `./orderDetail?state=` + this.pageState
+        // url: `./orderDetail?detail` + detail + '&state=' + this.currentState
+        url: `./orderDetail?state=` + this.currentState
       })
     }
   }
+  // 获取订单列表
   async getOrders(userId, state) {
     let res = await getUserOders(userId, state)
-    this.orders = res.info
+    if (res.status === 1) {
+      this.orders = res.info.records
+      this.$apply()
+    }
+  }
+  async editToCancel(id) {
+    // 调用撤单接口 完成撤单操作
+    let res = await editOrderState(id, -1)
+    if(res.status === 1) {
+      wx.showToast({
+        title: '操作成功！',
+        icon: 'none'
+      })
+      this.getOrders(2, this.currentState)
+    }
   }
   onLoad(options) {
-    this.pageState = options.state
+    this.currentState = options.state
+    console.log(this.currentState, 'state')
     let userId = 2
-    if (options.state + '' === 1 + '') { // 我的订单
+    if (options.state + '' === '0') {
       wx.setNavigationBarTitle({ title: '我的订单' })
-    } else if (options.state + '' === 2 + '') { // 驳回订单
+    } else if (options.state + '' === '6') {
       wx.setNavigationBarTitle({ title: '驳回订单列表' })
-    } else if (options.state + '' === 3 + '') { // 历时约车
+    } else if (options.state + '' === '5') {
       wx.setNavigationBarTitle({ title: '历时约车列表' })
-    } else if (options.state + '' === 4 + '') { // 历史撤单
+    } else if (options.state + '' === '-1') {
       wx.setNavigationBarTitle({ title: '历史撤单列表' })
     }
     this.windowHeight = wx.getSystemInfoSync().windowHeight
-    this.getOrders(userId, options.state)
+    if (options.state === '0') {
+      this.isShow = true
+      this.currentState = 1
+    }
+    this.getOrders(userId, options.state === '0' ? '1' : options.state)
   }
 }
 </script>

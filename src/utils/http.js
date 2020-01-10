@@ -1,4 +1,4 @@
-const BASE_URL = 'http://192.168.31.196:8090'
+const BASE_URL = 'http://192.168.31.119:8090'
 // const BASE_URL = "https://wuye-service-landa.lz-cc.com";
 
 // get request
