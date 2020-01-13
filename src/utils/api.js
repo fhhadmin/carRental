@@ -513,4 +513,15 @@ export const updateOrderArea = async (orderId,areaId,regionOneId,regionTwoId) =>
     } catch (error) {
         return error
     }
-};
+}
+/**
+ * 查询订单详情
+ * @param {Number} id 订单id
+ */
+export const getOrderDetail = async (id) => {
+  try {
+    return await post('/wx/findApplyOrder', {id}, true)
+  } catch (error) {
+    return error
+  }
+}

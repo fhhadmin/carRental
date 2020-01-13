@@ -49,7 +49,7 @@
       <view catchtap="clickFilt(5)" class="{{currentState+'' === '5' ? 'currentState' : ''}}">已完成</view>
     </view>
     <block wx:for="{{orders}}">
-      <view class="orderList" @tap="clickInfo">
+      <view class="orderList"  @tap="clickInfo"  data-orders-item="{{item.id}}">
         <view class="content">
           <view style="margin-right: 20rpx;">{{item.linkMan}}</view>
           <view style="margin-right: 23rpx;">{{item.linkMobile}}</view>
@@ -108,9 +108,11 @@ export default class orders extends wepy.page {
 
     },
     clickInfo(e) {
+      console.log(e, 'eeeeeee')
+      var currentOrderId = e.currentTarget.dataset.ordersItem
       wx.navigateTo({
         // url: `./orderDetail?detail` + detail + '&state=' + this.currentState
-        url: `./orderDetail?state=` + this.currentState
+        url: `./orderDetail?state=` + this.currentState+'&id='+currentOrderId
       })
     }
   }
