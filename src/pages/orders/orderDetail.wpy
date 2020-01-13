@@ -214,11 +214,11 @@
     <view class="carInfo">
       <view class="carSelected">
         <image src="../../images/userCar.png" style="height: 50rpx; width: 50rpx;" />
-        <view class="textInfo">甘肃省公航旅骑车租赁有限公司</view>
+        <view class="textInfo">{{currentDetail.carrierName}}</view>
       </view>
       <view class="carSelected">
         <image src="../../images/goBack.png" style="height: 50rpx; width: 50rpx;" />
-        <view class="textInfo">城关校区 - 榆中校区</view>
+        <view class="textInfo">{{currentDetail.address?currentDetail.address:'暂无数据'}}</view>
       </view>
       <view class="carSelected">
         <image src="../../images/carType.png" style="height: 50rpx; width: 50rpx;" />
@@ -362,6 +362,7 @@
 </template>
 <script>
 import wepy from 'wepy'
+import { getOrderDetail } from '../../utils/api'
 export default class OrderDetail extends wepy.page {
   config = {
     'navigationBarTitleText': '订单详情',
@@ -370,7 +371,9 @@ export default class OrderDetail extends wepy.page {
   data = {
     count: 3,
     sex: '男',
-    currentPageState: null
+    currentPageState: null,
+    currentOrderId:'',
+    currentDetail:{}
   }
   components = {}
   methods = {
@@ -380,7 +383,19 @@ export default class OrderDetail extends wepy.page {
       })
     }
   }
+  // 查询订单详情接口
+  async orderDtail(id) {
+    let res = await getOrderDetail(id)
+    console.log(res, 'res.....')
+    if(res.status === 1) {
+      this.currentDetail = res.info
+    }
+    console.log(this.currentDetail, 'detaill.....')
+  }
   onLoad(options) {
+    this.currentOrderId = options.id
+    // 查询订单详情
+    this.orderDtail(this.currentOrderId)
     this.currentPageState = options.state
     if (options.state + '' === '0') { // 我的订单
 
