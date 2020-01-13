@@ -94,6 +94,36 @@ export const updatePassWd = async (mobile, msgCode, password) => {
 }
 
 /**
+ * 实名认证
+ * @param { Integer } userId 用户id
+ * @param { String } imgUrl 校园卡图片
+ * @param { String } name 职工姓名
+ * @param { String } sex 性别
+ * @param { String } institutionName 机构名称
+ * @param { String } cardNum 卡号
+ * @param { String } effectiveDate 有效期
+ */
+export const Certification = async (userId, imgUrl, name, sex, institutionName, cardNum, effectiveDate) => {
+  try {
+    return await post('/wx/addUserAc', { userId, imgUrl, name, sex, institutionName, cardNum, effectiveDate }, false)
+  } catch (error) {
+    return error
+  }
+}
+
+/**
+ * 查询个人认证信息
+ * @param { Integer } userId 用户id
+ */
+export const getCertification = async (userId) => {
+  try {
+    return await get('/wx/findUserAc', { userId }, true)
+  } catch (error) {
+    return error
+  }
+}
+
+/**
  * @description 查询全部的承运单位
  */
 export const getAllCarrier = async (state) => {
@@ -129,9 +159,9 @@ export const getCarType = async () => {
 /**
  * @description 查询已选车辆详情
  */
-export const getCarDetail = async (carTypeId, carrierId, routeTypeId) => {
+export const getCarDetail = async (carrierId, routeTypeId) => {
   try {
-    return await get('/base/queryCarDetail', {carTypeId: carTypeId, carrierId: carrierId, routeTypeId: routeTypeId}, false)
+    return await get('/base/queryCarDetail', {carrierId: carrierId, routeTypeId: routeTypeId}, false)
   } catch (error) {
     return error
   }

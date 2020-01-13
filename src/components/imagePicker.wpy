@@ -75,7 +75,7 @@ export default class GridImage extends wepy.component {
           cardDetail.map(e => {
             cardInfo[e.word_name] = e.word
           })
-          that.sendData(cardInfo)
+          that.sendData(cardInfo, data.info.fileUrl)
         } else {
           console.log('上传失败')
         }
@@ -85,8 +85,8 @@ export default class GridImage extends wepy.component {
       }
     })
   }
-  sendData(cardInfo) {
-    this.$emit('getCardDetail', cardInfo)
+  sendData(cardInfo, imgUrl) {
+    this.$emit('getCardDetail', cardInfo, imgUrl)
   }
   methods = {
     onItemClick() {

@@ -164,7 +164,7 @@
       <drawer :clientHeight.sync="clientHeight" :isOpen.sync="isOpen"></drawer>
       <view class="barTitle">兰州大学约车信息管理系统</view>
     </view>
-    <view class="notice">
+    <view wx:if="{{alreadyAc}}" class="notice">
       <image src="../images/notice.png" mode="widthFix" class="notice_icon" />
       <view style="display: flex; flex-direction: row;">您好，您还未实名认证！<view class="approve" @tap="gotoApprove">立即认证</view></view>
     </view>
@@ -244,13 +244,14 @@
 <script>
 import wepy from 'wepy'
 import defaultCounter from '../components/defaultCounter'
-import { getAllCarrier, getAllPath, getCarType, getCarDetail } from '../utils/api.js'
+import { getAllCarrier, getAllPath, getCarDetail, getCertification } from '../utils/api.js'
 import drawer from '../components/drawer'
 export default class HomePage extends wepy.page {
   config = {
     navigationStyle: 'custom'
   }
   data = {
+    alreadyAc: false,
     index1: null,
     index2: null,
     index3: null,
@@ -360,22 +361,30 @@ export default class HomePage extends wepy.page {
     }
   }
   // 获取所选车型的详情
-  async carDetail(unitId, routeId, carId) {
-    let res = await getCarDetail(carId, unitId, routeId)
-    if(res.status === 1 && res.info.length) {
-      this.mileagePrice = res.info[0].mileagePrice ? res.info[0].mileagePrice / 100 : 0
-      this.dayPrice = res.info[0].dayPrice ? res.info[0].dayPrice / 100 : 0
-      this.halfDayPrice = res.info[0].harfDayPrice ? res.info[0].harfDayPrice / 100 : 0
-      this.amount = res.info[0].amount ? res.info[0].amount : 0
-      this.carDetailId = res.info[0].id
+  async carDetail(unitId, routeId) {
+    let res = await getCarDetail(unitId, routeId)
+    if (res.status === 1 && res.info.length) {
+      res.info.map(e => {
+        let types = {
+          id: e.carTypeId,
+          name: e.carTypeName,
+          carDetailId: e.id,
+          mileagePrice: e.mileagePrice ? e.mileagePrice / 100 : 0,
+          dayPrice: e.dayPrice ? e.dayPrice / 100 : 0,
+          halfDayPrice: e.harfDayPrice ? e.harfDayPrice / 100 : 0,
+          amount: e.amount ? e.amount : 0
+        }
+        this.carType.push(types)
+      })
     } else {
+      this.carType = []
       this.mileagePrice = null
       this.dayPrice = null
       this.halfDayPrice = null
-      this.amount = 0
+      this.amount = null
       this.carDetailId = null
+      this.index3 = null
     }
-
     this.$apply()
   }
   async onLoad() {
@@ -389,26 +398,31 @@ export default class HomePage extends wepy.page {
       path.info.unshift({ id: '', name: '无' })
       this.allPath = path.info
     }
-    let types = await getCarType()
-    if (types.status === 1) {
-      this.carType = types.info
+    let certificate = await getCertification(2)
+    console.log(certificate)
+    if (certificate.info.length > 0) {
+      this.alreadyAc = true
     }
     this.$apply()
   }
   watch = {
     'carrierId'(e) {
-      if (e && this.carTypeId) {
-        this.carDetail(this.carrierUnit[e].id, this.pathId ? this.pathId : '', this.carTypeId)
+      if (e) {
+        this.carDetail(this.carrierUnit[e - 1].id, this.pathId ? this.pathId : '')
       }
     },
     'index2'(e) {
-      if (e && this.carrierId && this.carTypeId) {
-        this.carDetail(this.carrierId, this.allPath[e].id, this.carTypeId)
+      if (e && this.carrierId) {
+        this.carDetail(this.carrierId, this.allPath[e].id)
       }
     },
     'index3'(e) {
-      if (this.carrierId) {
-        this.carDetail(this.carrierId, this.pathId ? this.pathId : '', this.carType[e].id)
+      if (e) {
+        this.mileagePrice = this.carType[e].mileagePrice
+        this.dayPrice = this.carType[e].dayPrice
+        this.halfDayPrice = this.carType[e].halfDayPrice
+        this.amount = this.carType[e].amount
+        this.carDetailId = this.carType[e].carDetailId
       }
     }
   }

@@ -117,6 +117,7 @@
 <script>
 import wepy from 'wepy'
 import imagePicker from '../components/imagePicker'
+import { Certification } from '../utils/api'
 export default class Authentication extends wepy.page {
   config = {
     'navigationBarTitleText': '实名认证',
@@ -128,7 +129,9 @@ export default class Authentication extends wepy.page {
     institutionName: null,
     cardNum: null,
     cardNo: null,
-    effectiveDate: null
+    effectiveDate: null,
+    prevPage: null,
+    imgUrl: null
   }
   components = {
     imagePicker: imagePicker
@@ -163,17 +166,29 @@ export default class Authentication extends wepy.page {
     dateInput(e) {
       this.effectiveDate = e.detail.value
     },
-    getCardDetail(e) {
+    getCardDetail(e, img) {
       this.name = e.name
       this.sex = e.sex
       this.institutionName = e.institutionName
       this.cardNum = e.cardNum
       this.cardNo = e.cardNo
       this.effectiveDate = e.effectiveDate
+      this.imgUrl = img
     },
-    toAuthentication() {
-      if (this.name && this.sex && this.institutionName && this.cardNo && this.cardNum && this.effectiveDate) {
-
+    async toAuthentication() {
+      let userId = 2
+      if (userId && this.imgUrl && this.name && this.sex && this.institutionName && this.cardNum && this.effectiveDate) {
+        console.log('此页面从', this.prevPage.route, '跳转来')
+        let res = await Certification(userId, this.imgUrl, this.name, this.sex, this.institutionName, this.cardNum, this.effectiveDate)
+        if (res.status === 1) {
+          wx.showToast({
+            title: '认证成功!',
+            icon: 'none'
+          })
+          wx.redirectTo({
+            url: './homePage'
+          })
+        }
       } else {
         wx.showToast({
           title: '请完善相关信息后提交',
@@ -181,6 +196,10 @@ export default class Authentication extends wepy.page {
         })
       }
     }
+  }
+  onLoad() {
+    let page = getCurrentPages()
+    this.prevPage = page[page.length - 2]
   }
 }
 </script>
