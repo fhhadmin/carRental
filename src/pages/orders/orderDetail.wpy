@@ -176,15 +176,41 @@
   color: #ffffff;
   width: 384rpx;
   height: 90rpx;
-  margin: 30rpx 0;
+  /* margin: 30rpx 0; */
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
 }
+.orderState-container{
+  width:100%;
+}
+.button-container{
+  width: 100%;
+  height:300rpx;
+  margin-top:30rpx;
+  margin-bottom:10rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
+.button-container button{
+  width:230rpx;
+  height:60rpx;
+  font-size:25rpx;
+  color:rgba(255,255,255,1);
+  font-family:Source Han Sans CN;
+}
+.reject-button{
+  background-color: rgba(179, 179, 179, 1);
+}
+.agree-button{
+  background-color: rgba(255, 143, 55, 1);
+}
 </style>
 <template>
-  <view class="container">
+  <view class="container" style="height:{{clientHeight}}rpx;background-color:{{}}">
     <view class="carInfo">
       <view class="carSelected">
         <image src="../../images/userCar.png" style="height: 50rpx; width: 50rpx;" />
@@ -310,15 +336,26 @@
           <text style="font-size: 28rpx; color: #333333;">司机姓名：</text>
           <view class="driver">韩商言</view>
         </view>
-        <view style="display: flex; flex-direction: row; margin-bottom: 36rpx;">
-          <text style="font-size: 28rpx; color: #333333;">联系电话：</text>
-          <view class="driver">17693186884</view>
-        </view>
-        <view style="display: flex; flex-direction: row; margin-bottom: 36rpx;">
-          <text style="font-size: 28rpx; color: #333333;">车 牌 号：</text>
-          <view class="driver">MQ0942</view>
+        <view style="margin-left: 55rpx;">
+          <view style="display: flex; flex-direction: row; margin-bottom: 36rpx;">
+            <text style="font-size: 28rpx; color: #333333;">司机姓名：</text>
+            <view class="driver">韩商言</view>
+          </view>
+          <view style="display: flex; flex-direction: row; margin-bottom: 36rpx;">
+            <text style="font-size: 28rpx; color: #333333;">联系电话：</text>
+            <view class="driver">17693186884</view>
+          </view>
+          <view style="display: flex; flex-direction: row; margin-bottom: 36rpx;">
+            <text style="font-size: 28rpx; color: #333333;">车 牌 号：</text>
+            <view class="driver">MQ0942</view>
+          </view>
         </view>
       </view>
+      <button class="confirmBtn">订单费用确认</button>
+    </view>
+    <view wx:else class="button-container">
+        <button class="reject-button" @tap="rejectFunction">驳回</button>
+        <button class="agree-button">同意</button>
     </view>
     <button wx:if="{{currentPageState + '' === '1'}}" class="confirmBtn" @tap="confirmCost">订单费用确认</button>
   </view>
@@ -335,6 +372,7 @@ export default class OrderDetail extends wepy.page {
     sex: '男',
     currentPageState: null
   }
+  components = {}
   methods = {
     confirmCost() {
       wx.navigateTo({
