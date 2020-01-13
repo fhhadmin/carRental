@@ -22,7 +22,9 @@ setStore(store)
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/office/taxiHailingList',
       'pages/orders/orderDetail',
+      'pages/office/personalCenter',
       'pages/homePage',
       'pages/login',
       'pages/register',

@@ -1,0 +1,116 @@
+<template>
+  <view class="personal-container" style="height: {{clientHeight}}px">
+    <view class="personal-header">
+      <image src="../../images/personal.png" mode="widthFix"/>
+      <view class="personal-header-avatar">
+        <image src="../../images/login_backgroundImage.png"/>
+        <text class="personal-header-name">李白</text>
+      </view>
+    </view>
+    <view class="body-text">常见帮助</view>
+    <view class="peronal-footer">
+      <view class="peronal-footer-item">
+        <image src="../../images/use.png"/>
+        <text class="footer-text">使用说明</text>
+      </view>
+      <view class="peronal-footer-item">
+        <image src="../../images/institution.png"/>
+        <text class="footer-text">机构修改</text>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class Authentication extends wepy.page {
+  config = {
+    'navigationBarTitleText': '个人中心',
+    'navigationBarBackgroundColor': '#F2F6F9'
+  }
+  data = {
+    clientHeight: 0
+  }
+  components = {}
+  methods = {}
+  onLoad() {
+    this.clientHeight = wx.getSystemInfoSync().windowHeight
+  }
+}
+</script>
+<style>
+.personal-container{
+  height:1200rpx;
+  background-color:#F2F6F9;
+  display:flex;
+  flex-direction: column;
+}
+.personal-header{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width:100%;
+}
+.personal-header image{
+  width:100%;
+}
+.personal-header-avatar{
+  position: absolute;
+  top:30rpx;
+  left:328rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.personal-header-avatar image{
+  width:94rpx;
+  height: 94rpx;
+  border-radius: 50%;
+  border:2rpx solid #FFFFFF;
+  margin-bottom:6rpx;
+}
+.personal-header-name{
+  width:100%;
+  text-align: center;
+  font-size:25rpx;
+  color:#FFFFFF;
+}
+.body-text{
+  background-color: #FFFFFF;
+  width:100%;
+  height:80rpx;
+  font-size:24rpx;
+  font-family:Source Han Sans CN;
+  font-weight:500;
+  color:rgba(26,26,26,1);
+  line-height:44rpx;
+  padding-left:20rpx;
+}
+.peronal-footer{
+  display: flex;
+  flex-direction: row;
+  width:100%;
+  height: 138rpx;
+  background-color: #FFFFFF;
+}
+.peronal-footer-item{
+  width:50%;
+  height: 80%;
+  border-right:2rpx solid rgba(205, 219, 229, 1);
+  margin: 2% 0 2% 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.peronal-footer image{
+  width:38rpx;
+  height: 38rpx;
+  margin-bottom:6rpx;
+}
+.footer-text{
+  font-size:21rpx;
+  font-family:Source Han Sans CN;
+  font-weight:400;
+  color:rgba(26,26,26,1);
+}
+</style>

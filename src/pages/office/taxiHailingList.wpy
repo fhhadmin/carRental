@@ -1,0 +1,99 @@
+<template>
+  <view class="taxi-container" style="height: {{clientHeight}}px">
+    <view class="taxi-list-row" wx:for="{{array}}" wx:for-item="item" wx:key=" id ">
+      <view class="corner">{{item.id+1}}</view>
+      <view class="message">
+        <text class="item">林玉深</text>
+        <text class="item">15693884578</text>
+        <text class="item">兰州大学到会宁</text>
+      </view>
+      <view class="message">
+        <text class="item">紧凑型轿车</text>
+        <text class="item">捷达朗逸</text>
+        <text class="item">2.3元/公里</text>
+        <text class="check" @tap="checkFunction">审核</text>
+      </view>
+      <view class="message">
+        <image src="../../images/shijian.png"/>
+        <text class="item-date">2019.12.4</text>
+        <text class="item-date">09:30-2019.12.5</text>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class Authentication extends wepy.page {
+  config = {
+    'navigationBarTitleText': '约车列表',
+    'navigationBarBackgroundColor': '#F2F6F9'
+  }
+  data = {
+    clientHeight: 0,
+    array: [{ id: 0 }, {id: 1}, {id: 2}]
+  }
+  components = {}
+  methods = {
+    checkFunction () {
+      wx.navigateTo({
+        url: '/pages/orders/orderDetail?fatherPage=约车列表'
+      })
+    }
+  }
+  onLoad() {
+    this.clientHeight = wx.getSystemInfoSync().windowHeight
+  }
+}
+</script>
+<style>
+.taxi-container{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color:#F2F6F9;
+}
+.taxi-list-row{
+  margin-bottom:10rpx;
+  width: 686rpx;
+  height: 168rpx;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10rpx;
+  background-color: rgba(255, 255, 255, 1);
+}
+.corner{
+  width:29rpx;
+  height:29rpx;
+  background-color: rgba(250, 204, 76, 1);
+  border-bottom-right-radius: 50%;
+  border-top-left-radius: 10rpx;
+  font-size: 21rpx;
+  text-align: center;
+  color: rgba(255,255,255,1);
+}
+.message{
+  margin-top:8rpx;
+  display: flex;
+  flex-direction: row;
+  font-size: 25rpx;
+  color:rgba(51, 51, 51, 1);
+  padding-left:32rpx;
+}
+.message .item{
+  margin-right:24rpx;
+}
+.check{
+  font-size: 25rpx;
+  color:rgba(0, 145, 255, 1);
+  position: absolute;
+  right:56rpx;
+}
+.message image{
+  width:31rpx;
+  height: 31rpx;
+}
+.message .item-date{
+ color:rgba(102, 102, 102, 1);
+}
+</style>
