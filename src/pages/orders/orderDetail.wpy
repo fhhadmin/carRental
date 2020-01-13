@@ -228,13 +228,13 @@
       </view>
     </view>
     <view class="priceList">
-      <view>紧凑型轿车</view>
-      <view style="margin: 0 15rpx; color: #EEEEEE;">|</view>
       <view>2.3元/公里</view>
       <view style="margin: 0 15rpx; color: #EEEEEE;">|</view>
       <view>580元/天</view>
       <view style="margin: 0 15rpx; color: #EEEEEE;">|</view>
       <view>300元/半天</view>
+      <view style="margin: 0 15rpx; color: #EEEEEE;">|</view>
+      <view>剩余<text style="color: #FF8F37;">5</text>辆</view>
     </view>
     <view class="selfInfo">
       <view style="position: relative; width: 100%; height: 120rpx;">
@@ -296,35 +296,45 @@
       </view>
       <view style="margin-left: 64rpx; font-size: 28rpx; color: #333333;">去会宁办事</view>
     </view>
-    <view wx:if="{{showState}}" class="orderState-container">
-      <view class="selfInfo">
-        <view style="position: relative; width: 100%; height: 100rpx;">
-          <view class="titleText">订单状态：</view>
-        </view>
-        <view style="position: relative; width: 680rpx; height: 60rpx;">
-          <view class="progress">
-            <view style="width: 517rpx; height: 20rpx; border-radius: 5rpx;">
-              <view class="currentProgress">
-                <view class="currentState" style="background-color: #FF8F37;"></view>
-                <view class="currentState" style="background-color: red;"></view>
-                <view class="currentState" style="background-color: blue;"></view>
-                <view class="currentState" style="background-color: green;"></view>
-                <view class="currentState" style="background-color: #FF8F37;"></view>
-              </view>
-              <view class="currentStateText">
-                <view class="stateText">审核中</view>
-                <view class="stateText">已接单</view>
-                <view class="stateText">用车中</view>
-                <view class="stateText">费用确认</view>
-                <view class="stateText">已完成</view>
-              </view>
+    <view wx:if="{{currentPageState + '' === '1' || currentPageState + '' === '3'}}" class="selfInfo">
+      <view style="position: relative; width: 100%; height: 100rpx;">
+        <view class="titleText">订单状态：</view>
+      </view>
+      <view style="position: relative; width: 680rpx; height: 60rpx;">
+        <view class="progress">
+          <view style="width: 517rpx; height: 20rpx; border-radius: 5rpx;">
+            <view class="currentProgress">
+              <view class="currentState" style="background-color: #5BB531;"></view>
+              <view class="currentState" style="background-color: #FF4500;"></view>
+              <view class="currentState" style="background-color: #E7A100;"></view>
+              <view class="currentState" style="background-color: #BA2789;"></view>
+              <view class="currentState" style="background-color: #00B4C5;"></view>
+            </view>
+            <view class="currentStateText">
+              <view class="stateText">审核中</view>
+              <view class="stateText">已接单</view>
+              <view class="stateText">用车中</view>
+              <view class="stateText">费用确认</view>
+              <view class="stateText">已完成</view>
             </view>
           </view>
         </view>
       </view>
-      <view class="selfInfo">
-        <view style="position: relative; width: 100%; height: 100rpx;">
-          <view class="titleText">司机信息：</view>
+    </view>
+    <view wx:if="{{currentPageState + '' === '2'}}" class="selfInfo" style="margin-bottom: 50rpx;">
+      <view style="position: relative; width: 100%; height: 100rpx;">
+        <view class="titleText">驳回原因：</view>
+      </view>
+      <view style="margin-left: 64rpx; font-size: 28rpx; color: #333333;">事情原委存在虚假</view>
+    </view>
+    <view wx:if="{{currentPageState + '' === '1' || currentPageState + '' === '3'}}" class="selfInfo">
+      <view style="position: relative; width: 100%; height: 100rpx;">
+        <view class="titleText">司机信息：</view>
+      </view>
+      <view style="margin-left: 55rpx;">
+        <view style="display: flex; flex-direction: row; margin-bottom: 36rpx;">
+          <text style="font-size: 28rpx; color: #333333;">司机姓名：</text>
+          <view class="driver">韩商言</view>
         </view>
         <view style="margin-left: 55rpx;">
           <view style="display: flex; flex-direction: row; margin-bottom: 36rpx;">
@@ -347,6 +357,7 @@
         <button class="reject-button" @tap="rejectFunction">驳回</button>
         <button class="agree-button">同意</button>
     </view>
+    <button wx:if="{{currentPageState + '' === '1'}}" class="confirmBtn" @tap="confirmCost">订单费用确认</button>
   </view>
 </template>
 <script>
@@ -359,39 +370,26 @@ export default class OrderDetail extends wepy.page {
   data = {
     count: 3,
     sex: '男',
-    showState: false,
-    clientHeight: 0,
-    currentColor: ''
+    currentPageState: null
   }
   components = {}
   methods = {
-    rejectFunction () {
-      wx.showModal({
-        title: '驳回理由',
-        content: '经费来源不明,请查证后再次申请用车',
-        success: function(res) {
-          if (res.confirm) {
-            // 确定
-          } else {
-            // 取消
-          }
-        }
+    confirmCost() {
+      wx.navigateTo({
+        url: './costConfirm'
       })
     }
   }
-  onLoad(event) {
-    this.clientHeight = wx.getSystemInfoSync().windowHeight
-    if (event.fatherPage === '约车列表') {
-      this.data.showState = false
-    } else {
-      this.data.showState = true
-    }
-  }
-  onReady() {
-    if (!this.data.showState) {
-      wx.setNavigationBarTitle({
-        title: '申请用车详情'
-      })
+  onLoad(options) {
+    this.currentPageState = options.state
+    if (options.state + '' === '0') { // 我的订单
+
+    } else if (options.state + '' === '6') { // 驳回订单
+
+    } else if (options.state + '' === '5') { // 历时约车
+
+    } else if (options.state + '' === '-1') { // 历史撤单
+
     }
   }
 }

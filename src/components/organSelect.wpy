@@ -1,0 +1,85 @@
+<style lang="less" scoped>
+.mobileInput {
+  width: 485rpx;
+  padding-left: 15rpx;
+  border-bottom: 2rpx solid #E6E6E6;
+}
+</style>
+
+<template>
+  <view>
+    <picker mode="multiSelector" @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" value="{{multiIndex}}" range="{{organization}}">
+      <view class="mobileInput">
+        {{organization[0][multiIndex[0]]}}，{{organization[1][multiIndex[1]]}}
+      </view>
+    </picker>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { getFirstOrgan, getSecondOrgan } from '../utils/api'
+export default class OrganSelect extends wepy.component {
+  data = {
+    organization: [[], []],
+    organList: [],
+    twoOrganList: [],
+    organOneList: [],
+    multiIndex: [0, 0],
+    defaultId: null
+  }
+  methods = {
+    bindMultiPickerChange (e) {
+      this.multiIndex = e.detail.value
+      let twoOrganId = this.twoOrganList[this.multiIndex[1]] ? this.twoOrganList[this.multiIndex[1]]['id'] : ''
+      this.$emit('organSelect', this.organList[this.multiIndex[0]]['id'], twoOrganId)
+    },
+    bindMultiPickerColumnChange(e) {
+      this.multiIndex[e.detail.column] = e.detail.value
+      switch (e.detail.column) {
+        case 0:
+          let oneList = this.organList
+          let compareId = oneList[e.detail.value]['id']
+          let compareName = oneList[e.detail.value]['name']
+          this.searchTwoOrgan(compareId, compareName)
+          break
+      }
+    }
+  }
+  async searchTwoOrgan(defaultId, defaultName, e) {
+    if (defaultId + '') {
+      let res = await getSecondOrgan(defaultId)
+      let twoArr = []
+      if (res.status === 1) {
+        this.twoOrganList = res.info
+        twoArr = res.info.map((item) => {
+          return item.name
+        })
+        if (res.info.length === 0) {
+          twoArr.unshift('无')
+        }
+        this.organization = [this.organOneList, twoArr]
+      }
+      this.$apply()
+      if (e) {
+        this.$emit('organSelect', this.defaultId, this.defaultName, this.twoOrganList[0]['id'], this.twoOrganList[0]['name'])
+      }
+    }
+  }
+  async onLoad() {
+    let res = await getFirstOrgan()
+    if (res.status === 1) {
+      this.organList = res.info
+      this.organOneList = res.info.map(item => {
+        return item.name
+      })
+      this.organization = [this.organOneList, []]
+      this.defaultId = this.organList[0]['id']
+      this.defaultName = this.organList[0]['name']
+      if (this.defaultId) {
+        this.searchTwoOrgan(this.defaultId, this.defaultName, 1)
+      }
+    }
+    this.$apply()
+  }
+}
+</script>

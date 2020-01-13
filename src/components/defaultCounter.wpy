@@ -10,7 +10,8 @@
   border-radius: 4rpx;
 }
 .countChange {
-  font-size: 18rpx;
+  font-size: 22rpx;
+  color: #000000;
   width: 14rpx;
   height: 14rpx;
   display: flex;
@@ -20,12 +21,12 @@
   margin: 9rpx 16rpx;
 }
 .number {
-  width: 24rpx;
-  height: 24rpx;
+  width: 28rpx;
+  height: 28rpx;
   background-color: #00BE6E;
   border-radius: 2rpx;
   color: #FFFFFF;
-  font-size: 20rpx;
+  font-size: 28rpx;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -35,9 +36,9 @@
 </style>
 <template>
   <view class="counter">
-    <view class="countChange" @tap="addNum"> + </view>
-    <view class="number">{{currentNum}}</view>
     <view class="countChange" @tap="reduceNum"> - </view>
+    <view class="number">{{currentNum}}</view>
+    <view class="countChange" @tap="addNum"> + </view>
   </view>
 </template>
 <script>

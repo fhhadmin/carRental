@@ -2,8 +2,6 @@
 .container {
   display: flex;
   flex-direction: column;
-  /* justify-content: center;
-  align-items: center; */
 }
 .topTip {
   display: flex;
@@ -11,10 +9,8 @@
   margin: 23rpx 60rpx 40rpx 46rpx;
 }
 .tip {
-  width: 38rpx;
-  height: 30rpx;
-  margin-right: 7rpx;
-  margin-bottom: 24rpx;
+  width: 50rpx;
+  margin: 5rpx 7rpx 24rpx 0;
 }
 .infoContainer {
   display: flex;
@@ -24,7 +20,8 @@
   margin-top: 23rpx;
 }
 .sexBox {
-  background-color: #D6D6D6;
+  /* background-color: #D6D6D6; */
+  background-color: rgba(242,246,249,1);
   width: 604rpx;
   height: 60rpx;
   border:1px solid rgba(214, 214, 214, 1);
@@ -36,8 +33,18 @@
   padding-left: 21rpx;
   color: #999999;
 }
+.sexSelect {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.sexSize {
+  width: 36rpx;
+  margin-left: 5rpx;
+}
 .infoInput {
-  background-color: #D6D6D6;
+  /* background-color: #D6D6D6; */
+  background-color: rgba(242,246,249,1);
   width: 604rpx;
   height: 60rpx;
   border:1px solid rgba(214, 214, 214, 1);
@@ -47,7 +54,7 @@
   color: #999999;
 }
 .holderClass {
-  color: rgb(189, 174, 174);
+  color: #999999;
 }
 .editTip {
   font-size: 26rpx;
@@ -58,7 +65,7 @@
 .bottomTip {
   font-size: 26rpx;
   color: #FF8F37;
-  margin: 11rpx 200rpx 0 58rpx;
+  margin: 11rpx 180rpx 0 58rpx;
 }
 .btn {
   width: 400rpx;
@@ -76,7 +83,7 @@
 <template>
   <view class="container">
     <view class="topTip">
-      <image src="../images/tip.png" class="tip" />
+      <image mode="widthFix" src="../images/tip.png" class="tip" />
       <view style="font-size: 26rpx; color: #1A1A1A;">
         请务必上传本人校园卡，我们将根据您提供的实名信息认证，决定是否给您提供用车服务。
       </view>
@@ -84,27 +91,27 @@
     <imagePicker @getCardDetail.user="getCardDetail"></imagePicker>
     <view class="editTip">如扫描信息有误可手动修改</view>
     <view class="infoContainer">
-      <input class="infoInput" data-name="name" placeholder="持卡人姓名" placeholder-class="holderClass" />
+      <input class="infoInput" data-name="name" value="{{name}}" @input="nameInput" placeholder="持卡人姓名" placeholder-class="holderClass" />
       <view class="sexBox">
         <view style="margin-right: 62rpx;">性别</view>
-        <view style="margin-right: 33rpx;" @tap="clickMan">
+        <view class="sexSelect" style="margin-right: 33rpx;" catchtap="clickMan">
           <text>男</text>
-          <image wx:if="{{sex === '男'}}" src="../images/manSelected.png" style="width: 36rpx; height: 35rpx;" />
-          <image wx:else src="../images/man.png" style="width: 36rpx; height: 35rpx;" />
+          <image wx:if="{{sex === '男'}}" mode="widthFix" src="../images/manSelected.png" class="sexSize" />
+          <image wx:else mode="widthFix" src="../images/man.png" class="sexSize" />
         </view>
-        <view @tap="clickWoman">
+        <view class="sexSelect" @tap="clickWoman">
           <text>女</text>
-          <image wx:if="{{sex === '女'}}" src="../images/womanSelect.png" style="width: 36rpx; height: 35rpx;" />
-          <image wx:else src="../images/woman.png" style="width: 36rpx; height: 35rpx;" />
+          <image wx:if="{{sex === '女'}}" mode="widthFix" src="../images/womanSelect.png" class="sexSize" />
+          <image wx:else mode="widthFix" src="../images/woman.png" class="sexSize" />
         </view>
       </view>
-      <input class="infoInput" data-name="insititutionName" placeholder="持卡人所在机构名称" placeholder-class="holderClass" />
-      <input class="infoInput" data-name="cardNum" placeholder="卡号" placeholder-class="holderClass" />
-      <input class="infoInput" data-name="cardNo" placeholder="卡编号" placeholder-class="holderClass" />
-      <input class="infoInput" data-name="effectiveDate" placeholder="有效日期" placeholder-class="holderClass" />
-      <view class="bottomTip">如需修改认证信息可前往个人中心进行修改</view>
-      <button class="btn">确 定</button>
+      <input class="infoInput" value="{{institutionName}}" @input="insInput" data-name="institutionName" placeholder="持卡人所在机构名称" placeholder-class="holderClass" />
+      <input class="infoInput" value="{{cardNum}}" @input="numInput" data-name="cardNum" placeholder="卡号" placeholder-class="holderClass" />
+      <input class="infoInput" value="{{cardNo}}" @input="noInput" data-name="cardNo" placeholder="卡编号" placeholder-class="holderClass" />
+      <input class="infoInput" value="{{effectiveDate}}" @input="dateInput" data-name="effectiveDate" placeholder="有效日期" placeholder-class="holderClass" />
     </view>
+    <text class="bottomTip">如需修改认证信息可前往个人中心进行修改</text>
+    <button class="btn" @tap="toAuthentication">确 定</button>
   </view>
 </template>
 <script>
@@ -116,25 +123,63 @@ export default class Authentication extends wepy.page {
     'navigationBarBackgroundColor': '#FACC4C'
   }
   data = {
-
+    name: null,
+    sex: null,
+    institutionName: null,
+    cardNum: null,
+    cardNo: null,
+    effectiveDate: null
   }
   components = {
     imagePicker: imagePicker
   }
   methods = {
     clickMan(e) {
-      this.sex = '男'
+      if (this.sex === '男') {
+        this.sex = ''
+      } else {
+        this.sex = '男'
+      }
     },
     clickWoman(e) {
-      this.sex = '女'
+      if (this.sex === '女') {
+        this.sex = ''
+      } else {
+        this.sex = '女'
+      }
+    },
+    nameInput(e) {
+      this.name = e.detail.value
+    },
+    insInput(e) {
+      this.institutionName = e.detail.value
+    },
+    numInput(e) {
+      this.cardNum = e.detail.value
+    },
+    noInput(e) {
+      this.cardNo = e.detail.value
+    },
+    dateInput(e) {
+      this.effectiveDate = e.detail.value
     },
     getCardDetail(e) {
       this.name = e.name
       this.sex = e.sex
-      this.insitutionName = e.insitutionName
+      this.institutionName = e.institutionName
       this.cardNum = e.cardNum
       this.cardNo = e.cardNo
       this.effectiveDate = e.effectiveDate
+    },
+    toAuthentication() {
+      if (this.name && this.sex && this.institutionName && this.cardNo && this.cardNum && this.effectiveDate) {
+
+      } else {
+        wx.showToast({
+          title: '请完善相关信息后提交',
+          icon: 'none'
+        })
+      }
     }
   }
 }

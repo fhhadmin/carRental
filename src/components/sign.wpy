@@ -1,0 +1,164 @@
+<style lang="less" scoped>
+.painter {
+  padding: 20rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.canvas {
+  background-color: white;
+  box-shadow: 0 0 20rpx 4rpx #e1e1e1;
+  border-radius: 10rpx;
+  width: 584rpx;
+  height: 450rpx;
+  margin-top: 20rpx;
+}
+
+.btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.btn-clear {
+  width: 120rpx;
+  height: 60rpx;
+  border: 1rpx solid #b1b1b1;
+  color: #414141;
+  font-size: 28rpx;
+  line-height: 60rpx;
+  text-align: center;
+  border-radius: 10rpx;
+  margin-top: 20rpx;
+  margin-right: 10rpx;
+}
+
+.btn-save {
+  width: 120rpx;
+  height: 60rpx;
+  background-color: #094baa;
+  color: white;
+  font-size: 28rpx;
+  line-height: 60rpx;
+  text-align: center;
+  border-radius: 10rpx;
+  margin-top: 20rpx;
+}
+
+.btn-save:active {
+  background-color: #094191;
+}
+</style>
+<template>
+  <view class="painter">
+    <view wx:if="{{hasImg}}">
+      <image src="{{imgUrl}}" style="width: 372rpx; height: 196rpx;" />
+    </view>
+    <view wx:else>
+      <text style="margin-top:40rpx; font-size: 28rpx; color: #333333">签字板(手指签字)：</text>
+      <canvas id="canvas" class="canvas" canvas-id="signCanvas" @touchstart='touchstart' @touchmove='touchmove'></canvas>
+      <view class="btn">
+        <view class="btn-clear" @tap='clear'>清 空</view>
+        <view class="btn-save" @tap='submit'>提 交</view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { HOST } from '../utils/http'
+// import {addSign,getMySelfSign} from '../utils/api'
+
+export default class Sign extends wepy.page {
+  config = {
+    navigationBarTitleText: '反邪防邪签字',
+    navigationBarTextStyle: 'white',
+    backgroundTextStyle: 'dark',
+    navigationBarBackgroundColor: '#094baa',
+    disableScroll: true
+  }
+  data = {
+    context: null,
+    width: 0,
+    height: 0,
+    userInfo: null,
+    imgUrl: null,
+    hasImg: false
+  }
+  methods = {
+    touchstart(e) {
+      this.context.moveTo(e.changedTouches[0].x, e.changedTouches[0].y)
+    },
+    touchmove(e) {
+      this.context.lineTo(e.changedTouches[0].x, e.changedTouches[0].y)
+      this.context.stroke()
+      this.context.draw(true)
+      this.context.moveTo(e.changedTouches[0].x, e.changedTouches[0].y)
+    },
+    submit() {
+      let self = this
+      wepy.showLoading({
+        title: '签名生成中', // 提示的内容,
+        mask: true, // 显示透明蒙层，防止触摸穿透,
+        success: res => {}
+      })
+
+      wx.canvasToTempFilePath({
+        canvasId: 'signCanvas',
+        width: self.width,
+        height: self.height,
+        destWidth: 400,
+        destHeight: 300,
+        fileType: 'jpg',
+        success(res) {
+          wx.uploadFile({
+            url: `${HOST}/base/upload`,
+            filePath: res.tempFilePath,
+            name: 'file',
+            success: function (res) {
+              wx.hideLoading()
+              if (res.statusCode === 200) {
+                let data = JSON.parse(res.data)
+                if (data.status === 1) {
+                  wx.showToast({
+                    title: '签名成功',
+                    icon: 'none'
+                  })
+                  self.imgUrl = data.info
+                  self.hasImg = true
+                }
+                self.$apply()
+              }
+            },
+            fail: function (e) {
+              wx.hideLoading()
+            }
+          })
+        }
+      }, this)
+    },
+    clear() {
+      this.context.clearRect(0, 0, this.width, this.height)
+      this.context.draw()
+    }
+  }
+
+  async onLoad() {
+    this.userInfo = wx.getStorageSync('login_user')
+    this.$apply()
+    this.context = wx.createCanvasContext('signCanvas')
+    let query = wx.createSelectorQuery()
+    query.select('#canvas').boundingClientRect()
+    let self = this
+    query.exec(function(rect) {
+      let width = rect[0].width
+      let height = rect[0].height
+      self.width = width
+      self.height = height
+    })
+    this.context.setStrokeStyle('#414141')
+    this.context.setLineWidth(2)
+    this.context.setFontSize(20)
+  }
+}
+</script>

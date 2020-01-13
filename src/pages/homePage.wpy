@@ -33,9 +33,9 @@
 .notice {
   width: 662rpx;
   background-color: #FFF8DB;
-  padding: 4rpx 4rpx 4rpx 24rpx;
+  padding: 4rpx 4rpx 4rpx 20rpx;
   color: #4D4D4D;
-  font-size: 18rpx;
+  font-size: 24rpx;
   border-radius: 16rpx;
   display: flex;
   flex-direction: row;
@@ -43,8 +43,7 @@
 }
 .notice_icon {
   width: 24rpx;
-  height: 24rpx;
-  margin: 0 14rpx;
+  margin-right: 14rpx;
 }
 .approve {
   color: #FC9F37
@@ -54,22 +53,28 @@
 }
 .homePanel {
   width: 100%;
-  height: 180rpx;
-  margin: 10rpx 0
+  margin-top: 10rpx;
 }
 .pickers {
-  margin: 21rpx 92rpx;
+  margin: 10rpx 55rpx;
+  margin-bottom: 5rpx;
 }
 .pickerContainer {
   display: flex;
   flex-direction: row;
   align-items: center;
   height: 60rpx;
-  margin: 21rpx 0;
+  margin: 20rpx 0;
+}
+.nabla {
+  width: 24rpx;
+  position: absolute;
+  right: 30rpx;
+  top: 20rpx;
 }
 .options {
-  width: 484rpx;
-  font-size: 20rpx;
+  width: 524rpx;
+  font-size: 28rpx;
   color: #1A1A1A;
   padding: 0 10rpx;
   margin: 0 10rpx;
@@ -78,30 +83,32 @@
 }
 .icon {
   width: 44rpx;
-  height: 44rpx;
 }
 .priceList {
-  width: 660rpx;
-  height: 80rpx;
+  width: 680rpx;
+  height: 60rpx;
   display: flex;
   flex-direction: row;
   justify-content: center;
-  line-height: 80rpx;
   color: #1A1A1A;
-  font-size: 24rpx;
+  font-size: 28rpx;
+  line-height: 60rpx;
+  box-shadow: 5rpx 0rpx 5rpx #d6d3d3;
+  margin-bottom: 10rpx;
 }
 .carNum {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin-left: 37rpx;
+  margin-left: 35rpx;
 }
 .text {
   margin: 0 5rpx
 }
 .carInfo {
-  margin: 0 22rpx;
+  margin: 0 12rpx;
+  color: #E6E6E6;
 }
 .applyCar {
   width: 600rpx;
@@ -120,7 +127,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 39rpx;
+  margin-top: 36rpx;
 }
 .row {
   display: flex;
@@ -140,10 +147,10 @@
   margin: 0 20rpx 20rpx 0;
 }
 .describeFont {
-  font-size: 30rpx;
+  font-size: 36rpx;
   color: #333333;
   font-weight: 400;
-  line-height: 44rpx;
+  margin-top: 37rpx;
 }
 </style>
 <template>
@@ -158,65 +165,76 @@
       <view class="barTitle">兰州大学约车信息管理系统</view>
     </view>
     <view class="notice">
-      <image src="../images/notice.png" class="notice_icon" />
+      <image src="../images/notice.png" mode="widthFix" class="notice_icon" />
       <view style="display: flex; flex-direction: row;">您好，您还未实名认证！<view class="approve" @tap="gotoApprove">立即认证</view></view>
     </view>
-    <image src="../images/home.png" class="homePanel" />
+    <view class="homePanel">
+      <swiper autoplay circular style="height: 240rpx;">
+        <block wx:for="{{items}}" wx:key="{{index}}">
+          <swiper-item>
+            <image mode="asceptFill" src="{{item}}" style="width: 100%; height: 100%;" />
+          </swiper-item>
+        </block>
+      </swiper>
+    </view>
     <view class="pickers">
       <view class="pickerContainer">
-        <image src="../images/userCar.png" class="icon" />
-        <picker range="{{carrierUnit}}" @change="bindPickerChange1" range-key="name">
+        <image src="../images/userCar.png" mode="widthFix" class="icon" />
+        <picker range="{{carrierUnit}}" @change="bindPickerChange1" range-key="name" style="position: relative;">
           <view class="options" wx:if="{{index1}}">{{carrierUnit[index1].name}}</view>
-          <view class="options" wx:else>选择承运单位</view>
+          <view class="options" wx:else style="font-size: #333333;">选择承运单位</view>
+          <image src="../images/nabla.png" mode="widthFix" class="nabla" />
         </picker>
       </view>
       <view class="pickerContainer">
-        <image src="../images/goBack.png" class="icon" />
-        <picker range="{{allPath}}" @change="bindPickerChange2" range-key="name">
+        <image src="../images/goBack.png" mode="widthFix" class="icon" />
+        <picker range="{{allPath}}" @change="bindPickerChange2" range-key="name" style="position: relative;">
           <view class="options" wx:if="{{index2}}">{{allPath[index2].name}}</view>
-          <view class="options" wx:else>选择行驶路线</view>
+          <view class="options" wx:else style="font-size: #333333;">选择行驶路线</view>
+          <image src="../images/nabla.png" mode="widthFix" class="nabla" />
         </picker>
       </view>
       <view class="pickerContainer">
-        <image src="../images/carType.png" class="icon" />
-        <picker range="{{carType}}" @change="bindPickerChange3" range-key="name">
+        <image src="../images/carType.png" mode="widthFix" class="icon" />
+        <picker range="{{carType}}" @change="bindPickerChange3" range-key="name" style="position: relative;">
           <view class="options" wx:if="{{index3}}" style="width: 260rpx;">{{carType[index3].name}}</view>
-          <view class="options" wx:else style="width: 260rpx;">选择车型</view>
+          <view class="options" wx:else style="width: 260rpx; font-size: #333333;">选择车型</view>
+          <image src="../images/nabla.png" mode="widthFix" class="nabla" />
         </picker>
         <view class="carNum">
-          <text style="font-size: 20rpx; color: #333333;">车辆数：</text>
+          <text style="font-size: 28rpx; color: #333333;">车辆数：</text>
           <defaultCounter @getCurrentNum.user="getCurrentNum"></defaultCounter>
         </view>
       </view>
     </view>
-    <view class="priceList">
-      <view class="text">紧凑型轿车</view>
-      <view class="text" class="carInfo">|</view>
-      <view class="text">2.3元/公里</view>
-      <view class="text" class="carInfo">|</view>
-      <view class="text">580元/天</view>
-      <view class="text" class="carInfo">|</view>
-      <view class="text">300元/半天</view>
+    <view wx:if="{{mileagePrice}}" class="priceList">
+      <view class="text">{{mileagePrice}}元/公里</view>
+      <view class="carInfo">|</view>
+      <view class="text">{{dayPrice}}元/天</view>
+      <view class="carInfo">|</view>
+      <view class="text">{{halfDayPrice}}元/半天</view>
+      <view class="carInfo">|</view>
+      <view class="text">剩余<text style="color: #FF8F37;">{{amount}}</text>辆</view>
     </view>
-    <button class="applyCar">立即申请用车</button>
+    <button class="applyCar" @tap="toApplyUse">立即申请用车</button>
     <view class="bottomContainer">
       <view class="row">
         <view class="bottomPanel" @tap="clickMyOrders">
-          <image src="../images/order.png" style="width: 68rpx; height: 71rpx;" />
+          <image src="../images/order.png" mode="widthFix" style="width: 68rpx;" />
           <text class="describeFont">我的订单</text>
         </view>
         <view class="bottomPanel" @tap="clcikRejectOrders">
-          <image src="../images/reject.png" style="width: 68rpx; height: 71rpx;" />
+          <image src="../images/reject.png" mode="widthFix" style="width: 68rpx;" />
           <text class="describeFont">驳回订单</text>
         </view>
       </view>
       <view class="row">
         <view class="bottomPanel" @tap="clickHistoryList">
-          <image src="../images/historyOrder.png" style="width: 68rpx; height: 71rpx;" />
+          <image src="../images/historyOrder.png" mode="widthFix" style="width: 68rpx;" />
           <text class="describeFont">历史约车</text>
         </view>
         <view class="bottomPanel" @tap="clickHistoryBack">
-          <image src="../images/history.png" style="width: 68rpx; height: 71rpx;" />
+          <image src="../images/history.png" mode="widthFix" style="width: 68rpx;" />
           <text class="describeFont">历史撤单</text>
         </view>
       </view>
@@ -236,12 +254,21 @@ export default class HomePage extends wepy.page {
     index1: null,
     index2: null,
     index3: null,
-    carrierUnit: null,
-    allPath: null,
-    carType: null,
+    carTypeId: null,
+    pathId: null,
+    carrierId: null,
+    carrierUnit: [],
+    allPath: [],
+    carType: [],
+    mileagePrice: null,
+    halfDayPrice: null,
+    dayPrice: null,
+    amount: null,
+    carDetailId: null,
     carNum: 0,
     clientHeight: 0,
-    isOpen: 'close'
+    isOpen: 'close',
+    items: ['../images/panel3.png', '../images/home.png', '../images/panel2.png']
   }
   components = {
     defaultCounter: defaultCounter,
@@ -262,45 +289,94 @@ export default class HomePage extends wepy.page {
         url: './authentication'
       })
     },
+    toApplyUse() {
+      if (this.carrierId && this.carTypeId) {
+        if (this.carNum > 0) {
+          if (this.amount > this.carNum) {
+            wx.navigateTo({
+              url: './carApplication?carrientId=' + this.carrierId + '&carDetailId=' + this.carDetailId + '&carNum=' + this.carNum
+            })
+          } else {
+            wx.showToast({
+              title: '该车当前数量不足，请选择其他车型',
+              icon: 'none'
+            })
+          }
+        } else {
+          wx.showToast({
+            title: '请选择需要的车的数量',
+            icon: 'none'
+          })
+        }
+      } else {
+        wx.showToast({
+          title: '请选择承运单位或车型',
+          icon: 'none'
+        })
+      }
+    },
+    // 选择承运单位
     bindPickerChange1(e) {
       this.index1 = e.detail.value
+      this.carrierId = this.carrierUnit[e.detail.value]['id']
     },
+    // 选择行驶路线
     bindPickerChange2(e) {
       this.index2 = e.detail.value
+      this.pathId = this.allPath[e.detail.value]['id']
     },
+    // 选择车型
     bindPickerChange3(e) {
       this.index3 = e.detail.value
+      this.carTypeId = this.carType[e.detail.value]['id']
     },
+    // 要申请的车辆数
     getCurrentNum(e) {
       this.carNum = e
     },
+    // 我的订单
     clickMyOrders() {
       wx.navigateTo({
-        url: './orders/myOrders'
+        url: `./orders/orders?state=` + 0
       })
     },
+    // 驳回订单
     clcikRejectOrders() {
       wx.navigateTo({
-        url: './orders/rejectOrders'
+        url: `./orders/orders?state=` + 6
       })
     },
+    // 历时约车列表
     clickHistoryList() {
       wx.navigateTo({
-        url: './orders/historyOrders'
+        url: `./orders/orders?state=` + 5
       })
     },
+    // 历史撤单
     clickHistoryBack() {
       wx.navigateTo({
-        url: './orders/historyBackOrders'
+        url: `./orders/orders?state=` + '-1'
       })
     }
   }
+  // 获取所选车型的详情
   async carDetail(unitId, routeId, carId) {
-    unitId = unitId ? unitId : ''
-    routeId = routeId ? routeId : ''
-    carId = carId ? carId : ''
     let res = await getCarDetail(carId, unitId, routeId)
-    console.log(res, './././')
+    if(res.status === 1 && res.info.length) {
+      this.mileagePrice = res.info[0].mileagePrice ? res.info[0].mileagePrice / 100 : 0
+      this.dayPrice = res.info[0].dayPrice ? res.info[0].dayPrice / 100 : 0
+      this.halfDayPrice = res.info[0].harfDayPrice ? res.info[0].harfDayPrice / 100 : 0
+      this.amount = res.info[0].amount ? res.info[0].amount : 0
+      this.carDetailId = res.info[0].id
+    } else {
+      this.mileagePrice = null
+      this.dayPrice = null
+      this.halfDayPrice = null
+      this.amount = 0
+      this.carDetailId = null
+    }
+
+    this.$apply()
   }
   async onLoad() {
     this.clientHeight = wx.getSystemInfoSync().windowHeight
@@ -310,31 +386,29 @@ export default class HomePage extends wepy.page {
     }
     let path = await getAllPath()
     if (path.status === 1) {
+      path.info.unshift({ id: '', name: '无' })
       this.allPath = path.info
     }
     let types = await getCarType()
     if (types.status === 1) {
       this.carType = types.info
     }
+    this.$apply()
   }
   watch = {
-    'index1'(e) {
-      if (this.index2 || this.index3) {
-        let routeId = this.index2 ? this.allPath[this.index2].id : ''
-        let carId = this.index3 ? this.carType[this.index3].id : ''
-        this.carDetail(this.carrierUnit[e].id, routeId, carId)
+    'carrierId'(e) {
+      if (e && this.carTypeId) {
+        this.carDetail(this.carrierUnit[e].id, this.pathId ? this.pathId : '', this.carTypeId)
       }
     },
     'index2'(e) {
-      if (this.index1) {
-        let carId = this.index3 ? this.carType[this.index3].id : ''
-        this.carDetail(this.carrierUnit[this.index1].id, this.allPath[e].id, carId)
+      if (e && this.carrierId && this.carTypeId) {
+        this.carDetail(this.carrierId, this.allPath[e].id, this.carTypeId)
       }
     },
     'index3'(e) {
-      if (this.index1) {
-        let routeId = this.index2 ? this.allPath[this.index2].id : ''
-        this.carDetail(this.carrierUnit[this.index1].id, routeId, this.carType[e].id)
+      if (this.carrierId) {
+        this.carDetail(this.carrierId, this.pathId ? this.pathId : '', this.carType[e].id)
       }
     }
   }

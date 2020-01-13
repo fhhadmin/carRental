@@ -126,7 +126,7 @@ checkbox .wx-checkbox-input {
   <view class="container">
     <image src='../images/login_backgroundImage.png' class="bg" mode='widthFill' />
     <text class="title">兰州大学约车信息管理系统</text>
-    <image src="../images/logo.png" class="logo" />
+    <image src="../images/logo1.png" class="logo" />
     <view class="tabs">
       <text class="tab-item {{currentPage===0?'active':''}}" @tap="onTabClick" data-index="0">老 师</text>
       <text class="tab-item {{currentPage===1?'active':''}}" @tap="onTabClick" style="margin-left: 120rpx;" data-index="1">办 公 室</text>
