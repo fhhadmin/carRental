@@ -30,7 +30,9 @@ export default class extends wepy.app {
       'pages/orders/orders',
       'pages/orders/orderDetail',
       'pages/orders/costConfirm',
-      'pages/authentication'
+      'pages/authentication',
+
+      'pages/office/personalCenter'
     ],
     window: {
       backgroundTextStyle: 'light',

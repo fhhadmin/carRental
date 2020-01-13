@@ -51,10 +51,10 @@
   flex-direction: column;
 }
 .selfDetail {
-  /* display: flex;
+  display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center; */
+  justify-content: flex-start;
+  align-items: flex-start;
   width: 100%;
   font-size: 28rpx;
   color: #333333;
@@ -116,7 +116,7 @@
   width: 40rpx;
   height: 40rpx;
   margin: 15rpx 0;
-  margin-right: 620rpx;
+  /* margin-right: 620rpx; */
   margin-left: 110rpx;
 }
 .progress {
@@ -185,6 +185,15 @@
 .orderState-container{
   width:100%;
 }
+.editApply {
+  width: 220rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  color: #ffffff;
+  font-size: 28rpx;
+  margin-top: 50rpx;
+  background-color: rgba(255, 143, 55, 1)
+}
 .button-container{
   width: 100%;
   height:300rpx;
@@ -198,7 +207,7 @@
 .button-container button{
   width:230rpx;
   height:60rpx;
-  font-size:25rpx;
+  font-size:28rpx;
   color:rgba(255,255,255,1);
   font-family:Source Han Sans CN;
 }
@@ -296,7 +305,7 @@
       </view>
       <view style="margin-left: 64rpx; font-size: 28rpx; color: #333333;">去会宁办事</view>
     </view>
-    <view wx:if="{{currentPageState + '' === '1' || currentPageState + '' === '3'}}" class="selfInfo">
+    <view wx:if="{{currentPageState+''==='1'||currentPageState+''==='2'||currentPageState+''==='3'||currentPageState+''==='4'||currentPageState+''==='5'}}" class="selfInfo">
       <view style="position: relative; width: 100%; height: 100rpx;">
         <view class="titleText">订单状态：</view>
       </view>
@@ -321,13 +330,7 @@
         </view>
       </view>
     </view>
-    <view wx:if="{{currentPageState + '' === '2'}}" class="selfInfo" style="margin-bottom: 50rpx;">
-      <view style="position: relative; width: 100%; height: 100rpx;">
-        <view class="titleText">驳回原因：</view>
-      </view>
-      <view style="margin-left: 64rpx; font-size: 28rpx; color: #333333;">事情原委存在虚假</view>
-    </view>
-    <view wx:if="{{currentPageState + '' === '1' || currentPageState + '' === '3'}}" class="selfInfo">
+    <view wx:if="{{currentPageState+''==='4'||currentPageState+''==='5'}}" class="selfInfo">
       <view style="position: relative; width: 100%; height: 100rpx;">
         <view class="titleText">司机信息：</view>
       </view>
@@ -352,6 +355,13 @@
         </view>
       </view>
       <button class="confirmBtn">订单费用确认</button>
+    </view>
+    <view wx:if="{{currentPageState+''==='6'}}" class="selfInfo" style="margin-bottom: 50rpx;">
+      <view style="position: relative; width: 100%; height: 100rpx;">
+        <view class="titleText">驳回原因：</view>
+      </view>
+      <view style="margin-left: 64rpx; font-size: 28rpx; color: #333333;">事情原委存在虚假</view>
+      <button class="editApply">去修改</button>
     </view>
     <view wx:else class="button-container">
         <button class="reject-button" @tap="rejectFunction">驳回</button>
