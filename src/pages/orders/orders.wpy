@@ -59,8 +59,9 @@
           <image src="../../images/shijian.png" style="width: 40rpx; height: 40rpx; margin-right: 14rpx;" />
           <text style="color: #666666; font-size: 24rpx;">{{item.startTime}} - {{item.endTime}}</text>
           <view style="color: #666666; font-size: 24rpx; margin-left: 15rpx;">
-            {{item.state+'' === '1' ? '待审核' : item.state+'' === '2' ? '已审核' : item.state+'' === '3' ? '用车中' : item.state+'' === '4' ? '费用待确认' : item.state+'' === '5' ? '已完成' : ''}}
+            {{item.state+'' === '1' ? '待审核' : item.state+'' === '2' ? '已审核' : item.state+'' === '3' ? '用车中' : item.state+'' === '4' ? '费用待确认' : item.state+'' === '5' ? '已完成' : item.state+'' === '6' ? '已驳回' : ''}}
           </view>
+          <view wx:if="{{item.state+''==='6' || item.state+''==='5'}}" style="font-size: 22rpx; color: #0091FF; position: absolute; right: 25rpx;">详情</view>
           <!-- 若约车状态为 审核中 撤单 -->
           <view wx:if="{{item.state + '' === '1'}}" catchtap="cancelOrder({{item.id}})" class="click" style="color: #FF8F37;">撤单</view>
           <!-- 状态为 费用待确认 时 可直接查看费用单并确认 -->
@@ -136,7 +137,6 @@ export default class orders extends wepy.page {
   }
   onLoad(options) {
     this.currentState = options.state
-    console.log(this.currentState, 'state')
     let userId = 2
     if (options.state + '' === '0') {
       wx.setNavigationBarTitle({ title: '我的订单' })

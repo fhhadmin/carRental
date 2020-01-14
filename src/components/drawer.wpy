@@ -47,7 +47,7 @@
           <image src="../images/smallHistory.png" style="width: 36rpx; height: 39rpx; margin-right: 26rpx;" />
           <text style="color: #1A1A1A; font-size: 24rpx;">历史约车</text>
         </view>
-        <view class="list">
+        <view class="list" @tap="clickSelfCenter">
           <image src="../images/personalCenter.png" style="width: 36rpx; height: 39rpx; margin-right: 26rpx;" />
           <text style="color: #1A1A1A; font-size: 24rpx;">个人中心</text>
         </view>
@@ -95,6 +95,11 @@ export default class Drawer extends wepy.page {
     clickHistoryBack() {
       wx.navigateTo({
         url: './orders/historyBackOrders'
+      })
+    },
+    clickSelfCenter() {
+      wx.navigateTo({
+        url: './office/personalCenter'
       })
     }
   }
