@@ -364,14 +364,13 @@
 </template>
 <script>
 import wepy from 'wepy'
+import { getOrderDetail } from '../../utils/api'
 export default class OrderDetail extends wepy.page {
   config = {
     'navigationBarTitleText': '订单详情',
     'navigationBarBackgroundColor': '#FACC4C'
   }
   data = {
-    count: 3,
-    sex: '男',
     currentPageState: null
   }
   components = {}
@@ -386,7 +385,7 @@ export default class OrderDetail extends wepy.page {
   async orderDtail(id) {
     let res = await getOrderDetail(id)
     console.log(res, 'res.....')
-    if(res.status === 1) {
+    if (res.status === 1) {
       this.currentDetail = res.info
     }
     this.$apply()
@@ -396,6 +395,7 @@ export default class OrderDetail extends wepy.page {
     this.currentOrderId = options.id
     // 查询订单详情
     this.orderDtail(this.currentOrderId)
+    console.log(options.state, 'state')
     if (options.state + '' === '0') { // 我的订单
 
     } else if (options.state + '' === '6') { // 驳回订单

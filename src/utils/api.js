@@ -161,7 +161,7 @@ export const getCarType = async () => {
  */
 export const getCarDetail = async (carrierId, routeTypeId) => {
   try {
-    return await get('/base/queryCarDetail', {carrierId: carrierId, routeTypeId: routeTypeId}, false)
+    return await post('/base/queryCarDetail', {carrierId: carrierId, routeTypeId: routeTypeId}, false)
   } catch (error) {
     return error
   }
