@@ -312,17 +312,17 @@
         <view class="progress">
           <view style="width: 517rpx; height: 20rpx; border-radius: 5rpx;">
             <view class="currentProgress">
-              <view class="currentState" style="background-color: #5BB531;"></view>
-              <view class="currentState" style="background-color: #FF4500;"></view>
-              <view class="currentState" style="background-color: #E7A100;"></view>
-              <view class="currentState" style="background-color: #BA2789;"></view>
-              <view class="currentState" style="background-color: #00B4C5;"></view>
+              <view class="currentState" style="background-color: {{currentDetail.state >= 1?'#5BB531':'#B3B3B3'}}"></view>
+              <view class="currentState" style="background-color: {{currentDetail.state >= 2?'#FF4500':'#B3B3B3'}}"></view>
+              <view class="currentState" style="background-color: {{currentDetail.state >= 3?'#E7A100;':'#B3B3B3'}}"></view>
+              <view class="currentState" style="background-color: {{currentDetail.state >= 4?'#BA2789;':'#B3B3B3'}}"></view>
+              <view class="currentState" style="background-color: {{currentDetail.state >= 5?'#00B4C5;':'#B3B3B3'}}"></view>
             </view>
-            <view class="currentStateText">
+            <view class="currentStateText" style="margin-bottom: 30rpx;">
               <view class="stateText">审核中</view>
               <view class="stateText">已审核</view>
               <view class="stateText">用车中</view>
-              <view class="stateText">费用确认</view>
+              <view class="stateText" style="width: 120rpx;">费用待确认</view>
               <view class="stateText">已完成</view>
             </view>
           </view>
@@ -402,16 +402,6 @@ export default class OrderDetail extends wepy.page {
     this.currentOrderId = options.id
     // 查询订单详情
     this.orderDtail(this.currentOrderId)
-    console.log(options.state, 'state')
-    if (options.state + '' === '0') { // 我的订单
-
-    } else if (options.state + '' === '6') { // 驳回订单
-
-    } else if (options.state + '' === '5') { // 历时约车
-
-    } else if (options.state + '' === '-1') { // 历史撤单
-
-    }
   }
 }
 </script>
