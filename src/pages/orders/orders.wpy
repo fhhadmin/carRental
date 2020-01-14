@@ -108,11 +108,18 @@ export default class orders extends wepy.page {
 
     },
     clickInfo(e) {
-      var currentOrderId = e.currentTarget.dataset.ordersItem
-      var userId = e.currentTarget.dataset.userId
-      wx.navigateTo({
-        url: './orderDetail?id=' + currentOrderId + '&userId=' + userId
-      })
+      console.log(e, 123)
+      let currentOrderId = e.currentTarget.dataset.ordersItem
+      if (this.currentState + '' === '5') {
+        wx.navigateTo({
+          url: './orderAllDetail?id=' + currentOrderId
+        })
+      } else {
+        var userId = e.currentTarget.dataset.userId
+        wx.navigateTo({
+          url: './orderDetail?id=' + currentOrderId + '&userId=' + userId
+        })
+      }
     }
   }
   // 获取订单列表

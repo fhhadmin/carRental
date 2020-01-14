@@ -76,7 +76,7 @@
   width: 524rpx;
   font-size: 28rpx;
   color: #1A1A1A;
-  padding: 0 10rpx;
+  padding: 0 15rpx;
   margin: 0 10rpx;
   padding-bottom: 11rpx;
   border-bottom: solid #E6E6E6 2rpx;
