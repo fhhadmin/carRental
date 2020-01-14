@@ -111,7 +111,7 @@ export default class orders extends wepy.page {
       var currentOrderId = e.currentTarget.dataset.ordersItem
       wx.navigateTo({
         // url: `./orderDetail?detail` + detail + '&state=' + this.currentState
-        url: `./orderDetail?state=` + this.currentState+'&id='+currentOrderId
+        url: './orderDetail?id=' + currentOrderId
       })
     }
   }
@@ -126,7 +126,7 @@ export default class orders extends wepy.page {
   async editToCancel(id) {
     // 调用撤单接口 完成撤单操作
     let res = await editOrderState(id, -1)
-    if(res.status === 1) {
+    if (res.status === 1) {
       wx.showToast({
         title: '操作成功！',
         icon: 'none'
