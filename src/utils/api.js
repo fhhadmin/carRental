@@ -337,3 +337,14 @@ export const getOrderDetail = async (id) => {
     return error
   }
 }
+/**
+ * 查询用用车申请单对应的费用单
+ * @param {Number} applyOrderId 订单id
+ */
+export const getOrderCost = async (applyOrderId) => {
+  try {
+    return await get('/wx/findCostOrder', {applyOrderId}, true)
+  } catch (error) {
+    return error
+  }
+}
