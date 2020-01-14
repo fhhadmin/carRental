@@ -353,13 +353,15 @@
           </view>
         </view>
       </view>
-      <button class="confirmBtn">订单费用确认</button>
+      <!-- <button class="confirmBtn">订单费用确认</button> -->
     </view>
     <!-- <view wx:else class="button-container">
         <button class="reject-button" @tap="rejectFunction">驳回</button>
         <button class="agree-button">同意</button>
     </view> -->
-    <button wx:if="{{currentPageState + '' === '1'}}" class="confirmBtn" @tap="confirmCost">订单费用确认</button>
+    <view class="selfInfo">
+      <button wx:if="{{currentPageState + '' === '4'}}" class="confirmBtn" style="margin-top:40rpx;" @tap="confirmCost">订单费用确认</button>
+    </view>
   </view>
 </template>
 <script>
@@ -371,27 +373,32 @@ export default class OrderDetail extends wepy.page {
     'navigationBarBackgroundColor': '#FACC4C'
   }
   data = {
-    currentPageState: null
+    count: 3,
+    sex: '男',
+    currentPageState: null,
+    currentDetail: {},
+    userId: '2',
+    currentOrderId: '3'
   }
   components = {}
   methods = {
     confirmCost() {
       wx.navigateTo({
-        url: './costConfirm'
+        url: './costConfirm?userId=' + this.userId + '&orderId=' + this.currentOrderId
       })
     }
   }
   // 查询订单详情接口
   async orderDtail(id) {
     let res = await getOrderDetail(id)
-    console.log(res, 'res.....')
     if (res.status === 1) {
       this.currentDetail = res.info
+      this.currentPageState = this.currentDetail.state
     }
     this.$apply()
-    this.currentPageState = this.currentDetail.state
   }
   onLoad(options) {
+    this.userId = options.userId
     this.currentOrderId = options.id
     // 查询订单详情
     this.orderDtail(this.currentOrderId)

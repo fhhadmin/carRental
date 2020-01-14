@@ -98,19 +98,18 @@
     <view class="confirmTitle">订单确认：</view>
     <view class="content">
       <view class="confirmContent">
-        <text style="font-size: 28rpx; color: #333333; line-height: 50rpx;">行驶里程：800km</text>
-        <text style="font-size: 28rpx; color: #333333; line-height: 50rpx;">租赁费用：￥1256</text>
-        <text style="font-size: 28rpx; color: #333333; line-height: 50rpx;">停车费用：￥400</text>
-        <text style="font-size: 28rpx; color: #333333; line-height: 50rpx;">过路费用：￥206</text>
-        <text style="font-size: 28rpx; color: #333333; line-height: 50rpx;">其他费用：￥209</text>
+        <text style="font-size: 28rpx; color: #333333; line-height: 50rpx;">租赁费用：￥{{currentOrderCost.fare?(currentOrderCost.fare)/100:''}}</text>
+        <text style="font-size: 28rpx; color: #333333; line-height: 50rpx;">停车费用：￥{{currentOrderCost.parkFee?(currentOrderCost.parkFee)/100:''}}</text>
+        <text style="font-size: 28rpx; color: #333333; line-height: 50rpx;">过路费用：￥{{currentOrderCost.roadToll?(currentOrderCost.roadToll)/100:''}}</text>
+        <text style="font-size: 28rpx; color: #333333; line-height: 50rpx;">其他费用：￥{{currentOrderCost.other?(currentOrderCost.other)/100:''}}</text>
       </view>
     </view>
-    <view wx:if="{{notes.length === 0}}" style="font-size: 28rpx; color: #333333; margin: 37rpx 0 27rpx 54rpx;">
+    <view wx:if="{{fileUrl.length === 0}}" style="font-size: 28rpx; color: #333333; margin: 37rpx 0 27rpx 54rpx;">
       费用票据：暂无票据
     </view>
     <view wx:else>
       <view style="font-size: 28rpx; color: #333333; margin: 37rpx 0 27rpx 54rpx;">费用票据：</view>
-      <block wx:for="{{notes}}">
+      <block wx:for="{{fileUrl}}">
         <image src="{{item}}" style="width: 411rpx; height: 251rpx; margin-left: 54rpx; margin-bottom: 17rpx;" />
       </block>
     </view>
@@ -151,6 +150,7 @@
 <script>
 import wepy from 'wepy'
 import sign from '../../components/sign'
+import { getOrderCost } from '../../utils/api'
 export default class CostConfirm extends wepy.page {
   config = {
     'navigationBarTitleText': '订单费用确认'
@@ -163,7 +163,11 @@ export default class CostConfirm extends wepy.page {
       '../../images/noStar.png',
       '../../images/noStar.png'
     ],
-    notes: ['../../images/fapiao1.jpg', '../../images/fapiao2.jpg']
+    notes: ['../../images/fapiao1.jpg', '../../images/fapiao2.jpg'],
+    userId: '',
+    orderId: '',
+    currentOrderCost: {},
+    fileUrl: []
   }
   components = {
     sign: sign
@@ -190,6 +194,23 @@ export default class CostConfirm extends wepy.page {
         for (let i = 0; i <= index; i++) {
           this.stars[i] = '../../images/star.png'
         }
+      }
+    }
+  }
+  onLoad(options) {
+    this.userId = options.userId
+    this.orderId = options.orderId
+    this.getOrderCostHandle(this.orderId)
+  }
+  async getOrderCostHandle() {
+    let res = await getOrderCost(this.orderId)
+    console.log(res.info, 'info.....')
+    if (res.status === 1) {
+      this.currentOrderCost = res.info
+      if (this.currentOrderCost.fileUrl) {
+        this.fileUrl = this.currentOrderCost.fileUrl.split(',')
+      } else {
+        this.fileUrl = []
       }
     }
   }
