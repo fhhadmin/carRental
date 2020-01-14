@@ -320,7 +320,7 @@ export const getEvaluateContent = async (applyOrderId) => {
  */
 export const confirmCostOrder = async (userId, costOrderId, nameUrl) => {
   try {
-    return await get('/wx/updateCostOrder', { userId, costOrderId, nameUrl }, false)
+    return await post('/wx/updateCostOrder', { userId, costOrderId, nameUrl }, false)
   } catch (error) {
     return error
   }
@@ -344,6 +344,20 @@ export const getOrderDetail = async (id) => {
 export const getOrderCost = async (applyOrderId) => {
   try {
     return await get('/wx/findCostOrder', {applyOrderId}, true)
+  } catch (error) {
+    return error
+  }
+}
+/**
+ * 添加反馈信息
+ * @param {Number} applyOrderId 申请单ID
+ * @param {String} content 反馈存疑信息
+ * @param {Number} costOrderId 费用单ID
+ * @param {Number} userId 用户ID
+ */
+export const addFeedback = async (applyOrderId, content, costOrderId, userId) => {
+  try {
+    return await post('/wx/addFeedback', {applyOrderId, content, costOrderId, userId}, true)
   } catch (error) {
     return error
   }

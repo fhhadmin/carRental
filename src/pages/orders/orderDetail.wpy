@@ -384,7 +384,7 @@ export default class OrderDetail extends wepy.page {
   methods = {
     confirmCost() {
       wx.navigateTo({
-        url: './costConfirm?userId=' + this.userId + '&orderId=' + this.currentOrderId
+        url: './costConfirm?userId=' + this.userId + '&orderId=' + this.currentOrderId + '&costId=' + this.currentDetail.id
       })
     }
   }
