@@ -100,7 +100,9 @@ export default class Sign extends wepy.page {
       wepy.showLoading({
         title: '签名生成中', // 提示的内容,
         mask: true, // 显示透明蒙层，防止触摸穿透,
-        success: res => {}
+        success: res => {
+
+        }
       })
 
       wx.canvasToTempFilePath({
@@ -126,6 +128,8 @@ export default class Sign extends wepy.page {
                   })
                   self.imgUrl = data.info
                   self.hasImg = true
+                  // 传值操作
+                  self.$emit('getSignUrl', self.imgUrl)
                 }
                 self.$apply()
               }

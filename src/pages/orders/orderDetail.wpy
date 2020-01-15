@@ -371,7 +371,7 @@ export default class OrderDetail extends wepy.page {
   methods = {
     confirmCost() {
       wx.navigateTo({
-        url: './costConfirm?userId=' + this.userId + '&orderId=' + this.currentOrderId
+        url: './costConfirm?orderId=' + this.currentOrderId
       })
     }
   }
@@ -385,7 +385,6 @@ export default class OrderDetail extends wepy.page {
     this.$apply()
   }
   onLoad(options) {
-    this.userId = options.userId
     this.currentOrderId = options.id
     // 查询订单详情
     this.orderDtail(this.currentOrderId)
