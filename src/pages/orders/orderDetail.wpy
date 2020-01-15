@@ -175,6 +175,7 @@
   color: #ffffff;
   width: 384rpx;
   height: 90rpx;
+  margin-bottom:20rpx;
   /* margin: 30rpx 0; */
   display: flex;
   flex-direction: row;
@@ -377,14 +378,13 @@ export default class OrderDetail extends wepy.page {
     sex: '男',
     currentPageState: null,
     currentDetail: {},
-    userId: '2',
-    currentOrderId: '3'
+    currentOrderId: ''
   }
   components = {}
   methods = {
     confirmCost() {
       wx.navigateTo({
-        url: './costConfirm?userId=' + this.userId + '&orderId=' + this.currentOrderId + '&costId=' + this.currentDetail.id
+        url: './costConfirm?orderId=' + this.currentOrderId
       })
     }
   }
@@ -398,7 +398,6 @@ export default class OrderDetail extends wepy.page {
     this.$apply()
   }
   onLoad(options) {
-    this.userId = options.userId
     this.currentOrderId = options.id
     // 查询订单详情
     this.orderDtail(this.currentOrderId)

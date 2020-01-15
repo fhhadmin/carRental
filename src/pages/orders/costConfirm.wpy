@@ -25,7 +25,7 @@
 }
 .content {
   width: 100%;
-  height: 247rpx;
+  height: 235rpx;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -33,7 +33,7 @@
 }
 .confirmContent {
   width: 680rpx;
-  height: 247rpx;
+  height: 235rpx;
   background-color: #F2F6F9;
   display: flex;
   flex-direction: column;
@@ -134,11 +134,11 @@
           <image src="{{item}}" mode="widthFix" @tap="clickImg({{index}})" style="width: 50rpx; margin-right: 18rpx;" />
         </block>
       </view>
-      <textarea placeholder="对我们的服务发表您宝贵的建议~" bindblur="feedbackFunction" placeholder-class="placeholder" class="evaContent"></textarea>
+      <textarea placeholder="对我们的服务发表您宝贵的建议~" bindblur="evaluateFunction" placeholder-class="placeholder" class="evaContent"></textarea>
     </view>
     <view class="confirmTitle" style="margin-top: 37rpx;">用户反馈：</view>
     <view class="evaluate">
-      <textarea placeholder="请对承运单位做出费用反馈信息给出您的建议或意见..." placeholder-class="placeholder" class="proContent"></textarea>
+      <textarea placeholder="请对承运单位做出费用反馈信息给出您的建议或意见..." bindblur="feedbackFunction" placeholder-class="placeholder" class="proContent"></textarea>
     </view>
     <view class="confirmTitle" style="margin-top: 37rpx;">签名确认：</view>
     <view class="evaluate">
@@ -150,7 +150,7 @@
 <script>
 import wepy from 'wepy'
 import sign from '../../components/sign'
-import { getOrderCost, confirmCostOrder } from '../../utils/api'
+import { getOrderCost, confirmCostOrder, addFeedback, addEvaluate } from '../../utils/api'
 export default class CostConfirm extends wepy.page {
   config = {
     'navigationBarTitleText': '订单费用确认'
@@ -163,14 +163,27 @@ export default class CostConfirm extends wepy.page {
       '../../images/noStar.png',
       '../../images/noStar.png'
     ],
+    // 星级
+    star: 0,
     notes: ['../../images/fapiao1.jpg', '../../images/fapiao2.jpg'],
-    userId: '',
+    // 用户id
+    userId: 2,
+    // 申请单id
     orderId: '',
+    // 费用单id
     costId: '',
+    // 当前费用单
     currentOrderCost: {},
+    // 票据地址
     fileUrl: [],
+    // 签名地址
     nameUrl: '',
-    feedback: '',
+    // 反馈
+    feedbackContent: '',
+    // 承运公司id
+    carrierId: '',
+    // 评价
+    evaluateContent: ''
   }
   components = {
     sign: sign
@@ -198,41 +211,49 @@ export default class CostConfirm extends wepy.page {
           this.stars[i] = '../../images/star.png'
         }
       }
+      this.star = 0
+      for (let i = 0; i < this.stars.length; i++) {
+        if (this.stars[i]==='../../images/star.png') {
+          this.star++
+        }
+      }
     },
+    // 反馈失去焦点
     feedbackFunction (e) {
       this.feedbackContent = e.detail.value
     },
+    // 评价失去焦点
+    evaluateFunction (e) {
+      this.evaluateContent = e.detail.value
+    },
+    // 获取签名地址
     getSignUrl (e) {
-      // console.log(e, 'jsjahdfjhfdjh')
       this.nameUrl = e
     },
+    // 费用确认操作
     async costConfirmFunction () {
-
       let res = await confirmCostOrder(this.userId, this.costId, this.nameUrl)
-      // if (res.status === 1) {
-
-      // } else {
-
-      // }
+      let resFeed = await addFeedback(this.orderId, this.feedbackContent, this.costId, this.userId)
+      let resEvaluate = await addEvaluate(this.orderId, this.carrierId, this.userId, this.evaluateContent, this.star)
+      // 接口调成功之后的操作
     }
   }
   onLoad(options) {
-    this.userId = options.userId
     this.orderId = options.orderId
-    this.costId = options.costId
     this.getOrderCostHandle(this.orderId)
   }
+  // 查询费用单详情
   async getOrderCostHandle() {
     let res = await getOrderCost(this.orderId)
-    console.log(res.info, 'info.....')
     if (res.status === 1) {
       this.currentOrderCost = res.info
+      this.costId = res.info.id
+      this.carrierId = res.info.carrierId
       if (this.currentOrderCost.fileUrl) {
         this.fileUrl = this.currentOrderCost.fileUrl.split(',')
       } else {
         this.fileUrl = []
       }
-      // console.log(this.currentOrderCost, 'jjjjjjj')
     }
   }
 }
