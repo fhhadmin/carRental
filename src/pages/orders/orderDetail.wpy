@@ -34,7 +34,7 @@
   border-radius: 5rpx;
 }
 .priceList {
-  width: 660rpx;
+  width: 560rpx;
   height: 80rpx;
   display: flex;
   flex-direction: row;
@@ -55,7 +55,7 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  width: 100%;
+  width: 680rpx;
   font-size: 28rpx;
   color: #333333;
   margin-left: 54rpx;
@@ -78,7 +78,7 @@
   border-bottom: solid #E6E6E6 1rpx;
   line-height: 44rpx;
   padding-left: 19rpx;
-  margin-right: 44rpx;
+  margin-right: 24rpx;
   color: #999999;
 }
 .sexIcon {
@@ -103,7 +103,7 @@
 }
 .duration {
   color: #999999;
-   margin-left: 10rpx;
+  margin-left: 5rpx;
 }
 .startArea {
   width: 500rpx;
@@ -175,7 +175,6 @@
   color: #ffffff;
   width: 384rpx;
   height: 90rpx;
-  /* margin: 30rpx 0; */
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -232,17 +231,15 @@
         <image src="../../images/carType.png" style="height: 50rpx; width: 50rpx;" />
         <view class="textInfo" style="width: 300rpx">{{currentDetail.carTypeName?currentDetail.carTypeName:'暂无数据'}}</view>
         <view style="font-size: 28rpx; color: #1A1A1A; margin: 0 25rpx;">车辆数：</view>
-        <view class="carNum">{{count}}</view>
+        <view class="carNum">{{currentDetail.amount?currentDetail.amount:0}}</view>
       </view>
     </view>
     <view class="priceList">
       <view>{{currentDetail.mileagePrice?(currentDetail.mileagePrice)/100:''}}元/公里</view>
-      <view style="margin: 0 15rpx; color: #EEEEEE;">|</view>
+      <view style="margin: 0 35rpx; color: #EEEEEE;">|</view>
       <view>{{currentDetail.dayPrice?(currentDetail.dayPrice)/100:''}}元/天</view>
-      <view style="margin: 0 15rpx; color: #EEEEEE;">|</view>
+      <view style="margin: 0 35rpx; color: #EEEEEE;">|</view>
       <view>{{currentDetail.harfDayPrice?(currentDetail.harfDayPrice)/100:''}}元/半天</view>
-      <view style="margin: 0 15rpx; color: #EEEEEE;">|</view>
-      <view>剩余<text style="color: #FF8F37;">{{currentDetail.amount?currentDetail.amount:0}}</text>辆</view>
     </view>
     <view class="selfInfo">
       <view style="position: relative; width: 100%; height: 120rpx;">
@@ -272,12 +269,11 @@
           <text>所在机构：</text>
           <view class="mobile">{{currentDetail.institutionName?currentDetail.institutionName:''}}</view>
         </view>
-        <view class="useTime">
+        <view wx:if="{{currentDetail.state+''!=='-1'}}" class="useTime">
           <view style="width: 20rpx; height: 20rpx; background-color: #01CD78; border-radius: 50%; margin-right: 6rpx;"></view>
-          <view style="margin-right: 80rpx;" class="startTime">{{currentDetail.startTime?currentDetail.startTime:''}}出发</view>
-          <view style="width: 20rpx; height: 20rpx; background-color: #FF4500; border-radius: 50%; margin-right: 10rpx;"></view>
-          <view class="font-size: 28rpx; color: #1A1A1A;">用车时间</view>
-          <view class="duration">3天6小时40分钟</view>
+          <view style="margin-right: 25rpx;" class="startTime">{{currentDetail.startTime?currentDetail.startTime:''}}出发</view>
+          <view style="width: 20rpx; height: 20rpx; background-color: #FF4500; border-radius: 50%;"></view>
+          <view class="duration">{{currentDetail.endTime?currentDetail.endTime:''}}结束</view>
         </view>
         <view class="userName" style="margin-bottom: 0;">
           <image src="../../images/startArea.png" style="width: 30rpx; height: 30rpx; margin-right: 5rpx;" />
@@ -336,24 +332,17 @@
       <view style="margin-left: 55rpx;">
         <view style="display: flex; flex-direction: row; margin-bottom: 36rpx;">
           <text style="font-size: 28rpx; color: #333333;">司机姓名：</text>
-          <view class="driver">韩商言</view>
+          <view class="driver">{{currentDetail.driver}}</view>
         </view>
-        <view style="margin-left: 55rpx;">
-          <view style="display: flex; flex-direction: row; margin-bottom: 36rpx;">
-            <text style="font-size: 28rpx; color: #333333;">司机姓名：</text>
-            <view class="driver">韩商言</view>
-          </view>
-          <view style="display: flex; flex-direction: row; margin-bottom: 36rpx;">
-            <text style="font-size: 28rpx; color: #333333;">联系电话：</text>
-            <view class="driver">17693186884</view>
-          </view>
-          <view style="display: flex; flex-direction: row; margin-bottom: 36rpx;">
-            <text style="font-size: 28rpx; color: #333333;">车 牌 号：</text>
-            <view class="driver">MQ0942</view>
-          </view>
+        <view style="display: flex; flex-direction: row; margin-bottom: 36rpx;">
+          <text style="font-size: 28rpx; color: #333333;">联系电话：</text>
+          <view class="driver">{{currentDetail.driverMobile}}</view>
+        </view>
+        <view style="display: flex; flex-direction: row; margin-bottom: 36rpx;">
+          <text style="font-size: 28rpx; color: #333333;">车 牌 号：</text>
+          <view class="driver">{{currentDetail.carNum}}</view>
         </view>
       </view>
-      <!-- <button class="confirmBtn">订单费用确认</button> -->
     </view>
     <!-- <view wx:else class="button-container">
         <button class="reject-button" @tap="rejectFunction">驳回</button>
@@ -373,12 +362,10 @@ export default class OrderDetail extends wepy.page {
     'navigationBarBackgroundColor': '#FACC4C'
   }
   data = {
-    count: 3,
-    sex: '男',
     currentPageState: null,
     currentDetail: {},
     userId: '2',
-    currentOrderId: '3'
+    currentOrderId: null
   }
   components = {}
   methods = {

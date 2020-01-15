@@ -22,7 +22,7 @@
 .orderList {
   background-color: #FFFFFF;
   width: 680rpx;
-  height: 130rpx;
+  height: 150rpx;
   margin: 14rpx 0;
   border-radius: 8rpx;
   padding: 27rpx 11rpx;
@@ -32,7 +32,13 @@
   flex-direction: row;
   font-size: 28rpx;
   color: #333333;
-  margin-bottom: 30rpx;
+  margin-bottom: 20rpx;
+}
+.time {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 20rpx;
 }
 .click {
   position: absolute;
@@ -55,12 +61,24 @@
           <view style="margin-right: 23rpx;">{{item.linkMobile}}</view>
           <view>{{item.address}}到{{item.destination}}</view>
         </view>
-        <view class="content" style="margin-bottom: 10rpx; position: relative;">
-          <image src="../../images/shijian.png" style="width: 40rpx; height: 40rpx; margin-right: 14rpx;" />
-          <text style="color: #666666; font-size: 24rpx;">{{item.startTime}} - {{item.endTime}}</text>
-          <view style="color: #666666; font-size: 24rpx; margin-left: 15rpx;">
-            {{item.state+'' === '1' ? '待审核' : item.state+'' === '2' ? '已审核' : item.state+'' === '3' ? '用车中' : item.state+'' === '4' ? '费用待确认' : item.state+'' === '5' ? '已完成' : item.state+'' === '6' ? '已驳回' : ''}}
+        <view style="margin-bottom: 10rpx; position: relative; display: flex; flex-direction: column;">
+          <view class="time" wx:if="{{item.state+''==='-1'}}">
+            <image src="../../images/shijian.png" mode="widthFix" style="width: 30rpx" />
+            <text style="color: #666666; font-size: 24rpx;">申请时间：</text>
+            <text style="color: #666666; font-size: 24rpx;">{{item.createTime}}</text>
           </view>
+          <view class="time" wx:if="{{item.state+''==='-1'}}">
+            <image src="../../images/shijian.png" mode="widthFix" style="width: 30rpx; margin-right: 5rpx;" />
+            <text style="color: #666666; font-size: 24rpx;">撤单时间：</text>
+            <text style="color: #666666; font-size: 24rpx;">{{item.updateTime}}</text>
+          </view>
+          <view class="time" wx:else>
+            <image src="../../images/shijian.png" mode="widthFix" style="width: 30rpx; margin-right: 5rpx;" />
+            <text style="color: #666666; font-size: 24rpx;">{{item.startTime}} - {{item.endTime}}</text>
+          </view>
+          <!-- <view style="color: #666666; font-size: 24rpx; margin-left: 15rpx;">
+            {{item.state+'' === '1' ? '待审核' : item.state+'' === '2' ? '已审核' : item.state+'' === '3' ? '用车中' : item.state+'' === '4' ? '费用待确认' : item.state+'' === '5' ? '已完成' : item.state+'' === '6' ? '已驳回' : item.state+'' === '-1' ? '已撤单' : ''}}
+          </view> -->
           <view wx:if="{{item.state+''==='6' || item.state+''==='5'}}" style="font-size: 22rpx; color: #0091FF; position: absolute; right: 25rpx;">详情</view>
           <!-- 若约车状态为 审核中 撤单 -->
           <view wx:if="{{item.state + '' === '1'}}" catchtap="cancelOrder({{item.id}})" class="click" style="color: #FF8F37;">撤单</view>
