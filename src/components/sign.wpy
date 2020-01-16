@@ -56,7 +56,7 @@
     </view>
     <view wx:else>
       <text style="margin-top:40rpx; font-size: 28rpx; color: #333333">签字板(手指签字)：</text>
-      <canvas id="canvas" class="canvas" canvas-id="signCanvas" @touchstart='touchstart' @touchmove='touchmove'></canvas>
+      <canvas id="canvas" class="canvas" canvas-id="signCanvas" disable-scroll="true" @touchstart='touchstart' @touchmove='touchmove'></canvas>
       <view class="btn">
         <view class="btn-clear" @tap='clear'>清 空</view>
         <view class="btn-save" @tap='submit'>提 交</view>

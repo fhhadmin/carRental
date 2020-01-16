@@ -1,5 +1,8 @@
 <style>
 .container {
+  /* position:fixed;
+  top:0; */
+  display: flex;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -233,9 +236,26 @@ export default class CostConfirm extends wepy.page {
     // 费用确认操作
     async costConfirmFunction () {
       let res = await confirmCostOrder(this.userId, this.costId, this.nameUrl)
-      let resFeed = await addFeedback(this.orderId, this.feedbackContent, this.costId, this.userId)
-      let resEvaluate = await addEvaluate(this.orderId, this.carrierId, this.userId, this.evaluateContent, this.star)
-      // 接口调成功之后的操作
+      if (res.status === 1) {
+        let resFeed = await addFeedback(this.orderId, this.feedbackContent, this.costId, this.userId)
+        if (resFeed.status === 1) {
+           let resEvaluate = await addEvaluate(this.orderId, this.carrierId, this.userId, this.evaluateContent, this.star)
+           wx.showToast({
+            title: '操作成功',
+            icon: 'none'
+           })
+        }else {
+          wx.showToast({
+            title: '操作失败',
+            icon: 'none'
+          })
+        }
+      } else {
+        wx.showToast({
+          title: '操作失败',
+          icon: 'none'
+        })
+      }
     }
   }
   onLoad(options) {
