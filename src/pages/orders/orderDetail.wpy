@@ -170,16 +170,6 @@
   font-size: 28rpx;
   color: #999999;
 }
-.confirmBtn {
-  background-color: #B3B3B3;
-  color: #ffffff;
-  width: 384rpx;
-  height: 90rpx;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-}
 .orderState-container{
   width:100%;
 }
@@ -215,6 +205,17 @@
 .agree-button{
   background-color: rgba(255, 143, 55, 1);
 }
+.cancelApply {
+  width: 400rpx;
+  height: 60rpx;
+  background-color: rgba(255, 143, 55, 1);
+  color: #ffffff;
+  font-size: 28rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
 </style>
 <template>
   <view class="container" style="height:{{clientHeight}}rpx;background-color:{{}}">
@@ -225,7 +226,7 @@
       </view>
       <view class="carSelected">
         <image src="../../images/goBack.png" style="height: 50rpx; width: 50rpx;" />
-        <view class="textInfo">城关校区 - 榆中校区</view>
+        <view class="textInfo">{{currentDetail.routeTypeName?currentDetail.routeTypeName:'暂无数据'}}</view>
       </view>
       <view class="carSelected">
         <image src="../../images/carType.png" style="height: 50rpx; width: 50rpx;" />
@@ -250,15 +251,13 @@
           <text>真实姓名：</text>
           <view class="nameStyle">{{currentDetail.linkMan?currentDetail.linkMan:''}}</view>
           <text>性 别：</text>
-          <view style="display: flex; flex-direction: row; margin: 0 15rpx;">
+          <view wx:if="{{currentDetail.sex === '男'}}" style="display: flex; flex-direction: row; margin: 0 15rpx;">
             <view style="margin: 0 10rpx; color: #999999">男</view>
-            <image wx:if="{{currentDetail.sex === '男'}}" src="../../images/manSelected.png" class="sexIcon" />
-            <image wx:else src="../../images/man.png" class="sexIcon" />
+            <image src="../../images/manSelected.png" class="sexIcon" />
           </view>
-          <view style="display: flex; flex-direction: row;">
+          <view wx:if="{{currentDetail.sex === '女'}}" style="display: flex; flex-direction: row;">
             <view style="margin: 0 10rpx; color: #999999">女</view>
-            <image wx:if="{{currentDetail.sex === '女'}}" src="../../images/womanSelect.png" class="sexIcon" />
-            <image wx:else src="../../images/woman.png" class="sexIcon" />
+            <image src="../../images/womanSelect.png" class="sexIcon" />
           </view>
         </view>
         <view class="userName">
@@ -300,9 +299,9 @@
       </view>
       <view style="margin-left: 64rpx; font-size: 28rpx; color: #333333;">{{currentDetail.reason?currentDetail.reason:''}}</view>
     </view>
-    <view wx:if="{{currentPageState+''==='1'||currentPageState+''==='2'||currentPageState+''==='3'||currentPageState+''==='4'||currentPageState+''==='5'}}" class="selfInfo">
+    <view wx:if="{{currentPageState+''!=='-1'}}" class="selfInfo">
       <view style="position: relative; width: 100%; height: 100rpx;">
-        <view class="titleText">订单状态：</view>
+        <view class="titleText">申请单状态：</view>
       </view>
       <view style="position: relative; width: 680rpx; height: 60rpx;">
         <view class="progress">
@@ -315,7 +314,7 @@
               <view class="currentState" style="background-color: {{currentDetail.state >= 5?'#00B4C5;':'#B3B3B3'}}"></view>
             </view>
             <view class="currentStateText" style="margin-bottom: 30rpx;">
-              <view class="stateText">审核中</view>
+              <view class="stateText">待审核</view>
               <view class="stateText">已审核</view>
               <view class="stateText">用车中</view>
               <view class="stateText" style="width: 120rpx;">费用待确认</view>
@@ -325,7 +324,7 @@
         </view>
       </view>
     </view>
-    <view wx:if="{{currentPageState+''==='4'||currentPageState+''==='5'}}" class="selfInfo">
+    <view wx:if="{{currentPageState+''==='3'}}" class="selfInfo">
       <view style="position: relative; width: 100%; height: 100rpx;">
         <view class="titleText">司机信息：</view>
       </view>
@@ -344,21 +343,21 @@
         </view>
       </view>
     </view>
+    <view style="margin: 60rpx 0 30rpx 0;" wx:if="{{currentDetail.state+''==='1'}}">
+      <button class="cancelApply" catchtap="cancelOrder">取 消 申 请</button>
+    </view>
     <!-- <view wx:else class="button-container">
         <button class="reject-button" @tap="rejectFunction">驳回</button>
         <button class="agree-button">同意</button>
     </view> -->
-    <view class="selfInfo">
-      <button wx:if="{{currentPageState + '' === '4'}}" class="confirmBtn" style="margin-top:40rpx;" @tap="confirmCost">订单费用确认</button>
-    </view>
   </view>
 </template>
 <script>
 import wepy from 'wepy'
-import { getOrderDetail } from '../../utils/api'
+import { getOrderDetail, editOrderState } from '../../utils/api'
 export default class OrderDetail extends wepy.page {
   config = {
-    'navigationBarTitleText': '订单详情',
+    'navigationBarTitleText': '申请单详情',
     'navigationBarBackgroundColor': '#FACC4C'
   }
   data = {
@@ -373,9 +372,34 @@ export default class OrderDetail extends wepy.page {
       wx.navigateTo({
         url: './costConfirm?orderId=' + this.currentOrderId
       })
+    },
+    // 撤单
+    cancelOrder() {
+      wx.showModal({
+        title: '温馨提示',
+        content: '将取消此次约车行为，是否继续？',
+        success: e => {
+          if (e.confirm) {
+            this.editToCancel(this.currentOrderId)
+          }
+        }
+      })
     }
   }
-  // 查询订单详情接口
+  async editToCancel(id) {
+    // 调用撤单接口 完成撤单操作
+    let res = await editOrderState(id, -1)
+    if (res.status === 1) {
+      wx.showToast({
+        title: '操作成功！',
+        icon: 'none'
+      })
+      wx.navigateTo({
+        url: './orders?state=0'
+      })
+    }
+  }
+  // 查询申请单详情接口
   async orderDtail(id) {
     let res = await getOrderDetail(id)
     if (res.status === 1) {
@@ -386,7 +410,7 @@ export default class OrderDetail extends wepy.page {
   }
   onLoad(options) {
     this.currentOrderId = options.id
-    // 查询订单详情
+    // 查询申请单详情
     this.orderDtail(this.currentOrderId)
   }
 }

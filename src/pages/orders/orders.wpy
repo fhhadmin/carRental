@@ -59,6 +59,11 @@
         <view class="content">
           <view style="margin-right: 20rpx;">{{item.linkMan}}</view>
           <view style="margin-right: 23rpx;">{{item.linkMobile}}</view>
+          <view style="color: #666666; font-size: 24rpx; margin-left: 15rpx;">
+            {{item.state+'' === '1' ? '待审核' : item.state+'' === '2' ? '已审核' : item.state+'' === '3' ? '用车中' : item.state+'' === '4' ? '费用待确认' : item.state+'' === '5' ? '已完成' : item.state+'' === '6' ? '已驳回' : item.state+'' === '-1' ? '已撤单' : ''}}
+          </view>
+        </view>
+        <view class="content">
           <view>{{item.address}}到{{item.destination}}</view>
         </view>
         <view style="margin-bottom: 10rpx; position: relative; display: flex; flex-direction: column;">
@@ -76,14 +81,11 @@
             <image src="../../images/shijian.png" mode="widthFix" style="width: 30rpx; margin-right: 5rpx;" />
             <text style="color: #666666; font-size: 24rpx;">{{item.startTime}} - {{item.endTime}}</text>
           </view>
-          <!-- <view style="color: #666666; font-size: 24rpx; margin-left: 15rpx;">
-            {{item.state+'' === '1' ? '待审核' : item.state+'' === '2' ? '已审核' : item.state+'' === '3' ? '用车中' : item.state+'' === '4' ? '费用待确认' : item.state+'' === '5' ? '已完成' : item.state+'' === '6' ? '已驳回' : item.state+'' === '-1' ? '已撤单' : ''}}
-          </view> -->
-          <view wx:if="{{item.state+''==='6' || item.state+''==='5'}}" style="font-size: 22rpx; color: #0091FF; position: absolute; right: 25rpx;">详情</view>
-          <!-- 若约车状态为 审核中 撤单 -->
-          <view wx:if="{{item.state + '' === '1'}}" catchtap="cancelOrder({{item.id}})" class="click" style="color: #FF8F37;">撤单</view>
+          <view wx:if="{{item.state+''==='6' || item.state+''==='5'}}" style="font-size: 24rpx; color: #0091FF; position: absolute; right: 25rpx; bottom: 135rpx;">详情</view>
+          <!-- 若约车状态为 待审核 撤单 -->
+          <view wx:if="{{item.state + '' === '1'}}" catchtap="cancelOrder({{item.id}})" class="click" style="color: #FF8F37; font-size: 24rpx; position: absolute; right: 25rpx; bottom: 135rpx;">撤单</view>
           <!-- 状态为 费用待确认 时 可直接查看费用单并确认 -->
-          <view wx:if="{{item.state + '' === '4'}}" catchtap="confirmFee" class="click" style="color: #FF8F37;">费用单</view>
+          <view wx:if="{{item.state + '' === '4'}}" catchtap="confirmFee" class="click" style="color: #FF8F37; font-size: 24rpx; position: absolute; right: 25rpx; bottom: 135rpx;">费用单</view>
         </view>
       </view>
     </block>
@@ -126,11 +128,14 @@ export default class orders extends wepy.page {
 
     },
     clickInfo(e) {
-      console.log(e, 123)
       let currentOrderId = e.currentTarget.dataset.ordersItem
       if (this.currentState + '' === '5') {
         wx.navigateTo({
-          url: './orderAllDetail?id=' + currentOrderId
+          url: './componentOrder?id=' + currentOrderId
+        })
+      } else if (this.currentState + '' === '4') {
+        wx.navigateTo({
+          url: './costConfirm?id=' + currentOrderId
         })
       } else {
         var userId = e.currentTarget.dataset.userId
@@ -140,7 +145,7 @@ export default class orders extends wepy.page {
       }
     }
   }
-  // 获取订单列表
+  // 获取申请单列表
   async getOrders(userId, state) {
     let res = await getUserOders(userId, state)
     if (res.status === 1) {
@@ -163,9 +168,9 @@ export default class orders extends wepy.page {
     this.currentState = options.state
     let userId = 2
     if (options.state + '' === '0') {
-      wx.setNavigationBarTitle({ title: '我的订单' })
+      wx.setNavigationBarTitle({ title: '我的申请单' })
     } else if (options.state + '' === '6') {
-      wx.setNavigationBarTitle({ title: '驳回订单列表' })
+      wx.setNavigationBarTitle({ title: '驳回申请单列表' })
     } else if (options.state + '' === '5') {
       wx.setNavigationBarTitle({ title: '历时约车列表' })
     } else if (options.state + '' === '-1') {

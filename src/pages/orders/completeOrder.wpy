@@ -1,0 +1,427 @@
+<style>
+.container {
+  width: 100%;
+}
+.carInfo {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20rpx;
+}
+.carSelected {
+  display: flex;
+  flex-direction: row;
+  margin: 19rpx 0;
+}
+.textInfo {
+  border-bottom: solid #E6E6E6 1rpx;
+  width: 484rpx;
+  font-size: 28rpx;
+  color: #1A1A1A;
+  margin-left: 20rpx;
+}
+.carNum {
+  background-color: #00BE6E;
+  width: 40rpx;
+  height: 40rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  font-size: 28rpx;
+  border-radius: 5rpx;
+}
+.priceList {
+  width: 660rpx;
+  height: 80rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  line-height: 80rpx;
+  color: #1A1A1A;
+  font-size: 28rpx;
+  box-shadow: 5rpx 0rpx 5rpx #d6d3d3;
+  border-radius: 5rpx;
+}
+.selfInfo {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.selfDetail {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 660rpx;
+  font-size: 28rpx;
+  color: #333333;
+  margin-left: 54rpx;
+}
+.titleText {
+  position: absolute;
+  left: 20rpx;
+  top: 30rpx;
+  font-size: 32rpx;
+  color: #1A1A1A;
+  font-weight: 500;
+}
+.userName {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 36rpx;
+}
+.nameStyle {
+  width: 160rpx;
+  border-bottom: solid #E6E6E6 1rpx;
+  line-height: 44rpx;
+  padding-left: 19rpx;
+  margin-right: 40rpx;
+  color: #999999;
+}
+.sexIcon {
+  width: 40rpx;
+  height: 40rpx;
+}
+.mobile {
+  width: 480rpx;
+  border-bottom: solid #E6E6E6 1rpx;
+  padding: 0 15rpx;
+  padding-left: 15rpx;
+  color: #999999
+}
+.useTime {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 36rpx;
+}
+.startTime {
+  color: #999999;
+}
+.duration {
+  color: #999999;
+   margin-left: 10rpx;
+}
+.startArea {
+  width: 480rpx;
+  border-bottom: solid #E6E6E6 1rpx;
+  padding: 0 15rpx;
+  padding-left: 15rpx;
+  color: #999999
+}
+.toAndFromIcon {
+  width: 40rpx;
+  height: 40rpx;
+  margin: 15rpx 0;
+  margin-left: 60rpx;
+}
+.progress {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 550rpx;
+  height: 60rpx;
+  position: absolute;
+  right: 11rpx;
+}
+.currentProgress {
+  width: 530rpx;
+  height: 25rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 18rpx;
+  border-radius: 10rpx;
+  box-shadow: 5rpx 5rpx 10rpx #b3b1b1;
+}
+.currentStateText {
+  width: 535rpx;
+  height: 20rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.currentState {
+  width: 98rpx;
+  height: 10rpx;
+  background-color: #B3B3B3;
+  border-radius: 40rpx;
+  margin-right: 4rpx;
+}
+.stateText {
+  width: 98rpx;
+  font-size: 24rpx;
+  color: #333333;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.driver {
+  width: 480rpx;
+  border-bottom: 1rpx solid #E6E6E6;
+  line-height: 44rpx;
+  font-size: 28rpx;
+  color: #999999;
+}
+.content {
+  width: 100%;
+  height: 247rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.confirmContent {
+  width: 600rpx;
+  height: 247rpx;
+  background-color: #F2F6F9;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 14rpx 0 16rpx 33rpx;
+  border-radius: 8rpx;
+}
+.evaluate {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.star {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20rpx;
+}
+.evaContent {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 28rpx;
+  color: #333333;
+  margin: 20rpx;
+}
+</style>
+<template>
+  <view class="container" style="height:{{clientHeight}}rpx;background-color:{{}}">
+    <view class="carInfo">
+      <view class="carSelected">
+        <image src="../../images/userCar.png" style="height: 50rpx; width: 50rpx;" />
+        <view class="textInfo">{{orderDetail.carrierName}}</view>
+      </view>
+      <view wx:if="{{orderDetail.routeTypeName}}" class="carSelected">
+        <image src="../../images/goBack.png" style="height: 50rpx; width: 50rpx;" />
+        <view class="textInfo">{{orderDetail.routeTypeName}}</view>
+      </view>
+      <view class="carSelected">
+        <image src="../../images/carType.png" style="height: 50rpx; width: 50rpx;" />
+        <view class="textInfo" style="width: 300rpx">{{orderDetail.carTypeName}}</view>
+        <view style="font-size: 28rpx; color: #1A1A1A; margin: 0 25rpx;">车辆数：</view>
+        <view class="carNum">{{orderDetail.amount}}</view>
+      </view>
+    </view>
+    <view class="priceList">
+      <view>{{orderDetail.mileagePrice/100}}元/公里</view>
+      <view style="margin: 0 15rpx; color: #EEEEEE;">|</view>
+      <view>{{orderDetail.dayPrice/100}}元/天</view>
+      <view style="margin: 0 15rpx; color: #EEEEEE;">|</view>
+      <view>{{orderDetail.harfDayPrice/100}}元/半天</view>
+      <!-- <view style="margin: 0 15rpx; color: #EEEEEE;">|</view>
+      <view>剩余<text style="color: #FF8F37;">5</text>辆</view> -->
+    </view>
+    <view class="selfInfo">
+      <view style="position: relative; width: 100%; height: 120rpx;">
+        <view class="titleText">个人信息：</view>
+      </view>
+      <view class="selfDetail">
+        <view class="userName">
+          <text>真实姓名：</text>
+          <view class="nameStyle">{{orderDetail.linkMan}}</view>
+          <text>性 别：</text>
+          <view wx:if="{{orderDetail.sex === '男'}}" style="display: flex; flex-direction: row; margin: 0 15rpx;">
+            <view style="margin: 0 10rpx; color: #999999">{{orderDetail.sex}}</view>
+            <image wx:if="{{orderDetail.sex === '男'}}" src="../../images/manSelected.png" class="sexIcon" />
+            <image wx:else src="../../images/man.png" class="sexIcon" />
+          </view>
+          <view wx:else style="display: flex; flex-direction: row;">
+            <view style="margin: 0 10rpx; color: #999999">{{orderDetail.sex}}</view>
+            <image wx:if="{{orderDetail.sex === '女'}}" src="../../images/womanSelect.png" class="sexIcon" />
+            <image wx:else src="../../images/woman.png" class="sexIcon" />
+          </view>
+        </view>
+        <view class="userName">
+          <text>联系电话：</text>
+          <view class="mobile">{{orderDetail.linkMobile}}</view>
+        </view>
+        <view class="userName">
+          <text>所在机构：</text>
+          <view class="mobile">{{orderDetail.parentName}}/{{orderDetail.institutionName?orderDetail.institutionName:''}}</view>
+        </view>
+        <view class="useTime">
+          <view style="width: 20rpx; height: 20rpx; background-color: #01CD78; border-radius: 50%; margin-right: 6rpx;"></view>
+          <view style="margin-right: 60rpx;" class="startTime">{{orderDetail.startTime}}出发</view>
+          <view style="width: 20rpx; height: 20rpx; background-color: #FF4500; border-radius: 50%; margin-right: 5rpx;"></view>
+          <!-- <view class="font-size: 28rpx; color: #1A1A1A; margin-right: 5rpx;">用车时间</view> -->
+          <view class="duration">{{orderDetail.endTime}}结束</view>
+        </view>
+        <view class="userName" style="margin-bottom: 0;">
+          <image src="../../images/startArea.png" style="width: 30rpx; height: 30rpx; margin-right: 5rpx;" />
+          <text>出发地：</text>
+          <view class="startArea">{{orderDetail.address}}</view>
+        </view>
+        <image src="../../images/toAndFrom.png" class="toAndFromIcon" />
+        <view class="userName">
+          <image src="../../images/destination.png" style="width: 30rpx; height: 30rpx; margin-right: 5rpx;" />
+          <text>目的地：</text>
+          <view class="startArea">{{orderDetail.destination}}</view>
+        </view>
+      </view>
+    </view>
+    <view class="selfInfo">
+      <view style="position: relative; width: 100%; height: 100rpx;">
+        <view class="titleText">经费来源：</view>
+      </view>
+      <view style="margin-left: 64rpx; font-size: 28rpx; color: #333333;">{{orderDetail.fundSource}}</view>
+    </view>
+    <view class="selfInfo">
+      <view style="position: relative; width: 100%; height: 100rpx;">
+        <view class="titleText">用车原因：</view>
+      </view>
+      <view style="margin-left: 64rpx; font-size: 28rpx; color: #333333;">{{orderDetail.reason}}</view>
+    </view>
+    <view class="selfInfo">
+      <view style="position: relative; width: 100%; height: 100rpx;">
+        <view class="titleText">申请单状态：</view>
+      </view>
+      <view style="position: relative; width: 680rpx; height: 60rpx;">
+        <view class="progress">
+          <view style="width: 517rpx; height: 20rpx; border-radius: 5rpx;">
+            <view class="currentProgress">
+              <view class="currentState" style="background-color: #5BB531"></view>
+              <view class="currentState" style="background-color: #FF4500;"></view>
+              <view class="currentState" style="background-color: #E7A100;"></view>
+              <view class="currentState" style="background-color: #BA2789;"></view>
+              <view class="currentState" style="background-color: #00B4C5;"></view>
+            </view>
+            <view class="currentStateText">
+              <view class="stateText">待审核</view>
+              <view class="stateText">已接单</view>
+              <view class="stateText">用车中</view>
+              <view class="stateText">费用确认</view>
+              <view class="stateText">已完成</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="selfInfo">
+      <view style="position: relative; width: 100%; height: 100rpx;">
+        <view class="titleText">司机信息：</view>
+      </view>
+      <view style="margin-left: 55rpx;">
+        <view style="display: flex; flex-direction: row; margin-bottom: 36rpx;">
+          <text style="font-size: 28rpx; color: #333333;">司机姓名：</text>
+          <view class="driver">{{orderDetail.driver}}</view>
+        </view>
+        <view style="display: flex; flex-direction: row; margin-bottom: 36rpx;">
+          <text style="font-size: 28rpx; color: #333333;">联系电话：</text>
+          <view class="driver">{{orderDetail.driverMobile}}</view>
+        </view>
+        <view style="display: flex; flex-direction: row; margin-bottom: 36rpx;">
+          <text style="font-size: 28rpx; color: #333333;">车 牌 号：</text>
+          <view class="driver">{{orderDetail.carNum}}</view>
+        </view>
+      </view>
+    </view>
+    <view class="selfInfo">
+      <view style="position: relative; width: 100%; height: 100rpx;">
+        <view class="titleText">费用详情</view>
+      </view>
+      <view class="content">
+        <view class="confirmContent">
+          <!-- <text style="font-size: 28rpx; color: #333333; line-height: 50rpx;">行驶里程：{{orderDetail.mileage}}km</text> -->
+          <text style="font-size: 28rpx; color: #333333; line-height: 50rpx;">租赁费用：￥{{orderDetail.fare/100}}</text>
+          <text style="font-size: 28rpx; color: #333333; line-height: 50rpx;">停车费用：￥{{orderDetail.parkFee/100}}</text>
+          <text style="font-size: 28rpx; color: #333333; line-height: 50rpx;">过路费用：￥{{orderDetail.roadToll/100}}</text>
+          <text style="font-size: 28rpx; color: #333333; line-height: 50rpx;">其他费用：￥{{orderDetail.other/100}}</text>
+        </view>
+      </view>
+      <view wx:if="{{orderDetail.file.split(',').length === 0}}" style="font-size: 28rpx; color: #333333; margin: 37rpx 0 27rpx 54rpx;">
+        费用票据：暂无票据
+      </view>
+      <view wx:else>
+        <view style="font-size: 28rpx; color: #333333; margin: 37rpx 0 27rpx 54rpx;">费用票据：</view>
+        <block wx:for="{{orderDetail.file.split(',')}}">
+          <image src="{{item}}" style="width: 411rpx; height: 251rpx; margin-left: 54rpx; margin-bottom: 17rpx;" />
+        </block>
+      </view>
+    </view>
+    <view class="selfInfo">
+      <view style="position: relative; width: 100%; height: 100rpx;">
+        <view class="titleText">服务评价：</view>
+      </view>
+      <view class="star">
+        <block wx:for="{{stars}}">
+          <image src="{{item}}" mode="widthFix" style="width: 50rpx; margin-right: 18rpx;" />
+        </block>
+      </view>
+      <view class="evaContent">{{orderDetail.evaluateContent?orderDetail.evaluateContent:'暂无评价'}}</view>
+    </view>
+    <view class="selfInfo">
+      <view style="position: relative; width: 100%; height: 100rpx;">
+        <view class="titleText">用户反馈：</view>
+      </view>
+      <view class="evaContent">{{orderDetail.feedbackContent}}</view>
+    </view>
+    <view class="selfInfo" style="margin-bottom: 20rpx;">
+      <view style="position: relative; width: 100%; height: 100rpx;">
+        <view class="titleText">签名确认：</view>
+      </view>
+      <view class="evaluate">
+        <image wx:if="{{imageUrl}}" src="{{imageUrl}}" mode="widthFix" style="width: 420rpx;" />
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { getOrderDetail } from '../../utils/api'
+export default class CompleteOrder extends wepy.page {
+  config = {
+    'navigationBarTitleText': '申请单详情',
+    'navigationBarBackgroundColor': '#FACC4C'
+  }
+  data = {
+    count: 0,
+    orderDetail: null,
+    stars: [
+      '../../images/noStar.png',
+      '../../images/noStar.png',
+      '../../images/noStar.png',
+      '../../images/noStar.png',
+      '../../images/noStar.png'
+    ],
+    notes: ['../../images/fapiao1.jpg', '../../images/fapiao2.jpg']
+  }
+  methods = {
+
+  }
+  async onLoad(options) {
+    let res = await getOrderDetail(options.id)
+    this.orderDetail = res.info
+    for (let i = 0; i < this.orderDetail.star; i++) {
+      this.stars[i] = '../../images/star.png'
+    }
+    this.$apply()
+    console.log(this.orderDetail, 'resres')
+  }
+}
+</script>

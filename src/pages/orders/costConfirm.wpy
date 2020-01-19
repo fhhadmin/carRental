@@ -1,8 +1,5 @@
 <style>
 .container {
-  /* position:fixed;
-  top:0; */
-  display: flex;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -19,12 +16,18 @@
   padding: 14rpx 24rpx 12rpx 20rpx;
   margin: 15rpx 0 27rpx 23rpx;
 }
+.applyInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 .confirmTitle {
   font-size: 36rpx;
   color: #1A1A1A;
   font-weight: 500;
   margin-left: 21rpx;
-  margin-bottom: 20rpx;
+  margin-bottom: 30rpx;
 }
 .content {
   width: 100%;
@@ -51,21 +54,6 @@
   justify-content: center;
   align-items: center;
 }
-.star {
-  display: flex;
-  flex-direction: row;
-  /* justify-content: center;
-  align-items: center; */
-  margin-top: 39rpx;
-}
-.evaContent {
-  width: 580rpx;
-  height: 148rpx;
-  background-color: #F2F6F9;
-  border-radius: 5rpx;
-  margin-top: 20rpx;
-  padding: 20rpx 0 0 19rpx;
-}
 .placeholder {
   font-size: 28rpx;
   color: #B3B3B3;
@@ -91,6 +79,210 @@
   margin-top: 35rpx;
   margin-bottom: 29rpx;
 }
+.carInfo {
+  display: flex;
+  flex-direction: column;
+}
+.carSelected {
+  display: flex;
+  flex-direction: row;
+  margin: 19rpx 0;
+}
+.textInfo {
+  border-bottom: solid #E6E6E6 1rpx;
+  width: 484rpx;
+  font-size: 28rpx;
+  color: #1A1A1A;
+  margin-left: 20rpx;
+}
+.carNum {
+  background-color: #00BE6E;
+  width: 40rpx;
+  height: 40rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  font-size: 28rpx;
+  border-radius: 5rpx;
+}
+.priceList {
+  width: 560rpx;
+  height: 80rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  line-height: 80rpx;
+  color: #1A1A1A;
+  font-size: 28rpx;
+  box-shadow: 5rpx 0rpx 5rpx #d6d3d3;
+  border-radius: 5rpx;
+}
+.selfInfo {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.selfDetail {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 680rpx;
+  font-size: 28rpx;
+  color: #333333;
+  margin-left: 54rpx;
+}
+.titleText {
+  position: absolute;
+  left: 20rpx;
+  top: 30rpx;
+  font-size: 32rpx;
+  color: #1A1A1A;
+  font-weight: 500;
+}
+.userName {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 36rpx;
+}
+.nameStyle {
+  width: 170rpx;
+  border-bottom: solid #E6E6E6 1rpx;
+  line-height: 44rpx;
+  padding-left: 19rpx;
+  margin-right: 24rpx;
+  color: #999999;
+}
+.sexIcon {
+  width: 40rpx;
+  height: 40rpx;
+}
+.mobile {
+  width: 500rpx;
+  border-bottom: solid #E6E6E6 1rpx;
+  padding: 0 15rpx;
+  padding-left: 15rpx;
+  color: #999999
+}
+.useTime {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 36rpx;
+}
+.startTime {
+  color: #999999;
+}
+.duration {
+  color: #999999;
+  margin-left: 5rpx;
+}
+.startArea {
+  width: 500rpx;
+  border-bottom: solid #E6E6E6 1rpx;
+  padding: 0 15rpx;
+  padding-left: 15rpx;
+  color: #999999
+}
+.toAndFromIcon {
+  width: 40rpx;
+  height: 40rpx;
+  margin: 15rpx 0;
+  margin-left: 60rpx;
+}
+.progress {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 550rpx;
+  height: 60rpx;
+  position: absolute;
+  right: 11rpx;
+}
+.currentProgress {
+  width: 530rpx;
+  height: 25rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 18rpx;
+  border-radius: 10rpx;
+  box-shadow: 5rpx 5rpx 10rpx #b3b1b1;
+}
+.currentStateText {
+  width: 535rpx;
+  height: 20rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.currentState {
+  width: 98rpx;
+  height: 10rpx;
+  background-color: #B3B3B3;
+  border-radius: 40rpx;
+  margin-right: 4rpx;
+}
+.stateText {
+  width: 98rpx;
+  font-size: 24rpx;
+  color: #333333;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.driver {
+  width: 500rpx;
+  border-bottom: 1rpx solid #E6E6E6;
+  line-height: 44rpx;
+  font-size: 28rpx;
+  color: #999999;
+}
+.confirmBtn {
+  background-color: #B3B3B3;
+  color: #ffffff;
+  width: 384rpx;
+  height: 90rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.orderState-container{
+  width:100%;
+}
+.editApply {
+  width: 220rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  color: #ffffff;
+  font-size: 28rpx;
+  margin-top: 50rpx;
+  background-color: rgba(255, 143, 55, 1)
+}
+.button-container{
+  width: 100%;
+  height:300rpx;
+  margin-top:30rpx;
+  margin-bottom:10rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
+.button-container button{
+  width:230rpx;
+  height:60rpx;
+  font-size:28rpx;
+  color:rgba(255,255,255,1);
+  font-family:Source Han Sans CN;
+}
 </style>
 <template>
   <view class="container">
@@ -98,7 +290,133 @@
       <image src="../../images/notice.png" mode="widthFix" style="width: 50rpx; margin-right: 15rpx;" />
       <view style="font-size: 22rpx; color: #4C4C4C;">你好！请您接到用车信息反馈后及时对费用情况进行核对，发现有误的请及时联系我们进行修改。确认无误后请对费用及时确认并对服务质量进行客观评价。</view>
     </view>
-    <view class="confirmTitle">订单确认：</view>
+    <view class="applyInfo">
+      <view class="carInfo">
+        <view class="carSelected">
+          <image src="../../images/userCar.png" style="height: 50rpx; width: 50rpx;" />
+          <view class="textInfo">{{currentOrderCost.carrierName?currentOrderCost.carrierName:'暂无数据'}}</view>
+        </view>
+        <view class="carSelected">
+          <image src="../../images/goBack.png" style="height: 50rpx; width: 50rpx;" />
+          <view class="textInfo">城关校区 - 榆中校区</view>
+        </view>
+        <view class="carSelected">
+          <image src="../../images/carType.png" style="height: 50rpx; width: 50rpx;" />
+          <view class="textInfo" style="width: 300rpx">{{currentOrderCost.carTypeName?currentOrderCost.carTypeName:'暂无数据'}}</view>
+          <view style="font-size: 28rpx; color: #1A1A1A; margin: 0 25rpx;">车辆数：</view>
+          <view class="carNum">{{currentOrderCost.amount?currentOrderCost.amount:0}}</view>
+        </view>
+      </view>
+      <view class="priceList">
+        <view>{{currentOrderCost.mileagePrice?(currentOrderCost.mileagePrice)/100:''}}元/公里</view>
+        <view style="margin: 0 35rpx; color: #EEEEEE;">|</view>
+        <view>{{currentOrderCost.dayPrice?(currentOrderCost.dayPrice)/100:''}}元/天</view>
+        <view style="margin: 0 35rpx; color: #EEEEEE;">|</view>
+        <view>{{currentOrderCost.harfDayPrice?(currentOrderCost.harfDayPrice)/100:''}}元/半天</view>
+      </view>
+      <view class="selfInfo">
+        <view style="position: relative; width: 100%; height: 120rpx;">
+          <view class="titleText">个人信息：</view>
+        </view>
+        <view class="selfDetail">
+          <view class="userName">
+            <text>真实姓名：</text>
+            <view class="nameStyle">{{currentOrderCost.linkMan?currentOrderCost.linkMan:''}}</view>
+            <text>性 别：</text>
+            <view wx:if="{{currentOrderCost.sex === '男'}}" style="display: flex; flex-direction: row; margin: 0 15rpx;">
+              <view style="margin: 0 10rpx; color: #999999">男</view>
+              <image src="../../images/manSelected.png" class="sexIcon" />
+            </view>
+            <view wx:if="{{currentOrderCost.sex === '女'}}" style="display: flex; flex-direction: row;">
+              <view style="margin: 0 10rpx; color: #999999">女</view>
+              <image src="../../images/womanSelect.png" class="sexIcon" />
+            </view>
+          </view>
+          <view class="userName">
+            <text>联系电话：</text>
+            <view class="mobile">{{currentOrderCost.linkMobile?currentOrderCost.linkMobile:''}}</view>
+          </view>
+          <view class="userName">
+            <text>所在机构：</text>
+            <view class="mobile">{{currentOrderCost.institutionName?currentOrderCost.institutionName:''}}</view>
+          </view>
+          <view wx:if="{{currentOrderCost.startTime}}" class="useTime">
+            <view style="width: 20rpx; height: 20rpx; background-color: #01CD78; border-radius: 50%; margin-right: 6rpx;"></view>
+            <view style="margin-right: 25rpx;" class="startTime">{{currentOrderCost.startTime?currentOrderCost.startTime:''}}出发</view>
+            <view style="width: 20rpx; height: 20rpx; background-color: #FF4500; border-radius: 50%;"></view>
+            <view class="duration">{{currentOrderCost.endTime?currentOrderCost.endTime:''}}结束</view>
+          </view>
+          <view class="userName" style="margin-bottom: 0;">
+            <image src="../../images/startArea.png" style="width: 30rpx; height: 30rpx; margin-right: 5rpx;" />
+            <text>出发地：</text>
+            <view class="startArea">{{currentOrderCost.address}}</view>
+          </view>
+          <image src="../../images/toAndFrom.png" class="toAndFromIcon" />
+          <view class="userName">
+            <image src="../../images/destination.png" style="width: 30rpx; height: 30rpx; margin-right: 5rpx;" />
+            <text>目的地：</text>
+            <view class="startArea">{{currentOrderCost.destination?currentOrderCost.destination:''}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="selfInfo">
+        <view style="position: relative; width: 100%; height: 100rpx;">
+          <view class="titleText">经费来源：</view>
+        </view>
+        <view style="margin-left: 64rpx; font-size: 28rpx; color: #333333;">{{currentOrderCost.fundSource?currentOrderCost.fundSource:''}}</view>
+      </view>
+      <view class="selfInfo">
+        <view style="position: relative; width: 100%; height: 100rpx;">
+          <view class="titleText">用车原因：</view>
+        </view>
+        <view style="margin-left: 64rpx; font-size: 28rpx; color: #333333;">{{currentOrderCost.reason?currentOrderCost.reason:''}}</view>
+      </view>
+      <view class="selfInfo">
+        <view style="position: relative; width: 100%; height: 100rpx;">
+          <view class="titleText">申请单状态：</view>
+        </view>
+        <view style="position: relative; width: 680rpx; height: 60rpx;">
+          <view class="progress">
+            <view style="width: 517rpx; height: 20rpx; border-radius: 5rpx;">
+              <view class="currentProgress">
+                <view class="currentState" style="background-color: {{currentOrderCost.state >= 1?'#5BB531':'#B3B3B3'}}"></view>
+                <view class="currentState" style="background-color: {{currentOrderCost.state >= 2?'#FF4500':'#B3B3B3'}}"></view>
+                <view class="currentState" style="background-color: {{currentOrderCost.state >= 3?'#E7A100;':'#B3B3B3'}}"></view>
+                <view class="currentState" style="background-color: {{currentOrderCost.state >= 4?'#BA2789;':'#B3B3B3'}}"></view>
+                <view class="currentState" style="background-color: {{currentOrderCost.state >= 5?'#00B4C5;':'#B3B3B3'}}"></view>
+              </view>
+              <view class="currentStateText" style="margin-bottom: 30rpx;">
+                <view class="stateText">待审核</view>
+                <view class="stateText">已审核</view>
+                <view class="stateText">用车中</view>
+                <view class="stateText" style="width: 120rpx;">费用待确认</view>
+                <view class="stateText">已完成</view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="selfInfo" style="margin-top: 20rpx;">
+        <view style="position: relative; width: 100%; height: 100rpx;">
+          <view class="titleText">司机信息：</view>
+        </view>
+        <view style="margin-left: 55rpx;">
+          <view style="display: flex; flex-direction: row; margin-bottom: 36rpx;">
+            <text style="font-size: 28rpx; color: #333333;">司机姓名：</text>
+            <view class="driver">{{currentOrderCost.driver}}</view>
+          </view>
+          <view style="display: flex; flex-direction: row; margin-bottom: 36rpx;">
+            <text style="font-size: 28rpx; color: #333333;">联系电话：</text>
+            <view class="driver">{{currentOrderCost.driverMobile}}</view>
+          </view>
+          <view style="display: flex; flex-direction: row; margin-bottom: 36rpx;">
+            <text style="font-size: 28rpx; color: #333333;">车 牌 号：</text>
+            <view class="driver">{{currentOrderCost.carNum}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="confirmTitle">申请单确认：</view>
     <view class="content">
       <view class="confirmContent">
         <text style="font-size: 28rpx; color: #333333; line-height: 50rpx;">租赁费用：￥{{currentOrderCost.fare?(currentOrderCost.fare)/100:'0'}}</text>
@@ -116,29 +434,7 @@
         <image src="{{item}}" style="width: 411rpx; height: 251rpx; margin-left: 54rpx; margin-bottom: 17rpx;" />
       </block>
     </view>
-    <view class="confirmTitle" style="margin-top: 15rpx;">服务评价：</view>
-    <view style="display: flex; flex-direction: row; font-size: 28rpx; color: #333333; margin: 5rpx 0 0 41rpx;">
-      <view style="margin-right: 20rpx;">林雨申</view>
-      <view style="margin-right: 23rpx;">17693187420</view>
-      <view>兰州大学到会宁</view>
-    </view>
-    <view style="display: flex; flex-direction: row; font-size: 28rpx; color: #333333; margin: 21rpx 0 0 41rpx;">
-      <view style="margin-right: 30rpx;">紧凑型轿车</view>
-      <view style="margin-right: 20rpx;">捷达朗逸</view>
-      <view>2.3元/公里</view>
-    </view>
-    <view style="display: flex; flex-direction: row; font-size: 28rpx; color: #666666; margin: 11rpx 0 0 51rpx;">
-      <image src="../../images/shijian.png" mode="widthFix" style="width: 40rpx; margin-right: 14rpx;" />
-      <view>2019.12.4 09:30</view>
-    </view>
-    <view class="evaluate">
-      <view class="star">
-        <block wx:for="{{stars}}">
-          <image src="{{item}}" mode="widthFix" @tap="clickImg({{index}})" style="width: 50rpx; margin-right: 18rpx;" />
-        </block>
-      </view>
-      <textarea placeholder="对我们的服务发表您宝贵的建议~" bindblur="evaluateFunction" placeholder-class="placeholder" class="evaContent"></textarea>
-    </view>
+    <view></view>
     <view class="confirmTitle" style="margin-top: 37rpx;">用户反馈：</view>
     <view class="evaluate">
       <textarea placeholder="请对承运单位做出费用反馈信息给出您的建议或意见..." bindblur="feedbackFunction" placeholder-class="placeholder" class="proContent"></textarea>
@@ -147,28 +443,20 @@
     <view class="evaluate">
       <sign @getSignUrl.user="getSignUrl"></sign>
     </view>
-    <button class="confirmBtn" @tap="costConfirmFunction">费用确认</button>
+    <view class="selfInfo">
+      <button class="confirmBtn" style="margin-top:40rpx;" @tap="confirmCost">费 用 确 认</button>
+    </view>
   </view>
 </template>
 <script>
 import wepy from 'wepy'
 import sign from '../../components/sign'
-import { getOrderCost, confirmCostOrder, addFeedback, addEvaluate } from '../../utils/api'
+import { confirmCostOrder, addFeedback, addEvaluate, getOrderDetail } from '../../utils/api'
 export default class CostConfirm extends wepy.page {
   config = {
-    'navigationBarTitleText': '订单费用确认'
+    'navigationBarTitleText': '申请单详情'
   }
   data = {
-    stars: [
-      '../../images/noStar.png',
-      '../../images/noStar.png',
-      '../../images/noStar.png',
-      '../../images/noStar.png',
-      '../../images/noStar.png'
-    ],
-    // 星级
-    star: 0,
-    notes: ['../../images/fapiao1.jpg', '../../images/fapiao2.jpg'],
     // 用户id
     userId: 2,
     // 申请单id
@@ -192,35 +480,6 @@ export default class CostConfirm extends wepy.page {
     sign: sign
   }
   methods = {
-    clickImg(index) {
-      let bigIndex = index + 1
-      if (this.stars[index] === '../../images/star.png' && this.stars[bigIndex] !== '../../images/star.png') {
-        for (let i = 0; i <= index; i++) {
-          this.stars[i] = '../../images/noStar.png'
-        }
-      } else if (this.stars[index] === '../../images/star.png' && this.stars[bigIndex] === '../../images/star.png') {
-        this.stars = [
-          '../../images/noStar.png',
-          '../../images/noStar.png',
-          '../../images/noStar.png',
-          '../../images/noStar.png',
-          '../../images/noStar.png'
-        ]
-        for (let i = 0; i <= index; i++) {
-          this.stars[i] = '../../images/star.png'
-        }
-      } else {
-        for (let i = 0; i <= index; i++) {
-          this.stars[i] = '../../images/star.png'
-        }
-      }
-      this.star = 0
-      for (let i = 0; i < this.stars.length; i++) {
-        if (this.stars[i]==='../../images/star.png') {
-          this.star++
-        }
-      }
-    },
     // 反馈失去焦点
     feedbackFunction (e) {
       this.feedbackContent = e.detail.value
@@ -239,12 +498,13 @@ export default class CostConfirm extends wepy.page {
       if (res.status === 1) {
         let resFeed = await addFeedback(this.orderId, this.feedbackContent, this.costId, this.userId)
         if (resFeed.status === 1) {
-           let resEvaluate = await addEvaluate(this.orderId, this.carrierId, this.userId, this.evaluateContent, this.star)
-           wx.showToast({
+          let resEvaluate = await addEvaluate(this.orderId, this.carrierId, this.userId, this.evaluateContent, this.star)
+          console.log(resEvaluate, 'resEvaluate')
+          wx.showToast({
             title: '操作成功',
             icon: 'none'
-           })
-        }else {
+          })
+        } else {
           wx.showToast({
             title: '操作失败',
             icon: 'none'
@@ -259,12 +519,12 @@ export default class CostConfirm extends wepy.page {
     }
   }
   onLoad(options) {
-    this.orderId = options.orderId
+    this.orderId = options.id
     this.getOrderCostHandle(this.orderId)
   }
   // 查询费用单详情
   async getOrderCostHandle() {
-    let res = await getOrderCost(this.orderId)
+    let res = await getOrderDetail(this.orderId)
     if (res.status === 1) {
       this.currentOrderCost = res.info
       this.costId = res.info.id
@@ -275,6 +535,7 @@ export default class CostConfirm extends wepy.page {
         this.fileUrl = []
       }
     }
+    this.$apply()
   }
 }
 </script>

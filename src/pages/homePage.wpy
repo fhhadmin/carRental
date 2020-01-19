@@ -221,11 +221,11 @@
       <view class="row">
         <view class="bottomPanel" @tap="clickMyOrders">
           <image src="../images/order.png" mode="widthFix" style="width: 68rpx;" />
-          <text class="describeFont">我的订单</text>
+          <text class="describeFont">我的申请单</text>
         </view>
         <view class="bottomPanel" @tap="clcikRejectOrders">
           <image src="../images/reject.png" mode="widthFix" style="width: 68rpx;" />
-          <text class="describeFont">驳回订单</text>
+          <text class="describeFont">驳回申请单</text>
         </view>
       </view>
       <view class="row">
@@ -335,13 +335,13 @@ export default class HomePage extends wepy.page {
     getCurrentNum(e) {
       this.carNum = e
     },
-    // 我的订单
+    // 我的申请单
     clickMyOrders() {
       wx.navigateTo({
         url: `./orders/orders?state=` + 0
       })
     },
-    // 驳回订单
+    // 驳回申请单
     clcikRejectOrders() {
       wx.navigateTo({
         url: `./orders/orders?state=` + 6
