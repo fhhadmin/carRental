@@ -22,31 +22,34 @@ setStore(store)
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/login',
       'pages/homePage',
       'pages/orders/costConfirm',
 
-      'pages/login',
       'pages/register',
       'pages/orders/completeOrder',
       'pages/carApplication',
       'pages/orders/orders',
       'pages/orders/orderDetail',
       'pages/authentication',
+      'pages/authorize',
 
-      'pages/office/personalCenter'
+      'pages/office/personalCenter',
+      'pages/office/taxiHailingList'
     ],
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
       navigationBarTitleText: '',
       navigationBarTextStyle: 'black'
+      // navigationStyle: 'custom'
     }
   }
 
   globalData = {
-    userInfo: null
+    userInfo: null,
+    isLogin: false
   }
-
   constructor () {
     super()
     this.use('requestfix')

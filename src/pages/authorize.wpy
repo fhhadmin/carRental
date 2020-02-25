@@ -4,12 +4,15 @@
   border-bottom: 1px solid #ccc;
   text-align: center;
   width: 650rpx;
-  height: 300rpx;
-  line-height: 450rpx;
+  height: 100rpx;
+  line-height: 200rpx;
 }
 .content {
-  margin-left: 50rpx;
+  margin-left: 90rpx;
   margin-bottom: 90rpx;
+}
+.logo {
+  width: 21px;
 }
 .content text {
   display: block;
@@ -28,9 +31,15 @@
     <view class="header">
 
     </view>
-    <view class="centent">
-      <view>申请获取以下权限</view>
-      <text>获取你的公开信息（昵称、头像等）</text>
+    <view class="content">
+      <view>
+        <view style="display: flex; flex-direction: row; font-size: 28rpx;">
+          <image src="../images/logo.png" mode="widthFix" class="logo" />
+          <view style="margin-left: 10rpx; display: flex; flex-direction: row;">兰州大学约车信息管理<view style="color: #9d9d9d; margin-left: 10rpx;">申请获取</view></view>
+        </view>
+        <view style="margin: 40rpx 0;">以下权限</view>
+      </view>
+      <view style="font-size: 28rpx; color: #9d9d9d;">获取你的公开信息（昵称、头像、性别等）</view>
     </view>
     <button class="bottom" type="primary" open-type="getUserInfo" lang="zh_CN" @getUserInfo="bindGetUserInfo">
       授权登录
@@ -52,7 +61,7 @@ export default class Authorize extends wepy.page {
   }
   bindGetUserInfo(e) {
     if (e.detail.userInfo) {
-
+      
     }
   }
   onReady() {

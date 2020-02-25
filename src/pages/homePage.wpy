@@ -15,6 +15,29 @@
   justify-content: center;
   align-items: center;
 }
+/* 设置胶囊大小 */
+.capsule {
+  width: 70px;
+  border: 1px solid hsla(0, 0%, 100%, 0.25);
+  border-radius: 27px;
+  background: hsla(0, 0%, 100%, 0.6);
+  line-height: 1;
+  position: absolute;
+  left: 7pt;
+  top: 30px;
+}
+
+.capsule, .capsule>text {
+  display: flex;
+  align-items: center;
+}
+
+.capsule>text {
+  flex: 1;
+  height: 30px;
+  justify-content: center;
+}
+
 .barTitle {
   margin-top: 83rpx;
   margin-bottom: 43rpx;
@@ -246,9 +269,12 @@ import wepy from 'wepy'
 import defaultCounter from '../components/defaultCounter'
 import { getAllCarrier, getAllPath, getCarDetail, getCertification } from '../utils/api.js'
 import drawer from '../components/drawer'
+
+// var app = getApp()
+
 export default class HomePage extends wepy.page {
   config = {
-    navigationStyle: 'custom'
+
   }
   data = {
     alreadyAc: false,
@@ -399,12 +425,21 @@ export default class HomePage extends wepy.page {
       this.allPath = path.info
     }
     let certificate = await getCertification(2)
-    console.log(certificate)
     if (certificate.info.length > 0) {
       this.alreadyAc = true
     }
     this.$apply()
   }
+  onShow() {
+    // 判断当前用户是否已登录
+    let loginRes = wx.getStorageSync('login_user_info')
+    if (!loginRes) {
+      wx.redirectTo({
+        url: './login'
+      })
+    }
+  }
+
   watch = {
     'carrierId'(e) {
       if (e) {

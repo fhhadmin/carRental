@@ -23,7 +23,7 @@
 </template>
 <script>
 import wepy from 'wepy'
-export default class Authentication extends wepy.page {
+export default class TaxiHailingList extends wepy.page {
   config = {
     'navigationBarTitleText': '约车列表',
     'navigationBarBackgroundColor': '#F2F6F9'

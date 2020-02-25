@@ -22,23 +22,20 @@
 .orderList {
   background-color: #FFFFFF;
   width: 680rpx;
-  height: 150rpx;
   margin: 14rpx 0;
   border-radius: 8rpx;
-  padding: 27rpx 11rpx;
+  padding: 20rpx 25rpx;
 }
 .content {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   font-size: 28rpx;
   color: #333333;
-  margin-bottom: 20rpx;
 }
 .time {
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin-bottom: 20rpx;
 }
 .click {
   position: absolute;
@@ -57,35 +54,35 @@
     <block wx:for="{{orders}}">
       <view class="orderList"  @tap="clickInfo"  data-orders-item="{{item.id}}">
         <view class="content">
-          <view style="margin-right: 20rpx;">{{item.linkMan}}</view>
-          <view style="margin-right: 23rpx;">{{item.linkMobile}}</view>
-          <view style="color: #666666; font-size: 24rpx; margin-left: 15rpx;">
-            {{item.state+'' === '1' ? '待审核' : item.state+'' === '2' ? '已审核' : item.state+'' === '3' ? '用车中' : item.state+'' === '4' ? '费用待确认' : item.state+'' === '5' ? '已完成' : item.state+'' === '6' ? '已驳回' : item.state+'' === '-1' ? '已撤单' : ''}}
+          <view style="display: flex; flex-direction: row;">
+            <view style="margin-right: 20rpx;">{{item.linkMan}}</view>
+            <view style="margin-right: 23rpx;">{{item.linkMobile}}</view>
+            <view style="color: #666666; font-size: 24rpx; margin-left: 15rpx;">
+              {{item.state+'' === '1' ? '待审核' : item.state+'' === '2' ? '已审核' : item.state+'' === '3' ? '用车中' : item.state+'' === '4' ? '费用待确认' : item.state+'' === '5' ? '已完成' : item.state+'' === '6' ? '已驳回' : item.state+'' === '-1' ? '已撤单' : ''}}
+            </view>
           </view>
-        </view>
-        <view class="content">
-          <view>{{item.address}}到{{item.destination}}</view>
-        </view>
-        <view style="margin-bottom: 10rpx; position: relative; display: flex; flex-direction: column;">
-          <view class="time" wx:if="{{item.state+''==='-1'}}">
-            <image src="../../images/shijian.png" mode="widthFix" style="width: 30rpx" />
-            <text style="color: #666666; font-size: 24rpx;">申请时间：</text>
-            <text style="color: #666666; font-size: 24rpx;">{{item.createTime}}</text>
+          <view style="display: flex; flex-direction: column; position: relative;">
+            <view style="margin: 15rpx 0;">{{item.address}}到{{item.destination}}</view>
+            <view class="time" style="margin-bottom: 20rpx;" wx:if="{{item.state+''==='-1'}}">
+              <image src="../../images/shijian.png" mode="widthFix" style="width: 30rpx" />
+              <text style="color: #666666; font-size: 24rpx;">申请时间：</text>
+              <text style="color: #666666; font-size: 24rpx;">{{item.createTime}}</text>
+            </view>
+            <view class="time" wx:if="{{item.state+''==='-1'}}">
+              <image src="../../images/shijian.png" mode="widthFix" style="width: 30rpx; margin-right: 5rpx;" />
+              <text style="color: #666666; font-size: 24rpx;">撤单时间：</text>
+              <text style="color: #666666; font-size: 24rpx;">{{item.updateTime}}</text>
+            </view>
+            <view class="time" wx:else>
+              <image src="../../images/shijian.png" mode="widthFix" style="width: 30rpx; margin-right: 5rpx;" />
+              <text style="color: #666666; font-size: 24rpx;">{{item.startTime}} - {{item.endTime}}</text>
+            </view>
+            <view wx:if="{{item.state+''==='6' || item.state+''==='5'}}" style="font-size: 24rpx; color: #0091FF; position: absolute; right: 25rpx; bottom: 135rpx;">详情</view>
+            <!-- 若约车状态为 待审核 撤单 -->
+            <view wx:if="{{item.state + '' === '1'}}" catchtap="cancelOrder({{item.id}})" class="click" style="color: #FF8F37; font-size: 24rpx; position: absolute; right: 25rpx; bottom: 110rpx;">撤单</view>
+            <!-- 状态为 费用待确认 时 可直接查看费用单并确认 -->
+            <view wx:if="{{item.state + '' === '4'}}" catchtap="confirmFee" class="click" style="color: #FF8F37; font-size: 24rpx; position: absolute; right: 25rpx; bottom: 135rpx;">费用单</view>
           </view>
-          <view class="time" wx:if="{{item.state+''==='-1'}}">
-            <image src="../../images/shijian.png" mode="widthFix" style="width: 30rpx; margin-right: 5rpx;" />
-            <text style="color: #666666; font-size: 24rpx;">撤单时间：</text>
-            <text style="color: #666666; font-size: 24rpx;">{{item.updateTime}}</text>
-          </view>
-          <view class="time" wx:else>
-            <image src="../../images/shijian.png" mode="widthFix" style="width: 30rpx; margin-right: 5rpx;" />
-            <text style="color: #666666; font-size: 24rpx;">{{item.startTime}} - {{item.endTime}}</text>
-          </view>
-          <view wx:if="{{item.state+''==='6' || item.state+''==='5'}}" style="font-size: 24rpx; color: #0091FF; position: absolute; right: 25rpx; bottom: 135rpx;">详情</view>
-          <!-- 若约车状态为 待审核 撤单 -->
-          <view wx:if="{{item.state + '' === '1'}}" catchtap="cancelOrder({{item.id}})" class="click" style="color: #FF8F37; font-size: 24rpx; position: absolute; right: 25rpx; bottom: 135rpx;">撤单</view>
-          <!-- 状态为 费用待确认 时 可直接查看费用单并确认 -->
-          <view wx:if="{{item.state + '' === '4'}}" catchtap="confirmFee" class="click" style="color: #FF8F37; font-size: 24rpx; position: absolute; right: 25rpx; bottom: 135rpx;">费用单</view>
         </view>
       </view>
     </block>
@@ -131,7 +128,7 @@ export default class orders extends wepy.page {
       let currentOrderId = e.currentTarget.dataset.ordersItem
       if (this.currentState + '' === '5') {
         wx.navigateTo({
-          url: './componentOrder?id=' + currentOrderId
+          url: './completeOrder?id=' + currentOrderId
         })
       } else if (this.currentState + '' === '4') {
         wx.navigateTo({

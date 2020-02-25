@@ -154,7 +154,8 @@
           </picker>
           <view class="dot" style="background-color: #FF8F37;"></view>
           <picker mode="date" start="{{endDay}}" @change="onEndDateChange">{{endDay ? endDay : '选择日期'}}</picker>
-          <picker mode="time" start="{{endTime}}" style="margin-left: 5rpx;" @change="onEndTimeChange">
+          <picker mode="time" style="margin-left: 5rpx;" @change="onEndTimeChange">
+          <!-- <picker mode="time" start="{{endTime}}" style="margin-left: 5rpx;" @change="onEndTimeChange"> -->
             {{endTime ? endTime : '选择时间'}}结束
           </picker>
         </view>
@@ -275,7 +276,11 @@ export default class CarApplication extends wepy.page {
     },
     // 选择出发时间
     onStartTimeChange(e) {
-      this.startTime = e.detail.value
+      if (this.startTime < e.detail.value) {
+        this.startTime = e.detail.value
+      } else {
+        // 提示结束时间不能在开始时间之前
+      }
     },
     // 选择结束日期
     onEndDateChange(e) {
@@ -283,7 +288,11 @@ export default class CarApplication extends wepy.page {
     },
     // 选择结束时间
     onEndTimeChange(e) {
-      this.endTime = e.detail.value
+      if (this.endDay > this.startDay || (this.endDay === this.startDay && this.endTime < e.detail.value)) {
+        this.endTime = e.detail.value
+      } else {
+        // 提示结束时间不能在开始时间之前
+      }
     },
     causeInput(e) {
       this.useCause = e.detail.value

@@ -416,7 +416,7 @@
         </view>
       </view>
     </view>
-    <view class="confirmTitle">申请单确认：</view>
+    <view class="confirmTitle">费用单确认：</view>
     <view class="content">
       <view class="confirmContent">
         <text style="font-size: 28rpx; color: #333333; line-height: 50rpx;">租赁费用：￥{{currentOrderCost.fare?(currentOrderCost.fare)/100:'0'}}</text>
@@ -430,9 +430,10 @@
     </view>
     <view wx:else>
       <view style="font-size: 28rpx; color: #333333; margin: 37rpx 0 27rpx 54rpx;">费用票据：</view>
-      <block wx:for="{{fileUrl}}">
-        <image src="{{item}}" style="width: 411rpx; height: 251rpx; margin-left: 54rpx; margin-bottom: 17rpx;" />
-      </block>
+      <image src="http://qiniu-store-landa.lz-cc.com/1582595830117.jpg" bindtap="preview" data-src="http://qiniu-store-landa.lz-cc.com/1582595830117.jpg" style="width: 411rpx; height: 251rpx; margin-left: 54rpx; margin-bottom: 17rpx;" />
+      <!-- <block wx:for="{{orderDetail.file.split(',')}}">
+          <image src="{{item}}" bindtap="preview" data-src="{{item}}" style="width: 411rpx; height: 251rpx; margin-left: 54rpx; margin-bottom: 17rpx;" />
+        </block> -->
     </view>
     <view></view>
     <view class="confirmTitle" style="margin-top: 37rpx;">用户反馈：</view>
@@ -516,6 +517,14 @@ export default class CostConfirm extends wepy.page {
           icon: 'none'
         })
       }
+    },
+    preview(event) {
+      let currentUrl = event.currentTarget.dataset.src
+      wx.previewImage({
+        current: currentUrl,
+        urls: [currentUrl]
+        // urls: this.fileUrl
+      })
     }
   }
   onLoad(options) {
