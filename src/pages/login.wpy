@@ -265,7 +265,8 @@ export default class Index extends wepy.page {
         // 在此处判断登录用户角色 决定接下来显示哪些页面
       } else {
         wx.showToast({
-          title: '登录失败'
+          title: '登录失败',
+          icon: 'none'
         })
       }
     },
@@ -279,13 +280,15 @@ export default class Index extends wepy.page {
       }
       let res = await adminLogin(this.adminAccount, this.adminPassword)
       if (res.status === 1) {
+        wx.setStorageSync('login_admin_info', res.info)
         wx.redirectTo({
           url: './office/taxiHailingList'
         })
         // 在此处判断登录用户角色 决定接下来显示哪些页面
       } else {
         wx.showToast({
-          title: '登录失败'
+          title: '登录失败',
+          icon: 'none'
         })
       }
     },

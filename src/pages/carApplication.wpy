@@ -134,7 +134,7 @@
           <text>联 系 人：</text>
           <input placeholder="申请人姓名" value={{linkMan}} @input="inputLinkMan" class="nameInput" />
           <text>乘车人数：</text>
-          <counter @getCurrentNum.user="getCurrentNum"></counter>
+          <counter @getCurrentNum.user="getCurrentNum" :perAmount.sync="perAmount"></counter>
         </view>
         <view class="content">
           <text>联系电话：</text>
@@ -155,7 +155,6 @@
           <view class="dot" style="background-color: #FF8F37;"></view>
           <picker mode="date" start="{{endDay}}" @change="onEndDateChange">{{endDay ? endDay : '选择日期'}}</picker>
           <picker mode="time" style="margin-left: 5rpx;" @change="onEndTimeChange">
-          <!-- <picker mode="time" start="{{endTime}}" style="margin-left: 5rpx;" @change="onEndTimeChange"> -->
             {{endTime ? endTime : '选择时间'}}结束
           </picker>
         </view>
@@ -195,7 +194,7 @@
 import wepy from 'wepy'
 import counter from '../components/defaultCounter'
 import { getToday } from '../utils/timeFormat'
-import { getFundSource, addApplyOrder, editApplyOrder } from '../utils/api'
+import { getFundSource, addApplyOrder } from '../utils/api'
 import organSelect from '../components/organSelect'
 export default class CarApplication extends wepy.page {
   config = {
@@ -213,6 +212,7 @@ export default class CarApplication extends wepy.page {
     linkMan: null,
     linkPhone: null,
     ridingPerson: 0,
+    perAmount: 0,
     startArea: null,
     endArea: null,
     useCause: null,
@@ -297,14 +297,22 @@ export default class CarApplication extends wepy.page {
     causeInput(e) {
       this.useCause = e.detail.value
     },
+    // 一键约车
     async clickCarHailing() {
       if (this.linkMan && this.linkPhone && this.ridingPerson && this.firstOrganId &&
       this.secondOrganId && this.startDay && this.startTime && this.endDay && this.endTime &&
       this.startArea && this.endArea && this.fundSource && this.useCause && this.carNum) {
-        let res = await addApplyOrder(2, this.carrientId, this.carDetailId, this.carNum, this.linkMan, this.linkPhone, this.ridingPerson, this.firstOrganId, this.firstOrganName, this.secondOrganId, this.secondOrganName, this.startDay + ' ' + this.startTime, this.endDay + ' ' + this.endTime, this.startArea, this.endArea, this.fundSource, this.useCause)
-        if (res.status === 1) {
-          wx.navigateTo({
-            url: './orders/orders?state=' + '0'
+        if ((this.startDay + ' ' + this.startTime) < (this.endDay + ' ' + this.endTime)) {
+          let res = await addApplyOrder(2, this.carrientId, this.carDetailId, this.carNum, this.linkMan, this.linkPhone, this.ridingPerson, this.firstOrganId, this.firstOrganName, this.secondOrganId, this.secondOrganName, this.startDay + ' ' + this.startTime, this.endDay + ' ' + this.endTime, this.startArea, this.endArea, this.fundSource, this.useCause)
+          if (res.status === 1) {
+            wx.navigateTo({
+              url: './orders/orders?state=' + '0'
+            })
+          }
+        } else {
+          wx.showToast({
+            title: '结束时间必须在出发时间之后！',
+            icon: 'none'
           })
         }
       } else {
@@ -328,13 +336,31 @@ export default class CarApplication extends wepy.page {
     this.carrientId = options.carrientId
     this.carDetailId = options.carDetailId
     this.carNum = options.carNum
-
+    if (options.orderDetail) {
+      let orderInfo = JSON.parse(options.orderDetail)
+      this.linkMan = orderInfo.linkMan
+      this.perAmount = orderInfo.personalAmount
+      this.linkPhone = orderInfo.linkMobile
+      this.firstOrganId = orderInfo.parentId
+      this.firstOrganName = orderInfo.parentName
+      this.secondOrganId = orderInfo.institutionId
+      this.secondOrganName = orderInfo.institutionName
+      this.startDay = orderInfo.startTime ? orderInfo.startTime.split(' ')[0] : ''
+      this.startTime = orderInfo.startTime ? orderInfo.startTime.split(' ')[1] : ''
+      this.endDay = orderInfo.endTime ? orderInfo.endTime.split(' ')[0] : ''
+      this.endTime = orderInfo.endTime ? orderInfo.endTime.split(' ')[1] : ''
+      this.startArea = orderInfo.address
+      this.endArea = orderInfo.destination
+      this.fundSource = orderInfo.fundSource
+      this.useCause = orderInfo.reason
+    }
     let day = getToday(new Date())
     this.startDay = day.split(' ')[0]
     this.startTime = day.split(' ')[1]
     this.endDay = day.split(' ')[0]
     this.endTime = day.split(' ')[1]
     this.getFundSource()
+    this.$apply()
   }
 }
 </script>

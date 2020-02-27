@@ -194,6 +194,19 @@ export const getUserOders = async (userId, state) => {
 }
 
 /**
+ * 用户订单列表
+ * @param { String } userId 用户id
+ * @param { String } state 订单状态
+ */
+export const getaAdminOrders = async (state) => {
+  try {
+    return await post('/wx/queryApplyOrder', { state: state }, false)
+  } catch (error) {
+    return error
+  }
+}
+
+/**
  * 查询一级机构
  */
 export const getFirstOrgan = async () => {
@@ -279,6 +292,21 @@ export const editApplyOrder = async (id, userId, carrierId, carDetailId, amount,
 export const editOrderState = async (id, state) => {
   try {
     return await post('/wx/editApplyOrder', { id, state }, true)
+  } catch (error) {
+    return error
+  }
+}
+
+/**
+ * 驳回申请单
+ * @param { Integer } id 申请单id
+ * @param { Integer } state 申请单状态 -1=>撤单 2=>通过 6=>驳回
+ * @param { Integer } content 驳回原因
+ * @param { Integer } adminId 管理员id
+ */
+export const rejectOrder = async (id, state, content, adminId) => {
+  try {
+    return await post('/wx/updateApplyOrder', { id, state, content, adminId }, true)
   } catch (error) {
     return error
   }

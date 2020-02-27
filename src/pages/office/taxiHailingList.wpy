@@ -1,28 +1,28 @@
 <template>
   <view class="taxi-container" style="height: {{clientHeight}}px">
-    <view class="taxi-list-row" wx:for="{{array}}" wx:for-item="item" wx:key=" id ">
-      <view class="corner">{{item.id+1}}</view>
-      <view class="message">
-        <text class="item">林玉深</text>
-        <text class="item">15693884578</text>
-        <text class="item">兰州大学到会宁</text>
+    <block wx:for="{{toAuditArray}}">
+      <view class="taxi-list-row" @tap="clickGetInfo" data-id="{{item.id}}">
+        <view class="corner">{{index+1}}</view>
+        <view class="message">
+          <text class="item">{{item.linkMan}}</text>
+          <text class="item">{{item.linkMobile}}</text>
+          <text class="item">{{item.address}} — {{item.destination}}</text>
+        </view>
+        <view class="message">
+          <text class="item">{{item.reason}}</text>
+        </view>
+        <view class="message" style="margin-bottom: 15rpx;">
+          <image src="../../images/shijian.png" style="margin-right: 10rpx;"/>
+          <text class="item-date">{{item.startTime}}</text>
+          <text class="item-date">{{item.endTime}}</text>
+        </view>
       </view>
-      <view class="message">
-        <text class="item">紧凑型轿车</text>
-        <text class="item">捷达朗逸</text>
-        <text class="item">2.3元/公里</text>
-        <text class="check" @tap="checkFunction">审核</text>
-      </view>
-      <view class="message">
-        <image src="../../images/shijian.png"/>
-        <text class="item-date">2019.12.4</text>
-        <text class="item-date">09:30-2019.12.5</text>
-      </view>
-    </view>
+    </block>
   </view>
 </template>
 <script>
 import wepy from 'wepy'
+import { getaAdminOrders } from '../../utils/api.js'
 export default class TaxiHailingList extends wepy.page {
   config = {
     'navigationBarTitleText': '约车列表',
@@ -30,18 +30,33 @@ export default class TaxiHailingList extends wepy.page {
   }
   data = {
     clientHeight: 0,
-    array: [{ id: 0 }, {id: 1}, {id: 2}]
+    toAuditArray: []
   }
   components = {}
   methods = {
-    checkFunction () {
+    clickGetInfo(e) {
+      let orderId = e.currentTarget.dataset.id
       wx.navigateTo({
-        url: '/pages/orders/orderDetail?fatherPage=约车列表'
+        url: '../orders/orderDetail?id=' + orderId + '&audit=' + true
       })
     }
   }
-  onLoad() {
+  async onLoad() {
     this.clientHeight = wx.getSystemInfoSync().windowHeight
+    let auditList = await getaAdminOrders(1)
+    if (auditList.status === 1) {
+      this.toAuditArray = auditList.info.records
+    }
+    this.$apply()
+  }
+  onShow() {
+    // 判断当前用户是否已登录
+    let loginRes = wx.getStorageSync('login_admin_info')
+    if (!loginRes) {
+      wx.redirectTo({
+        url: './login'
+      })
+    }
   }
 }
 </script>
@@ -73,7 +88,7 @@ export default class TaxiHailingList extends wepy.page {
   color: rgba(255,255,255,1);
 }
 .message{
-  margin-top:8rpx;
+  margin:8rpx 0;
   display: flex;
   flex-direction: row;
   font-size: 25rpx;
@@ -82,12 +97,6 @@ export default class TaxiHailingList extends wepy.page {
 }
 .message .item{
   margin-right:24rpx;
-}
-.check{
-  font-size: 25rpx;
-  color:rgba(0, 145, 255, 1);
-  position: absolute;
-  right:56rpx;
 }
 .message image{
   width:31rpx;

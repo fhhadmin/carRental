@@ -90,7 +90,6 @@ export default class OrderDetail extends wepy.page {
   }
   methods = {
     cancelFunction() {
-      console.log(this.data.dialogState)
       this.data.dialogState = false
     }
   }

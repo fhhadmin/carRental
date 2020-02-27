@@ -47,6 +47,16 @@ export default class DefaultCounter extends wepy.page {
   data = {
     currentNum: 0
   }
+  props = {
+    carAmount: {
+      type: Number,
+      default: 0
+    },
+    perAmount: {
+      type: Number,
+      default: 0
+    }
+  }
   methods = {
     addNum() {
       this.currentNum = this.currentNum + 1
@@ -57,6 +67,18 @@ export default class DefaultCounter extends wepy.page {
         this.currentNum = this.currentNum - 1
         this.$emit('getCurrentNum', this.currentNum)
       }
+    }
+  }
+  watch = {
+    'carAmount'(e) {
+      this.currentNum = e
+      this.$emit('getCurrentNum', this.currentNum)
+      this.$apply()
+    },
+    'perAmount'(e) {
+      this.currentNum = e
+      this.$emit('getCurrentNum', this.currentNum)
+      this.$apply()
     }
   }
 }

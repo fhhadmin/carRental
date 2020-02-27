@@ -148,16 +148,12 @@
   margin-bottom: 36rpx;
 }
 .nameStyle {
-  width: 170rpx;
+  width: 200rpx;
   border-bottom: solid #E6E6E6 1rpx;
   line-height: 44rpx;
   padding-left: 19rpx;
-  margin-right: 24rpx;
+  margin-right: 50rpx;
   color: #999999;
-}
-.sexIcon {
-  width: 40rpx;
-  height: 40rpx;
 }
 .mobile {
   width: 500rpx;
@@ -308,11 +304,11 @@
         </view>
       </view>
       <view class="priceList">
-        <view>{{currentOrderCost.mileagePrice?(currentOrderCost.mileagePrice)/100:''}}元/公里</view>
+        <view>{{currentOrderCost.mileagePrice?(currentOrderCost.mileagePrice)/100:0}}元/公里</view>
         <view style="margin: 0 35rpx; color: #EEEEEE;">|</view>
-        <view>{{currentOrderCost.dayPrice?(currentOrderCost.dayPrice)/100:''}}元/天</view>
+        <view>{{currentOrderCost.dayPrice?(currentOrderCost.dayPrice)/100:0}}元/天</view>
         <view style="margin: 0 35rpx; color: #EEEEEE;">|</view>
-        <view>{{currentOrderCost.harfDayPrice?(currentOrderCost.harfDayPrice)/100:''}}元/半天</view>
+        <view>{{currentOrderCost.harfDayPrice?(currentOrderCost.harfDayPrice)/100:0}}元/半天</view>
       </view>
       <view class="selfInfo">
         <view style="position: relative; width: 100%; height: 120rpx;">
@@ -322,15 +318,8 @@
           <view class="userName">
             <text>真实姓名：</text>
             <view class="nameStyle">{{currentOrderCost.linkMan?currentOrderCost.linkMan:''}}</view>
-            <text>性 别：</text>
-            <view wx:if="{{currentOrderCost.sex === '男'}}" style="display: flex; flex-direction: row; margin: 0 15rpx;">
-              <view style="margin: 0 10rpx; color: #999999">男</view>
-              <image src="../../images/manSelected.png" class="sexIcon" />
-            </view>
-            <view wx:if="{{currentOrderCost.sex === '女'}}" style="display: flex; flex-direction: row;">
-              <view style="margin: 0 10rpx; color: #999999">女</view>
-              <image src="../../images/womanSelect.png" class="sexIcon" />
-            </view>
+            <text>乘车人数：</text>
+            <view class="carNum">{{currentDetail.personalAmount?currentDetail.personalAmount:0}}</view>
           </view>
           <view class="userName">
             <text>联系电话：</text>
@@ -435,7 +424,10 @@
           <image src="{{item}}" bindtap="preview" data-src="{{item}}" style="width: 411rpx; height: 251rpx; margin-left: 54rpx; margin-bottom: 17rpx;" />
         </block> -->
     </view>
-    <view></view>
+    <view style="font-size: 28rpx; color: #333333; margin: 37rpx 0 27rpx 54rpx; display: flex; flex-direction: row;">
+      <image src="../../images/tip.png" mode="widthFix" style="width: 30rpx;" />
+      <view>请仔细核对费用单，如费用信息有误，请<text style="color: #0091FF">反馈</text>至承运单位</view>
+    </view>
     <view class="confirmTitle" style="margin-top: 37rpx;">用户反馈：</view>
     <view class="evaluate">
       <textarea placeholder="请对承运单位做出费用反馈信息给出您的建议或意见..." bindblur="feedbackFunction" placeholder-class="placeholder" class="proContent"></textarea>

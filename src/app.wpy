@@ -22,8 +22,8 @@ setStore(store)
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/login',
       'pages/homePage',
+      'pages/login',
       'pages/orders/costConfirm',
 
       'pages/register',
@@ -41,8 +41,8 @@ export default class extends wepy.app {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
       navigationBarTitleText: '',
-      navigationBarTextStyle: 'black'
-      // navigationStyle: 'custom'
+      navigationBarTextStyle: 'black',
+      navigationStyle: 'custom'
     }
   }
 

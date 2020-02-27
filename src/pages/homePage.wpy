@@ -204,7 +204,7 @@
       <view class="pickerContainer">
         <image src="../images/userCar.png" mode="widthFix" class="icon" />
         <picker range="{{carrierUnit}}" @change="bindPickerChange1" range-key="name" style="position: relative;">
-          <view class="options" wx:if="{{index1}}">{{carrierUnit[index1].name}}</view>
+          <view class="options" wx:if="{{index1 === 0 || index1 > 0}}">{{carrierUnit[index1].name}}</view>
           <view class="options" wx:else style="font-size: #333333;">选择承运单位</view>
           <image src="../images/nabla.png" mode="widthFix" class="nabla" />
         </picker>
@@ -212,7 +212,7 @@
       <view class="pickerContainer">
         <image src="../images/goBack.png" mode="widthFix" class="icon" />
         <picker range="{{allPath}}" @change="bindPickerChange2" range-key="name" style="position: relative;">
-          <view class="options" wx:if="{{index2}}">{{allPath[index2].name}}</view>
+          <view class="options" wx:if="{{index2 === 0 || index2 > 0}}">{{allPath[index2].name}}</view>
           <view class="options" wx:else style="font-size: #333333;">选择行驶路线</view>
           <image src="../images/nabla.png" mode="widthFix" class="nabla" />
         </picker>
@@ -220,13 +220,13 @@
       <view class="pickerContainer">
         <image src="../images/carType.png" mode="widthFix" class="icon" />
         <picker range="{{carType}}" @change="bindPickerChange3" range-key="name" style="position: relative;">
-          <view class="options" wx:if="{{index3}}" style="width: 260rpx;">{{carType[index3].name}}</view>
+          <view class="options" wx:if="{{index3 === 0 || index3 > 0}}" style="width: 260rpx;">{{carType[index3].name}}</view>
           <view class="options" wx:else style="width: 260rpx; font-size: #333333;">选择车型</view>
           <image src="../images/nabla.png" mode="widthFix" class="nabla" />
         </picker>
         <view class="carNum">
           <text style="font-size: 28rpx; color: #333333;">车辆数：</text>
-          <defaultCounter @getCurrentNum.user="getCurrentNum"></defaultCounter>
+          <defaultCounter @getCurrentNum.user="getCurrentNum" :carAmount.sync="carAmount"></defaultCounter>
         </view>
       </view>
     </view>
@@ -278,6 +278,8 @@ export default class HomePage extends wepy.page {
   }
   data = {
     alreadyAc: false,
+    isReSend: false,
+    orderDetail: null,
     index1: null,
     index2: null,
     index3: null,
@@ -294,6 +296,7 @@ export default class HomePage extends wepy.page {
     carDetailId: null,
     carNum: 0,
     clientHeight: 0,
+    carAmount: 0,
     isOpen: 'close',
     items: ['../images/panel3.png', '../images/home.png', '../images/panel2.png']
   }
@@ -320,9 +323,15 @@ export default class HomePage extends wepy.page {
       if (this.carrierId && this.carTypeId) {
         if (this.carNum > 0) {
           if (this.amount > this.carNum) {
-            wx.navigateTo({
-              url: './carApplication?carrientId=' + this.carrierId + '&carDetailId=' + this.carDetailId + '&carNum=' + this.carNum
-            })
+            if (this.isReSend) {
+              wx.navigateTo({
+                url: './carApplication?carrientId=' + this.carrierId + '&carDetailId=' + this.carDetailId + '&carNum=' + this.carNum + '&orderDetail=' + JSON.stringify(this.orderDetail)
+              })
+            } else {
+              wx.navigateTo({
+                url: './carApplication?carrientId=' + this.carrierId + '&carDetailId=' + this.carDetailId + '&carNum=' + this.carNum
+              })
+            }
           } else {
             wx.showToast({
               title: '该车当前数量不足，请选择其他车型',
@@ -387,10 +396,10 @@ export default class HomePage extends wepy.page {
     }
   }
   // 获取所选车型的详情
-  async carDetail(unitId, routeId) {
+  async carDetail(unitId, routeId, carTypeId) {
     let res = await getCarDetail(unitId, routeId)
     if (res.status === 1 && res.info.length) {
-      res.info.map(e => {
+      res.info.map((e, index) => {
         let types = {
           id: e.carTypeId,
           name: e.carTypeName,
@@ -399,6 +408,10 @@ export default class HomePage extends wepy.page {
           dayPrice: e.dayPrice ? e.dayPrice / 100 : 0,
           halfDayPrice: e.harfDayPrice ? e.harfDayPrice / 100 : 0,
           amount: e.amount ? e.amount : 0
+        }
+        if (carTypeId && carTypeId === e.carTypeId) {
+          this.index3 = index
+          this.carTypeId = e.carTypeId
         }
         this.carType.push(types)
       })
@@ -413,7 +426,7 @@ export default class HomePage extends wepy.page {
     }
     this.$apply()
   }
-  async onLoad() {
+  async onLoad(options) {
     this.clientHeight = wx.getSystemInfoSync().windowHeight
     let carrier = await getAllCarrier(0)
     if (carrier.status === 1) {
@@ -427,6 +440,24 @@ export default class HomePage extends wepy.page {
     let certificate = await getCertification(2)
     if (certificate.info.length > 0) {
       this.alreadyAc = true
+    }
+    if (options.detail) {
+      this.isReSend = true
+      this.orderDetail = JSON.parse(options.detail)
+      this.carrierUnit.map((e1, index1) => {
+        if (this.orderDetail.carrierId === e1.id) {
+          this.index1 = index1
+          this.carrierId = e1.id
+        }
+      })
+      this.allPath.map((e2, index2) => {
+        if (this.orderDetail.routeTypeId === e2.id) {
+          this.index2 = index2
+          this.pathId = e2.id
+        }
+      })
+      this.carAmount = this.orderDetail.amount
+      this.carDetail(this.carrierId, this.pathId, this.orderDetail.carTypeId)
     }
     this.$apply()
   }
@@ -452,7 +483,7 @@ export default class HomePage extends wepy.page {
       }
     },
     'index3'(e) {
-      if (e) {
+      if (e >= 0) {
         this.mileagePrice = this.carType[e].mileagePrice
         this.dayPrice = this.carType[e].dayPrice
         this.halfDayPrice = this.carType[e].halfDayPrice

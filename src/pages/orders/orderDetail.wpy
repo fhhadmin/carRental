@@ -67,6 +67,8 @@
   font-size: 32rpx;
   color: #1A1A1A;
   font-weight: 500;
+  display: flex;
+  flex-direction: row;
 }
 .userName {
   display: flex;
@@ -74,16 +76,12 @@
   margin-bottom: 36rpx;
 }
 .nameStyle {
-  width: 170rpx;
+  width: 200rpx;
   border-bottom: solid #E6E6E6 1rpx;
   line-height: 44rpx;
   padding-left: 19rpx;
-  margin-right: 24rpx;
+  margin-right: 50rpx;
   color: #999999;
-}
-.sexIcon {
-  width: 40rpx;
-  height: 40rpx;
 }
 .mobile {
   width: 500rpx;
@@ -199,22 +197,110 @@
   color:rgba(255,255,255,1);
   font-family:Source Han Sans CN;
 }
-.reject-button{
-  background-color: rgba(179, 179, 179, 1);
-}
-.agree-button{
-  background-color: rgba(255, 143, 55, 1);
+.audit-button{
+  width: 280rpx;
+  height: 60rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20rpx;
+  color: #ffffff;
+  font-size: 28rpx;
+  margin: 10rpx 20rpx;
 }
 .cancelApply {
   width: 400rpx;
   height: 60rpx;
-  background-color: rgba(255, 143, 55, 1);
+  background-color: #FF8F37;
   color: #ffffff;
   font-size: 28rpx;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+}
+.resend {
+  width: 400rpx;
+  height: 60rpx;
+  background-color: #5BB531;
+  color: #ffffff;
+  font-size: 28rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.zan-dialog__container {
+  position: fixed;
+  bottom: 400rpx;
+  width: 650rpx;
+  height: 500rpx;
+  margin-left: 50rpx;
+  background: #f8f8f8;
+  transform: translateY(300%);
+  transition: all 0.1s ease;
+  z-index: 12;
+  border-radius: 20rpx;
+  box-shadow: 2px gainsboro;
+}
+
+.zan-dialog--show .zan-dialog__container {
+  transform: translateY(0);
+  transform: translateX(-58%);
+}
+
+.zan-dialog--show .shade {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  opacity: 0.7;
+  z-index: 10;
+}
+.rejectAction {
+  width: 100%;
+  height: 65rpx;
+  border-bottom: 1px solid #919191;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 15rpx 0;
+}
+.reject_textarea_view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.reject_textarea {
+  border: 1px solid #919191;
+  border-radius: 20rpx;
+  width: 88%;
+  max-height: 200rpx;
+  margin: 20rpx 0;
+  padding: 20rpx;
+}
+.reject_button {
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+   justify-content: center;
+   font-size: 28rpx;
+   margin: 30rpx 0;
+ }
+.reject_btn_click {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 280rpx;
+  height: 70rpx;
+  color: #fff;
+  border-radius: 20rpx;
 }
 </style>
 <template>
@@ -236,11 +322,11 @@
       </view>
     </view>
     <view class="priceList">
-      <view>{{currentDetail.mileagePrice?(currentDetail.mileagePrice)/100:''}}元/公里</view>
+      <view>{{currentDetail.mileagePrice?(currentDetail.mileagePrice)/100:0}}元/公里</view>
       <view style="margin: 0 35rpx; color: #EEEEEE;">|</view>
-      <view>{{currentDetail.dayPrice?(currentDetail.dayPrice)/100:''}}元/天</view>
+      <view>{{currentDetail.dayPrice?(currentDetail.dayPrice)/100:0}}元/天</view>
       <view style="margin: 0 35rpx; color: #EEEEEE;">|</view>
-      <view>{{currentDetail.harfDayPrice?(currentDetail.harfDayPrice)/100:''}}元/半天</view>
+      <view>{{currentDetail.harfDayPrice?(currentDetail.harfDayPrice)/100:0}}元/半天</view>
     </view>
     <view class="selfInfo">
       <view style="position: relative; width: 100%; height: 120rpx;">
@@ -250,15 +336,8 @@
         <view class="userName">
           <text>真实姓名：</text>
           <view class="nameStyle">{{currentDetail.linkMan?currentDetail.linkMan:''}}</view>
-          <text>性 别：</text>
-          <view wx:if="{{currentDetail.sex === '男'}}" style="display: flex; flex-direction: row; margin: 0 15rpx;">
-            <view style="margin: 0 10rpx; color: #999999">男</view>
-            <image src="../../images/manSelected.png" class="sexIcon" />
-          </view>
-          <view wx:if="{{currentDetail.sex === '女'}}" style="display: flex; flex-direction: row;">
-            <view style="margin: 0 10rpx; color: #999999">女</view>
-            <image src="../../images/womanSelect.png" class="sexIcon" />
-          </view>
+          <text>乘车人数：</text>
+          <view class="carNum">{{currentDetail.personalAmount?currentDetail.personalAmount:0}}</view>
         </view>
         <view class="userName">
           <text>联系电话：</text>
@@ -301,9 +380,9 @@
     </view>
     <view wx:if="{{currentPageState+''!=='-1'}}" class="selfInfo">
       <view style="position: relative; width: 100%; height: 100rpx;">
-        <view class="titleText">申请单状态：</view>
+        <view class="titleText">申请单状态：<view wx:if="{{currentDetail.state === 6}}">已驳回</view></view>
       </view>
-      <view style="position: relative; width: 680rpx; height: 60rpx;">
+      <view wx:if="{{currentDetail.state !== 6}}" style="position: relative; width: 680rpx; height: 60rpx;">
         <view class="progress">
           <view style="width: 517rpx; height: 20rpx; border-radius: 5rpx;">
             <view class="currentProgress">
@@ -324,6 +403,13 @@
         </view>
       </view>
     </view>
+    <!-- 驳回理由 -->
+    <view class="selfInfo" wx:if="{{currentDetail.state === 6}}">
+      <view style="position: relative; width: 100%; height: 100rpx;">
+        <view class="titleText">驳回理由：</view>
+      </view>
+      <view style="margin-left: 64rpx; font-size: 28rpx; color: #333333;">{{currentDetail.auditContent?currentDetail.auditContent:''}}</view>
+    </view>
     <view wx:if="{{currentPageState+''==='3'}}" class="selfInfo">
       <view style="position: relative; width: 100%; height: 100rpx;">
         <view class="titleText">司机信息：</view>
@@ -343,18 +429,37 @@
         </view>
       </view>
     </view>
-    <view style="margin: 60rpx 0 30rpx 0;" wx:if="{{currentDetail.state+''==='1'}}">
+    <view style="margin: 60rpx 0 30rpx 0; display: flex; flex-direction: row;" wx:if="{{isAudit}}">
+      <button class="audit-button" style="background-color: rgba(179, 179, 179, 1);" catchtap="rejectOrder">驳 回</button>
+      <button class="audit-button" style="background-color: rgba(255, 143, 55, 1);" catchtap="passOrder">同 意</button>
+    </view>
+    <!-- 撤销申请 -->
+    <view style="margin: 60rpx 0 30rpx 0;" wx:elif="{{currentDetail.state+''==='1' || currentDetail.state+''==='2'}}">
       <button class="cancelApply" catchtap="cancelOrder">取 消 申 请</button>
     </view>
-    <!-- <view wx:else class="button-container">
-        <button class="reject-button" @tap="rejectFunction">驳回</button>
-        <button class="agree-button">同意</button>
-    </view> -->
+    <!-- 重新发起申请 -->
+    <view style="margin: 60rpx 0 30rpx 0;" wx:elif="{{currentDetail.state+''==='6'}}">
+      <button class="resend" catchtap="resend">重 新 发 起</button>
+    </view>
+    <!-- 驳回时的弹框 -->
+    <view class="zan-dialog {{ showDialog ? 'zan-dialog--show' : '' }}">
+      <view class="shade"></view>
+      <view class="zan-dialog__container">
+        <view class="rejectAction">申请驳回</view>
+        <view class="reject_textarea_view">
+          <textarea placeholder="请输入驳回理由" value={{rejectReason}} @input="reasonInput" class="reject_textarea" placeholder-class="textarea_placeholder" />
+        </view>
+        <view class="reject_button">
+          <button class="reject_btn_click" style="background-color: #adadad;" catchtap="clickCancel">取消</button>
+          <button class="reject_btn_click" style="background-color: #0091FF;" catchtap="clickConfirm">确定</button>
+        </view>
+      </view>
+    </view>
   </view>
 </template>
 <script>
 import wepy from 'wepy'
-import { getOrderDetail, editOrderState } from '../../utils/api'
+import { getOrderDetail, editOrderState, rejectOrder } from '../../utils/api'
 export default class OrderDetail extends wepy.page {
   config = {
     'navigationBarTitleText': '申请单详情',
@@ -364,7 +469,11 @@ export default class OrderDetail extends wepy.page {
     currentPageState: null,
     currentDetail: {},
     userId: '2',
-    currentOrderId: null
+    currentOrderId: null,
+    rejectReason: null,
+    isAudit: false,
+    showDialog: false,
+    perAmount: 0
   }
   components = {}
   methods = {
@@ -380,23 +489,85 @@ export default class OrderDetail extends wepy.page {
         content: '将取消此次约车行为，是否继续？',
         success: e => {
           if (e.confirm) {
-            this.editToCancel(this.currentOrderId)
+            this.editToCancel(this.currentOrderId, -1)
           }
         }
       })
+    },
+    // 驳回申请单
+    rejectOrder() {
+      this.showDialog = !this.showDialog
+    },
+    // 取消驳回
+    clickCancel() {
+      this.showDialog = !this.showDialog
+      this.rejectReason = ''
+    },
+    reasonInput(e) {
+      this.rejectReason = e.detail.value
+    },
+    // 确定驳回
+    clickConfirm() {
+      if (this.rejectReason) {
+        this.confirmRejectOrder(this.currentOrderId, 6, this.rejectReason, wx.getStorageSync('login_admin_info').id)
+      } else {
+        wx.showToast({
+          title: '请填写驳回原因！',
+          icon: 'none'
+        })
+      }
+    },
+    // 通过申请单
+    passOrder() {
+      wx.showModal({
+        title: '温馨提示',
+        content: '通过此用车申请后相关承运单位将进行派车等一系列后续操作，是否继续？',
+        success: e => {
+          if (e.confirm) {
+            this.editToCancel(this.currentOrderId, 2)
+          }
+        }
+      })
+    },
+    // 被驳回的申请单重新发起
+    resend() {
+      wx.navigateTo({
+        url: '../homePage?detail=' + JSON.stringify(this.currentDetail)
+      })
     }
   }
-  async editToCancel(id) {
+  async confirmRejectOrder(id, state, reason, adminId) {
+    let res = await rejectOrder(id, state, reason, adminId)
+    if (res.status === 1) {
+      this.showDialog = !this.showDialog
+      wx.navigateTo({
+        url: '../office/taxiHailingList'
+      })
+    } else {
+      wx.showToast({
+        title: '操作失败，请稍后重试',
+        icon: 'none'
+      })
+    }
+  }
+  async editToCancel(id, state) {
     // 调用撤单接口 完成撤单操作
-    let res = await editOrderState(id, -1)
+    let res = await editOrderState(id, state)
     if (res.status === 1) {
       wx.showToast({
         title: '操作成功！',
         icon: 'none'
       })
-      wx.navigateTo({
-        url: './orders?state=0'
-      })
+      // state = 2 审核通过   state = -1 撤单
+      if (state === 2) {
+        wx.navigateTo({
+          url: '../office/taxiHailingList'
+        })
+      } else {
+        wx.navigateTo({
+          url: './orders?state=0'
+        })
+      }
     }
   }
   // 查询申请单详情接口
@@ -412,6 +583,10 @@ export default class OrderDetail extends wepy.page {
     this.currentOrderId = options.id
     // 查询申请单详情
     this.orderDtail(this.currentOrderId)
+    // 当audit值为true时此页面为管理员对申请单的审核页面
+    if (options.audit) {
+      this.isAudit = true
+    }
   }
 }
 </script>
