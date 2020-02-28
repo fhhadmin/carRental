@@ -24,13 +24,24 @@
   width: 680rpx;
   margin: 14rpx 0;
   border-radius: 8rpx;
-  padding: 20rpx 25rpx;
+  padding: 0 25rpx 20rpx 0;
+}
+.corner{
+  width:29rpx;
+  height:29rpx;
+  background-color: rgba(250, 204, 76, 1);
+  border-bottom-right-radius: 50%;
+  border-top-left-radius: 10rpx;
+  font-size: 21rpx;
+  text-align: center;
+  color: rgba(255,255,255,1);
 }
 .content {
   display: flex;
   flex-direction: column;
   font-size: 28rpx;
   color: #333333;
+  margin-left: 45rpx;
 }
 .time {
   display: flex;
@@ -53,11 +64,12 @@
     </view>
     <block wx:for="{{orders}}">
       <view class="orderList"  @tap="clickInfo" data-orders-item="{{item.id}}">
+        <view class="corner">{{index+1}}</view>
         <view class="content">
           <view style="display: flex; flex-direction: row;">
-            <view style="margin-right: 20rpx;">{{item.linkMan}}</view>
-            <view style="margin-right: 23rpx;">{{item.linkMobile}}</view>
-            <view style="color: #666666; font-size: 24rpx; margin-left: 15rpx;">
+            <view style="margin-right: 30rpx;">{{item.linkMan}}</view>
+            <view style="margin-right: 30rpx;">{{item.linkMobile}}</view>
+            <view style="color: #666666;">
               {{item.state+'' === '1' ? '待审核' : item.state+'' === '2' ? '已审核' : item.state+'' === '3' ? '用车中' : item.state+'' === '4' ? '费用待确认' : item.state+'' === '5' ? '已完成' : item.state+'' === '6' ? '已驳回' : item.state+'' === '-1' ? '已撤单' : ''}}
             </view>
           </view>
@@ -78,9 +90,10 @@
               <text style="color: #666666; font-size: 24rpx;">{{item.startTime}} - {{item.endTime}}</text>
             </view>
             <!-- 若约车状态为 待审核 撤单 -->
-            <view wx:if="{{item.state + '' === '1' || item.state+ '' === '2'}}" catchtap="cancelOrder({{item.id}})" class="click" style="color: #FF8F37; font-size: 24rpx; position: absolute; right: 25rpx; bottom: 110rpx;">撤单</view>
+            <view wx:if="{{item.state + '' === '1' || item.state+ '' === '2'}}" catchtap="cancelOrder({{item.id}})" class="click" style="color: #FF8F37; font-size: 28rpx; position: absolute; right: 30rpx; bottom: 100rpx;">撤单</view>
             <!-- 状态为 费用待确认 时 可直接查看费用单并确认 -->
-            <view wx:if="{{item.state + '' === '4'}}" catchtap="confirmFee" class="click" style="color: #FF8F37; font-size: 24rpx; position: absolute; right: 25rpx; bottom: 135rpx;">费用单</view>
+            <!-- <view wx:if="{{item.state + '' === '4'}}" catchtap="confirmFee" class="click" style="color: #FF8F37; font-size: 28rpx; position: absolute; right: 30rpx; bottom: 100rpx;">费用单</view> -->
+            <view wx:if="{{item.state + '' === '5' && !(item.evaluateStars > 0 || item.evaluate) }}" catchtap="toEvaluate" class="click" style="color: #FF8F37; font-size: 28rpx; position: absolute; right: 30rpx; bottom: 100rpx;">去评价</view>
           </view>
         </view>
       </view>
@@ -121,6 +134,10 @@ export default class orders extends wepy.page {
     },
     // 确认费用
     confirmFee() {
+
+    },
+    // 去评价
+    toEvaluate() {
 
     },
     clickInfo(e) {

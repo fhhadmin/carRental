@@ -1,16 +1,16 @@
 <style>
 .counter {
-  width: 110rpx;
-  height: 32rpx;
+  width: 120rpx;
+  height: 40rpx;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   border: solid 1rpx #BFBFBF;
-  border-radius: 4rpx;
+  border-radius: 5rpx;
 }
 .countChange {
-  font-size: 28rpx;
+  font-size: 34rpx;
   color: #000000;
   width: 14rpx;
   height: 14rpx;
@@ -21,17 +21,16 @@
   margin: 9rpx 16rpx;
 }
 .number {
-  width: 30rpx;
-  height: 28rpx;
+  height: 38rpx;
   background-color: #00BE6E;
-  border-radius: 2rpx;
+  border-radius: 4rpx;
   color: #FFFFFF;
   font-size: 28rpx;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 3rpx 7rpx;
+  padding: 0 10rpx;
 }
 </style>
 <template>

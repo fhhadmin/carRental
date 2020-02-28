@@ -26,28 +26,28 @@
 </style>
 <template>
   <view>
-    <view class='mask' bindtap="powerDrawer" data-statu="close" wx:if="{{showModalStatus}}"></view>
+    <view class='mask' catchtap="powerDrawer" wx:if="{{showModalStatus}}"></view>
     <view class='Drawer' animation="{{animationData}}" wx:if="{{showModalStatus}}">
       <image src="../images/logo1.png" style="width: 120rpx; height: 103rpx; margin-top: 60rpx;" />
       <view style="font-size: 24rpx; margin-top: 20rpx; margin-bottom: 19rpx">{{account}}</view>
       <view>
-        <view class="list" @tap="clickOrders">
+        <view class="list" catchtap="clickOrders">
           <image src="../images/smallOrders.png" style="width: 36rpx; height: 39rpx; margin-right: 26rpx;" />
           <text style="color: #1A1A1A; font-size: 24rpx;">我的订单</text>
         </view>
-        <view class="list" @tap="clickHistoryBack">
+        <view class="list" catchtap="clickHistoryBack">
           <image src="../images/smallHistory.png" style="width: 36rpx; height: 39rpx; margin-right: 26rpx;" />
           <text style="color: #1A1A1A; font-size: 24rpx;">历史撤单</text>
         </view>
-        <view class="list" @tap="clickRejectOders">
+        <view class="list" catchtap="clickRejectOders">
           <image src="../images/smallReject.png" style="width: 36rpx; height: 39rpx; margin-right: 26rpx;" />
           <text style="color: #1A1A1A; font-size: 24rpx;">驳回订单</text>
         </view>
-        <view class="list" @tap="clickHistoryList">
+        <view class="list" catchtap="clickHistoryList">
           <image src="../images/smallHistory.png" style="width: 36rpx; height: 39rpx; margin-right: 26rpx;" />
           <text style="color: #1A1A1A; font-size: 24rpx;">历史约车</text>
         </view>
-        <view class="list" @tap="clickSelfCenter">
+        <view class="list" catchtap="clickSelfCenter">
           <image src="../images/personalCenter.png" style="width: 36rpx; height: 39rpx; margin-right: 26rpx;" />
           <text style="color: #1A1A1A; font-size: 24rpx;">个人中心</text>
         </view>
@@ -64,37 +64,42 @@ import wepy from 'wepy'
 export default class Drawer extends wepy.page {
   data = {
     showModalStatus: false,
-    account: '17693186884'
+    modalStatu: true,
+    account: null
   }
   props = {
     isOpen: {
-      type: String,
+      type: Boolean,
       default: false
     }
   }
   methods = {
     powerDrawer(e) {
-      var currentStatu = e.currentTarget.dataset.statu
-      this.util(currentStatu)
+      this.modalStatu = !this.modalStatu
+      this.util(this.modalStatu)
     },
+    // 我的申请单列表
     clickOrders() {
       wx.navigateTo({
-        url: './orders/myOrders'
+        url: `./orders/orders?state=` + 0
       })
     },
+    // 我的驳回申请单列表
     clickRejectOders() {
       wx.navigateTo({
-        url: './orders/rejectOrders'
+        url: `./orders/orders?state=` + 6
       })
     },
+    // 历史约车列表
     clickHistoryList() {
       wx.navigateTo({
-        url: './orders/historyOrders'
+        url: `./orders/orders?state=` + 5
       })
     },
+    // 历史撤单列表
     clickHistoryBack() {
       wx.navigateTo({
-        url: './orders/historyBackOrders'
+        url: `./orders/orders?state=` + '-1'
       })
     },
     clickSelfCenter() {
@@ -117,30 +122,34 @@ export default class Drawer extends wepy.page {
     animation.translateX(0).step()
     // 第4步：导出动画对象赋给数据对象储存
     this.animationData = animation.export()
-    // this.setData({
-    //   animationData: animation.export()
-    // })
     // 第5步：设置定时器到指定时候后，执行第二组动画
-    setTimeout(function () {
-      // 执行第二组动画：X轴偏移22px，停
-      animation.translateX(220).step()
-      // 给数据对象储存的第一组动画，更替为执行完第二组动画的动画对象
-      this.animationData = animation
-      // 关闭抽屉
-      if (currentStatu === 'close') {
-        this.showModalStatus = false
-      }
-    }.bind(this), 200)
+    // setTimeout(function () {
+    //   // 执行第二组动画：X轴偏移22px，停
+    //   animation.translateX(220).step()
+    //   // 给数据对象储存的第一组动画，更替为执行完第二组动画的动画对象
+    //   this.animationData = animation
+    //   // 关闭抽屉
+    //   if (currentStatu === false) {
+    //     this.showModalStatus = false
+    //   }
+    // }.bind(this), 200)
     // 显示抽屉
-    if (currentStatu === 'open') {
+    if (currentStatu === 'true') {
       this.account = this.account.replace(this.account.substring(3, 7), '****')
       this.showModalStatus = true
+    } else {
+      this.showModalStatus = false
     }
+    this.$apply()
   }
   watch = {
     'isOpen'(e) {
-      this.util(e)
+      this.util(e.split(',')[0])
     }
+  }
+  onLoad() {
+    let userInfo = wx.getStorageSync('login_user_info')
+    this.account = userInfo.mobile
   }
 }
 </script>

@@ -346,9 +346,9 @@ export const getEvaluateContent = async (applyOrderId) => {
  * @param { Integer } costOrderId 费用单id
  * @param { String } nameUrl 签名图片
  */
-export const confirmCostOrder = async (userId, costOrderId, nameUrl) => {
+export const confirmCostOrder = async (userId, applyOrderId, costOrderId, nameUrl) => {
   try {
-    return await post('/wx/updateCostOrder', { userId, costOrderId, nameUrl }, false)
+    return await post('/wx/updateCostOrder', { userId, applyOrderId, costOrderId, nameUrl }, false)
   } catch (error) {
     return error
   }

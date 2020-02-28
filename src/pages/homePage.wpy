@@ -97,6 +97,7 @@
 }
 .options {
   width: 524rpx;
+  line-height: 35rpx;
   font-size: 28rpx;
   color: #1A1A1A;
   padding: 0 15rpx;
@@ -105,7 +106,7 @@
   border-bottom: solid #E6E6E6 2rpx;
 }
 .icon {
-  width: 44rpx;
+  width: 54rpx;
 }
 .priceList {
   width: 680rpx;
@@ -274,7 +275,7 @@ import drawer from '../components/drawer'
 
 export default class HomePage extends wepy.page {
   config = {
-
+    navigationStyle: 'custom'
   }
   data = {
     alreadyAc: false,
@@ -297,7 +298,7 @@ export default class HomePage extends wepy.page {
     carNum: 0,
     clientHeight: 0,
     carAmount: 0,
-    isOpen: 'close',
+    isOpen: false,
     items: ['../images/panel3.png', '../images/home.png', '../images/panel2.png']
   }
   components = {
@@ -307,11 +308,8 @@ export default class HomePage extends wepy.page {
   methods = {
     // 个人设置
     openSetting() {
-      if (this.isOpen === 'close') {
-        this.isOpen = 'open'
-      } else {
-        this.isOpen = 'close'
-      }
+      this.isOpen = true + ',' + new Date()
+      this.$apply()
     },
     // 立即认证
     gotoApprove() {

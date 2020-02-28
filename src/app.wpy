@@ -33,6 +33,7 @@ export default class extends wepy.app {
       'pages/orders/orderDetail',
       'pages/authentication',
       'pages/authorize',
+      'pages/evaluate',
 
       'pages/office/personalCenter',
       'pages/office/taxiHailingList'
@@ -41,8 +42,7 @@ export default class extends wepy.app {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
       navigationBarTitleText: '',
-      navigationBarTextStyle: 'black',
-      navigationStyle: 'custom'
+      navigationBarTextStyle: 'black'
     }
   }
 

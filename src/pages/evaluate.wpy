@@ -1,0 +1,105 @@
+<style>
+.confirmTitle {
+  font-size: 36rpx;
+  color: #1A1A1A;
+  font-weight: 500;
+  margin-left: 21rpx;
+  margin-bottom: 30rpx;
+}
+.evaluate {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.star {
+  display: flex;
+  flex-direction: row;
+  /* justify-content: center;
+  align-items: center; */
+  margin-top: 39rpx;
+}
+.evaContent {
+  width: 580rpx;
+  height: 148rpx;
+  background-color: #F2F6F9;
+  border-radius: 5rpx;
+  margin-top: 20rpx;
+  padding: 20rpx 0 0 19rpx;
+}
+.placeholder {
+  font-size: 28rpx;
+  color: #B3B3B3;
+}
+</style>
+<template>
+  <view>
+    <view class="confirmTitle" style="margin-top: 15rpx;">服务评价：</view>
+    <view style="display: flex; flex-direction: row; font-size: 32rpx; color: #333333; margin: 5rpx 0 20rpx 41rpx;">
+      <view style="margin-right: 20rpx;">林雨申</view>
+      <view style="margin-right: 23rpx;">17693187420</view>
+      <view>兰州大学到会宁</view>
+    </view>
+    <view style="display: flex; flex-direction: row; font-size: 32rpx; color: #333333; margin: 0 0 20rpx 41rpx;">
+      <view style="margin-right: 30rpx;">紧凑型轿车</view>
+      <view style="margin-right: 20rpx;">捷达朗逸</view>
+      <view>2.3元/公里</view>
+    </view>
+    <view style="display: flex; flex-direction: row; font-size: 32rpx; color: #666666; margin: 0 0 20rpx 41rpx;">
+      <image src="../images/shijian.png" mode="widthFix" style="width: 40rpx; margin-right: 14rpx;" />
+      <view>2019.12.4 09:30</view>
+    </view>
+    <view class="evaluate">
+      <view class="star">
+        <block wx:for="{{stars}}">
+          <image src="{{item}}" mode="widthFix" @tap="clickImg(index)" style="width: 50rpx; margin-right: 18rpx;" />
+        </block>
+      </view>
+      <textarea placeholder="对我们的服务发表您宝贵的建议~" @input="evaluateFunction" placeholder-class="placeholder" class="evaContent"></textarea>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class Evaluate extends wepy.page {
+  config = {
+    'navigationBarTitleText': '用车评价'
+  }
+  data = {
+    evaluateContent: null,
+    stars: ['../images/noStar.png', '../images/noStar.png', '../images/noStar.png', '../images/noStar.png', '../images/noStar.png']
+  }
+  methods = {
+    clickImg(index) {
+      let bigIndex = index + 1
+      if (this.stars[index] === '../images/star.png' && this.stars[bigIndex] !== '../images/star.png') {
+        for (let i = 0; i <= index; i++) {
+          this.stars[i] = '../images/noStar.png'
+        }
+      } else if (this.stars[index] === '../images/star.png' && this.stars[bigIndex] === '../images/star.png') {
+        this.stars = ['../images/noStar.png', '../images/noStar.png', '../images/noStar.png', '../images/noStar.png', '../images/noStar.png']
+        for (let i = 0; i <= index; i++) {
+          this.stars[i] = '../images/star.png'
+        }
+      } else {
+        for (let i = 0; i <= index; i++) {
+          this.stars[i] = '../images/star.png'
+        }
+      }
+      this.star = 0
+      for (let i = 0; i < this.stars.length; i++) {
+        if (this.stars[i] === '../images/star.png') {
+          this.star++
+        }
+      }
+    },
+    evaluateFunction(e) {
+      this.evaluateContent = e.detail.value
+    }
+  }
+  onLoad() {
+
+  }
+}
+</script>

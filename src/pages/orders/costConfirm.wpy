@@ -59,11 +59,12 @@
   color: #B3B3B3;
 }
 .proContent {
-  width: 580rpx;
-  height: 148rpx;
+  width: 600rpx;
+  height: 188rpx;
   background-color: #F2F6F9;
   border-radius: 5rpx;
   padding: 20rpx 0 0 19rpx;
+  margin-bottom: 100rpx;
 }
 .confirmBtn {
   background-color: #FF8F37;
@@ -424,34 +425,44 @@
           <image src="{{item}}" bindtap="preview" data-src="{{item}}" style="width: 411rpx; height: 251rpx; margin-left: 54rpx; margin-bottom: 17rpx;" />
         </block> -->
     </view>
-    <view style="font-size: 28rpx; color: #333333; margin: 37rpx 0 27rpx 54rpx; display: flex; flex-direction: row;">
-      <image src="../../images/tip.png" mode="widthFix" style="width: 30rpx;" />
-      <view>请仔细核对费用单，如费用信息有误，请<text style="color: #0091FF">反馈</text>至承运单位</view>
+    <view style="font-size: 28rpx; color: #717171; margin: 10rpx 20rpx 20rpx 50rpx; display: flex; flex-direction: row;">
+      <image src="../../images/tip.png" mode="widthFix" style="width: 32rpx; margin-right: 10rpx; margin-top: 8rpx;" />
+      <view>请仔细核对费用单，如费用信息有误，请<text catchtap="gotoFeedBack" style="color: #0091FF">反馈</text>至承运单位</view>
     </view>
-    <view class="confirmTitle" style="margin-top: 37rpx;">用户反馈：</view>
-    <view class="evaluate">
-      <textarea placeholder="请对承运单位做出费用反馈信息给出您的建议或意见..." bindblur="feedbackFunction" placeholder-class="placeholder" class="proContent"></textarea>
-    </view>
-    <view class="confirmTitle" style="margin-top: 37rpx;">签名确认：</view>
-    <view class="evaluate">
-      <sign @getSignUrl.user="getSignUrl"></sign>
-    </view>
-    <view class="selfInfo">
-      <button class="confirmBtn" style="margin-top:40rpx;" @tap="confirmCost">费 用 确 认</button>
-    </view>
+    <block wx:if="{{isFeed}}">
+      <view class="confirmTitle" style="margin-top: 37rpx;">用户反馈：</view>
+      <view wx:if="{{feedBtn}}" class="evaluate" style="position: relative;">
+        <textarea placeholder="请对承运单位做出费用反馈信息给出您的建议或意见..." @input="feedbackFunction" placeholder-class="placeholder" class="proContent"></textarea>
+        <view style="display: flex; flex-direction: row; position: absolute; right: 75rpx; bottom: 25rpx;">
+          <button @tap="cancelFeed" style="background: #B3B3B3; width: 120rpx; height: 75rpx; font-size: 28rpx; color: #fff; margin-right: 20rpx;">取消</button>
+          <button @tap="confirmFeed" style="background: #0091FF; width: 120rpx; height: 75rpx; font-size: 28rpx; color: #fff;">提交</button>
+        </view>
+      </view>
+      <view wx:else style="font-size: 28rpx; color: #333333; margin: 20rpx 0 40rpx 54rpx;">{{feedbackContent}}</view>
+    </block>
+    <block wx:else>
+      <view  class="confirmTitle" style="margin-top: 37rpx;">签名确认：</view>
+      <view class="evaluate">
+        <sign @getSignUrl.user="getSignUrl"></sign>
+      </view>
+      <view class="selfInfo">
+        <button class="confirmBtn" style="margin-top:40rpx;" @tap="confirmCost">费 用 确 认</button>
+      </view>
+    </block>
+
   </view>
 </template>
 <script>
 import wepy from 'wepy'
 import sign from '../../components/sign'
-import { confirmCostOrder, addFeedback, addEvaluate, getOrderDetail } from '../../utils/api'
+import { confirmCostOrder, addFeedback, getOrderDetail } from '../../utils/api'
 export default class CostConfirm extends wepy.page {
   config = {
     'navigationBarTitleText': '申请单详情'
   }
   data = {
     // 用户id
-    userId: 2,
+    userId: null,
     // 申请单id
     orderId: '',
     // 费用单id
@@ -466,8 +477,8 @@ export default class CostConfirm extends wepy.page {
     feedbackContent: '',
     // 承运公司id
     carrierId: '',
-    // 评价
-    evaluateContent: ''
+    isFeed: false,
+    feedBtn: true
   }
   components = {
     sign: sign
@@ -477,32 +488,42 @@ export default class CostConfirm extends wepy.page {
     feedbackFunction (e) {
       this.feedbackContent = e.detail.value
     },
-    // 评价失去焦点
-    evaluateFunction (e) {
-      this.evaluateContent = e.detail.value
-    },
     // 获取签名地址
     getSignUrl (e) {
       this.nameUrl = e
     },
+    // 去反馈
+    gotoFeedBack() {
+      this.isFeed = true
+    },
+    // 取消反馈
+    cancelFeed() {
+      this.isFeed = false
+    },
+    // 反馈内容提交
+    async confirmFeed() {
+      let resFeed = await addFeedback(this.orderId, this.feedbackContent, this.costId, this.userId)
+      if (resFeed.status === 1) {
+        wx.showToast({
+          title: '操作成功',
+          icon: 'none'
+        })
+        this.feedBtn = false
+      } else {
+        wx.showToast({
+          title: '操作失败',
+          icon: 'none'
+        })
+      }
+      this.$apply()
+    },
     // 费用确认操作
-    async costConfirmFunction () {
-      let res = await confirmCostOrder(this.userId, this.costId, this.nameUrl)
+    async confirmCost () {
+      let res = await confirmCostOrder(this.userId, this.orderId, this.costId, this.nameUrl)
       if (res.status === 1) {
-        let resFeed = await addFeedback(this.orderId, this.feedbackContent, this.costId, this.userId)
-        if (resFeed.status === 1) {
-          let resEvaluate = await addEvaluate(this.orderId, this.carrierId, this.userId, this.evaluateContent, this.star)
-          console.log(resEvaluate, 'resEvaluate')
-          wx.showToast({
-            title: '操作成功',
-            icon: 'none'
-          })
-        } else {
-          wx.showToast({
-            title: '操作失败',
-            icon: 'none'
-          })
-        }
+        wx.navigateTo({
+          url: '../evaluate'
+        })
       } else {
         wx.showToast({
           title: '操作失败',
@@ -521,14 +542,15 @@ export default class CostConfirm extends wepy.page {
   }
   onLoad(options) {
     this.orderId = options.id
+    this.userId = wx.getStorageSync('login_user_info').id
     this.getOrderCostHandle(this.orderId)
   }
   // 查询费用单详情
-  async getOrderCostHandle() {
-    let res = await getOrderDetail(this.orderId)
+  async getOrderCostHandle(orderId) {
+    let res = await getOrderDetail(orderId)
     if (res.status === 1) {
       this.currentOrderCost = res.info
-      this.costId = res.info.id
+      this.costId = res.info.costOrderId
       this.carrierId = res.info.carrierId
       if (this.currentOrderCost.fileUrl) {
         this.fileUrl = this.currentOrderCost.fileUrl.split(',')
