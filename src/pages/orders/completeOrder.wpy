@@ -376,6 +376,7 @@
     <view class="selfInfo" style="margin-bottom: 20rpx;">
       <view style="position: relative; width: 100%; height: 100rpx;">
         <view class="titleText">签名确认：</view>
+        <image wx:if="{{orderDetail.nameUrl}}" src="{{orderDetail.nameUrl}}" mode="widthFix" style="width: 500rpx; margin-left: 100rpx;" />
       </view>
       <view class="evaluate">
         <image wx:if="{{imageUrl}}" src="{{imageUrl}}" mode="widthFix" style="width: 420rpx;" />
@@ -405,11 +406,9 @@ export default class CompleteOrder extends wepy.page {
   methods = {
     preview(event) {
       let currentUrl = event.currentTarget.dataset.src
-      // let urlList = this.orderDetail.file.split(',')
       wx.previewImage({
         current: currentUrl,
         urls: [currentUrl]
-        // urls: urlList
       })
     }
   }

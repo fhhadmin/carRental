@@ -51,10 +51,10 @@
           <image src="../images/personalCenter.png" style="width: 36rpx; height: 39rpx; margin-right: 26rpx;" />
           <text style="color: #1A1A1A; font-size: 24rpx;">个人中心</text>
         </view>
-        <view class="list" style="margin-right: 40rpx;">
+        <!-- <view class="list" style="margin-right: 40rpx;">
           <image src="../images/shezhi.png" style="width: 36rpx; height: 39rpx; margin-right: 26rpx;" />
           <text style="color: #1A1A1A; font-size: 24rpx;">设置</text>
-        </view>
+        </view> -->
       </view>
     </view>
   </view>
@@ -71,6 +71,10 @@ export default class Drawer extends wepy.page {
     isOpen: {
       type: Boolean,
       default: false
+    },
+    clientHeight: {
+      type: String,
+      default: ''
     }
   }
   methods = {
@@ -145,9 +149,13 @@ export default class Drawer extends wepy.page {
   watch = {
     'isOpen'(e) {
       this.util(e.split(',')[0])
+    },
+    'clientHeight'(e) {
+      console.log(e, 'height')
     }
   }
   onLoad() {
+    console.log(this.clientHeight, 'kkkkkkkkkkkkkkkkk')
     let userInfo = wx.getStorageSync('login_user_info')
     this.account = userInfo.mobile
   }

@@ -425,17 +425,21 @@ export default class HomePage extends wepy.page {
     this.$apply()
   }
   async onLoad(options) {
+    let userId = wx.getStorageSync('login_user_info').id
     this.clientHeight = wx.getSystemInfoSync().windowHeight
+    // 获取所有承运单位
     let carrier = await getAllCarrier(0)
     if (carrier.status === 1) {
       this.carrierUnit = carrier.info
     }
+    // 获取所有路线
     let path = await getAllPath()
     if (path.status === 1) {
       path.info.unshift({ id: '', name: '无' })
       this.allPath = path.info
     }
-    let certificate = await getCertification(2)
+    // 判断是否认证
+    let certificate = await getCertification(userId)
     if (certificate.info.length > 0) {
       this.alreadyAc = true
     }

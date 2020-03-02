@@ -468,7 +468,6 @@ export default class OrderDetail extends wepy.page {
   data = {
     currentPageState: null,
     currentDetail: {},
-    userId: '2',
     currentOrderId: null,
     rejectReason: null,
     isAudit: false,

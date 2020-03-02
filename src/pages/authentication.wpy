@@ -130,7 +130,6 @@ export default class Authentication extends wepy.page {
     cardNum: null,
     cardNo: null,
     effectiveDate: null,
-    prevPage: null,
     imgUrl: null
   }
   components = {
@@ -176,9 +175,8 @@ export default class Authentication extends wepy.page {
       this.imgUrl = img
     },
     async toAuthentication() {
-      let userId = 2
+      let userId = wx.wx.getStorageSync('login_user_info')
       if (userId && this.imgUrl && this.name && this.sex && this.institutionName && this.cardNum && this.effectiveDate) {
-        console.log('此页面从', this.prevPage.route, '跳转来')
         let res = await Certification(userId, this.imgUrl, this.name, this.sex, this.institutionName, this.cardNum, this.effectiveDate)
         if (res.status === 1) {
           wx.showToast({
@@ -197,9 +195,8 @@ export default class Authentication extends wepy.page {
       }
     }
   }
-  onLoad() {
-    let page = getCurrentPages()
-    this.prevPage = page[page.length - 2]
+  onLoad(options) {
+    console.log(options, '实名认证页面')
   }
 }
 </script>

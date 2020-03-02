@@ -221,7 +221,8 @@ export default class CarApplication extends wepy.page {
     firstOrganName: null,
     secondOrganName: null,
     carrientId: null,
-    carNum: null
+    carNum: null,
+    userId: null
   }
   components = {
     counter: counter,
@@ -303,7 +304,7 @@ export default class CarApplication extends wepy.page {
       this.secondOrganId && this.startDay && this.startTime && this.endDay && this.endTime &&
       this.startArea && this.endArea && this.fundSource && this.useCause && this.carNum) {
         if ((this.startDay + ' ' + this.startTime) < (this.endDay + ' ' + this.endTime)) {
-          let res = await addApplyOrder(2, this.carrientId, this.carDetailId, this.carNum, this.linkMan, this.linkPhone, this.ridingPerson, this.firstOrganId, this.firstOrganName, this.secondOrganId, this.secondOrganName, this.startDay + ' ' + this.startTime, this.endDay + ' ' + this.endTime, this.startArea, this.endArea, this.fundSource, this.useCause)
+          let res = await addApplyOrder(this.userId, this.carrientId, this.carDetailId, this.carNum, this.linkMan, this.linkPhone, this.ridingPerson, this.firstOrganId, this.firstOrganName, this.secondOrganId, this.secondOrganName, this.startDay + ' ' + this.startTime, this.endDay + ' ' + this.endTime, this.startArea, this.endArea, this.fundSource, this.useCause)
           if (res.status === 1) {
             wx.navigateTo({
               url: './orders/orders?state=' + '0'
@@ -336,6 +337,7 @@ export default class CarApplication extends wepy.page {
     this.carrientId = options.carrientId
     this.carDetailId = options.carDetailId
     this.carNum = options.carNum
+    this.userId = wx.getStorageSync('login_user_info')
     if (options.orderDetail) {
       let orderInfo = JSON.parse(options.orderDetail)
       this.linkMan = orderInfo.linkMan

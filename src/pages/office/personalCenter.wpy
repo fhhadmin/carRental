@@ -3,8 +3,8 @@
     <view class="personal-header">
       <image src="../../images/personal.png" mode="widthFix"/>
       <view class="personal-header-avatar">
-        <image src="../../images/login_backgroundImage.png"/>
-        <text class="personal-header-name">李白</text>
+        <image catchtap="preview({{profilePhoto}})" src="{{profilePhoto}}"/>
+        <text class="personal-header-name">{{selfInfo.name ? selfInfo.name : '立即认证'}}</text>
       </view>
     </view>
     <view class="body-text">常见帮助</view>
@@ -13,7 +13,7 @@
         <image src="../../images/use.png"/>
         <text class="footer-text">使用说明</text>
       </view>
-      <view class="peronal-footer-item">
+      <view class="peronal-footer-item" @tap="updateInfo">
         <image src="../../images/institution.png"/>
         <text class="footer-text">机构修改</text>
       </view>
@@ -22,18 +22,40 @@
 </template>
 <script>
 import wepy from 'wepy'
+import { getCertification } from '../../utils/api'
 export default class PersonalCenter extends wepy.page {
   config = {
     'navigationBarTitleText': '个人中心',
     'navigationBarBackgroundColor': '#F2F6F9'
   }
   data = {
-    clientHeight: 0
+    clientHeight: 0,
+    profilePhoto: 'http://qiniu-store-landa.lz-cc.com/1583140171700.png',
+    selfInfo: null
   }
   components = {}
-  methods = {}
-  onLoad() {
+  methods = {
+    updateInfo() {
+      wx.navigateTo({
+        url: '../authentication?info=' + JSON.stringify(this.selfInfo)
+      })
+    },
+    // 图片的预览和修改
+    preview(imgUrl) {
+      wx.previewImage({
+        current: imgUrl,
+        urls: [imgUrl]
+      })
+    }
+  }
+  async onLoad() {
     this.clientHeight = wx.getSystemInfoSync().windowHeight
+    let userId = wx.getStorageSync('login_user_info').id
+    let res = await getCertification(userId)
+    if (res.status === 1) {
+      this.selfInfo = res.info
+    }
+    this.$apply()
   }
 }
 </script>
@@ -73,6 +95,7 @@ export default class PersonalCenter extends wepy.page {
   text-align: center;
   font-size:25rpx;
   color:#FFFFFF;
+  margin-top: 10rpx;
 }
 .body-text{
   background-color: #FFFFFF;

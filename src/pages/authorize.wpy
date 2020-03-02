@@ -60,9 +60,7 @@ export default class Authorize extends wepy.page {
 
   }
   bindGetUserInfo(e) {
-    if (e.detail.userInfo) {
-      
-    }
+    if (e.detail.userInfo) {}
   }
   onReady() {
 
