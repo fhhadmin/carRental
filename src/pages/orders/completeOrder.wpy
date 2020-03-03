@@ -213,7 +213,8 @@
 }
 </style>
 <template>
-  <view class="container" style="height:{{clientHeight}}rpx;background-color:{{}}">
+  <view class="container" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" @tap="clickAnyWay" style="height:{{clientHeight}}rpx;background-color:{{}}">
+    <drawer :clientHeight.sync="screenHeight" :isOpen.sync="isOpen"></drawer>
     <view class="carInfo">
       <view class="carSelected">
         <image src="../../images/userCar.png" style="height: 50rpx; width: 50rpx;" />
@@ -367,12 +368,6 @@
       </view>
       <view class="evaContent">{{orderDetail.evaluateContent?orderDetail.evaluateContent:'暂无评价'}}</view>
     </view>
-    <!-- <view class="selfInfo">
-      <view style="position: relative; width: 100%; height: 100rpx;">
-        <view class="titleText">用户反馈：</view>
-      </view>
-      <view class="evaContent">{{orderDetail.feedbackContent}}</view>
-    </view> -->
     <view class="selfInfo" style="margin-bottom: 20rpx;">
       <view style="position: relative; width: 100%; height: 100rpx;">
         <view class="titleText">签名确认：</view>
@@ -386,6 +381,7 @@
 </template>
 <script>
 import wepy from 'wepy'
+import drawer from '../../components/drawer'
 import { getOrderDetail } from '../../utils/api'
 export default class CompleteOrder extends wepy.page {
   config = {
@@ -395,6 +391,10 @@ export default class CompleteOrder extends wepy.page {
   data = {
     count: 0,
     orderDetail: null,
+    touchDot: 0,
+    screenHeight: 0,
+    isOpen: false,
+    rightSlide: false,
     stars: [
       '../../images/noStar.png',
       '../../images/noStar.png',
@@ -403,7 +403,38 @@ export default class CompleteOrder extends wepy.page {
       '../../images/noStar.png'
     ]
   }
+  components = { drawer }
   methods = {
+    // 触摸开始事件
+    touchStart (e) {
+      this.touchDot = e.touches[0].pageX // 获取触摸时的原点
+    },
+    // 开始移动事件
+    touchMove(e) {
+      var touchMove = e.touches[0].pageX
+      // console.log("touchMove:" + touchMove + " touchDot:" + this.touchDot + " diff:" + (touchMove - this.touchDot));
+      // 向左滑动
+      // if (touchMove - this.touchDot <= -40) {
+      //   console.log(213)
+      // }
+      // 向右滑动
+      if (touchMove - this.touchDot >= 40) {
+        this.rightSlide = true
+      }
+    },
+    // 触摸结束事件
+    touchEnd (e) {
+      if (this.rightSlide) {
+        this.rightSlide = false
+        this.isOpen = true + ',' + new Date()
+      }
+      this.touchDot = 0
+      this.$apply()
+    },
+    clickAnyWay() {
+      this.isOpen = false + ',' + new Date()
+    },
+    // 预览图片
     preview(event) {
       let currentUrl = event.currentTarget.dataset.src
       wx.previewImage({
@@ -413,6 +444,7 @@ export default class CompleteOrder extends wepy.page {
     }
   }
   async onLoad(options) {
+    this.screenHeight = wx.getSystemInfoSync().screenHeight
     let res = await getOrderDetail(options.id)
     this.orderDetail = res.info
     for (let i = 0; i < this.orderDetail.star; i++) {

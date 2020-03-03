@@ -1,10 +1,12 @@
 <template>
-  <view class="personal-container" style="height: {{clientHeight}}px">
+  <view bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" @tap="clickAnyWay" class="personal-container" style="height: {{clientHeight}}px">
+    <drawer :clientHeight.sync="screenHeight" :isOpen.sync="isOpen"></drawer>
     <view class="personal-header">
       <image src="../../images/personal.png" mode="widthFix"/>
       <view class="personal-header-avatar">
         <image catchtap="preview({{profilePhoto}})" src="{{profilePhoto}}"/>
-        <text class="personal-header-name">{{selfInfo.name ? selfInfo.name : '立即认证'}}</text>
+        <view wx:if="{{selfInfo.name}}" class="personal-header-name">{{selfInfo.name}}</view>
+        <view @tap="clickToCertificate" wx:else class="personal-header-certification">立即认证</view>
       </view>
     </view>
     <view class="body-text">常见帮助</view>
@@ -23,6 +25,7 @@
 <script>
 import wepy from 'wepy'
 import { getCertification } from '../../utils/api'
+import drawer from '../../components/drawer'
 export default class PersonalCenter extends wepy.page {
   config = {
     'navigationBarTitleText': '个人中心',
@@ -30,14 +33,60 @@ export default class PersonalCenter extends wepy.page {
   }
   data = {
     clientHeight: 0,
+    screenHeight: 0,
+    touchDot: 0,
+    isOpen: false,
+    rightSlide: false,
     profilePhoto: 'http://qiniu-store-landa.lz-cc.com/1583140171700.png',
     selfInfo: null
   }
-  components = {}
+  components = { drawer }
   methods = {
+    // 触摸开始事件
+    touchStart (e) {
+      this.touchDot = e.touches[0].pageX // 获取触摸时的原点
+    },
+    // 开始移动事件
+    touchMove(e) {
+      var touchMove = e.touches[0].pageX
+      // console.log("touchMove:" + touchMove + " touchDot:" + this.touchDot + " diff:" + (touchMove - this.touchDot));
+      // 向左滑动
+      // if (touchMove - this.touchDot <= -40) {
+      //   console.log(213)
+      // }
+      // 向右滑动
+      if (touchMove - this.touchDot >= 40) {
+        this.rightSlide = true
+      }
+    },
+    // 触摸结束事件
+    touchEnd (e) {
+      if (this.rightSlide) {
+        this.rightSlide = false
+        this.isOpen = true + ',' + new Date()
+      }
+      this.touchDot = 0
+      this.$apply()
+    },
+    clickAnyWay() {
+      this.isOpen = false + ',' + new Date()
+    },
     updateInfo() {
+      if (this.selfInfo) {
+        wx.navigateTo({
+          url: '../authentication?info=' + JSON.stringify(this.selfInfo)
+        })
+      } else {
+        wx.showToast({
+          title: '暂无实名认证信息',
+          icon: 'none'
+        })
+      }
+    },
+    // 立即认证
+    clickToCertificate() {
       wx.navigateTo({
-        url: '../authentication?info=' + JSON.stringify(this.selfInfo)
+        url: '../authentication?certificateState=' + true
       })
     },
     // 图片的预览和修改
@@ -50,6 +99,7 @@ export default class PersonalCenter extends wepy.page {
   }
   async onLoad() {
     this.clientHeight = wx.getSystemInfoSync().windowHeight
+    this.screenHeight = wx.getSystemInfoSync().screenHeight
     let userId = wx.getStorageSync('login_user_info').id
     let res = await getCertification(userId)
     if (res.status === 1) {
@@ -96,6 +146,14 @@ export default class PersonalCenter extends wepy.page {
   font-size:25rpx;
   color:#FFFFFF;
   margin-top: 10rpx;
+}
+.personal-header-certification {
+  width:100%;
+  text-align: center;
+  font-size:25rpx;
+  color:#FFFFFF;
+  margin-top: 10rpx;
+  border-bottom: 1px solid #fff;
 }
 .body-text{
   background-color: #FFFFFF;

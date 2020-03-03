@@ -103,9 +103,29 @@ export const updatePassWd = async (mobile, msgCode, password) => {
  * @param { String } cardNum 卡号
  * @param { String } effectiveDate 有效期
  */
-export const Certification = async (userId, imgUrl, name, sex, institutionName, cardNum, effectiveDate) => {
+export const Certification = async (userId, cerInfo) => {
   try {
-    return await post('/wx/addUserAc', { userId, imgUrl, name, sex, institutionName, cardNum, effectiveDate }, false)
+    return await post('/wx/addUserAc', { userId, imgUrl: cerInfo.imgUrl, name: cerInfo.name, sex: cerInfo.sex, institutionName: cerInfo.institutionName, cardNum: cerInfo.cardNum, cardNo: cerInfo.cardNo, effectiveDate: cerInfo.effectiveDate }, false)
+  } catch (error) {
+    return error
+  }
+}
+
+/**
+ * 编辑实名认证信息
+ * @param { Integer } id 认证信息表id
+ * @param { Integer } userId 用户id
+ * @param { String } imgUrl 图片url
+ * @param { String } name 姓名
+ * @param { String } sex 性别
+ * @param { String } institutionName 机构名称
+ * @param { String } cardNum 卡号
+ * @param { String } cardNo 卡编号
+ * @param { String } effectiveDate 有效日期
+ */
+export const editCertification = async (userId, cerInfo) => {
+  try {
+    return await post('/wx/editUserAc', { id: cerInfo.id, userId, imgUrl: cerInfo.imgUrl, name: cerInfo.name, sex: cerInfo.sex, institutionName: cerInfo.institutionName, cardNum: cerInfo.cardNum, cardNo: cerInfo.cardNo, effectiveDate: cerInfo.effectiveDate }, false)
   } catch (error) {
     return error
   }

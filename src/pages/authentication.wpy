@@ -81,122 +81,202 @@
 }
 </style>
 <template>
-  <view class="container">
+  <view class="container" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" @tap="clickAnyWay">
+    <drawer :clientHeight.sync="screenHeight" :isOpen.sync="isOpen"></drawer>
     <view class="topTip">
       <image mode="widthFix" src="../images/tip.png" class="tip" />
       <view style="font-size: 26rpx; color: #1A1A1A;">
         请务必上传本人校园卡，我们将根据您提供的实名信息认证，决定是否给您提供用车服务。
       </view>
     </view>
-    <imagePicker @getCardDetail.user="getCardDetail"></imagePicker>
+    <imagePicker @getCardDetail.user="getCardDetail" :imgUrl.sync="imageUrl"></imagePicker>
     <view class="editTip">如扫描信息有误可手动修改</view>
     <view class="infoContainer">
-      <input class="infoInput" data-name="name" value="{{name}}" @input="nameInput" placeholder="持卡人姓名" placeholder-class="holderClass" />
+      <view class="sexBox">
+        <view style="margin-right: 62rpx;">姓名</view>
+        <input data-name="name" value="{{cerInfo.name}}" @input="nameInput" placeholder="持卡人姓名" placeholder-class="holderClass" />
+      </view>
       <view class="sexBox">
         <view style="margin-right: 62rpx;">性别</view>
         <view class="sexSelect" style="margin-right: 33rpx;" catchtap="clickMan">
           <text>男</text>
-          <image wx:if="{{sex === '男'}}" mode="widthFix" src="../images/manSelected.png" class="sexSize" />
+          <image wx:if="{{cerInfo.sex === '男'}}" mode="widthFix" src="../images/manSelected.png" class="sexSize" />
           <image wx:else mode="widthFix" src="../images/man.png" class="sexSize" />
         </view>
         <view class="sexSelect" @tap="clickWoman">
           <text>女</text>
-          <image wx:if="{{sex === '女'}}" mode="widthFix" src="../images/womanSelect.png" class="sexSize" />
+          <image wx:if="{{cerInfo.sex === '女'}}" mode="widthFix" src="../images/womanSelect.png" class="sexSize" />
           <image wx:else mode="widthFix" src="../images/woman.png" class="sexSize" />
         </view>
       </view>
-      <input class="infoInput" value="{{institutionName}}" @input="insInput" data-name="institutionName" placeholder="持卡人所在机构名称" placeholder-class="holderClass" />
-      <input class="infoInput" value="{{cardNum}}" @input="numInput" data-name="cardNum" placeholder="卡号" placeholder-class="holderClass" />
-      <input class="infoInput" value="{{cardNo}}" @input="noInput" data-name="cardNo" placeholder="卡编号" placeholder-class="holderClass" />
-      <input class="infoInput" value="{{effectiveDate}}" @input="dateInput" data-name="effectiveDate" placeholder="有效日期" placeholder-class="holderClass" />
+      <view class="sexBox">
+        <view style="margin-right: 62rpx;">机构</view>
+        <input value="{{cerInfo.institutionName}}" @input="insInput" data-name="institutionName" placeholder="持卡人所在机构名称" placeholder-class="holderClass" />
+      </view>
+      <view class="sexBox">
+        <view style="margin-right: 62rpx;">卡号</view>
+        <input value="{{cerInfo.cardNum}}" @input="numInput" data-name="cardNum" placeholder="卡号" placeholder-class="holderClass" />
+      </view>
+      <view class="sexBox">
+        <view style="margin-right: 27rpx;">卡编号</view>
+        <input value="{{cerInfo.cardNo}}" @input="noInput" data-name="cardNo" placeholder="卡编号" placeholder-class="holderClass" />
+      </view>
+      <view class="sexBox">
+        <view style="margin-right: 27rpx;">有效期</view>
+        <input value="{{cerInfo.effectiveDate}}" @input="dateInput" data-name="effectiveDate" placeholder="有效日期" placeholder-class="holderClass" />
+      </view>
     </view>
-    <text class="bottomTip">如需修改认证信息可前往个人中心进行修改</text>
+    <text wx:if="{{pageFromPersonalCenterEdit}}" class="bottomTip">如需修改认证信息可前往个人中心进行修改</text>
     <button class="btn" @tap="toAuthentication">确 定</button>
   </view>
 </template>
 <script>
 import wepy from 'wepy'
 import imagePicker from '../components/imagePicker'
-import { Certification } from '../utils/api'
+import drawer from '../components/drawer'
+import { Certification, editCertification } from '../utils/api'
 export default class Authentication extends wepy.page {
   config = {
     'navigationBarTitleText': '实名认证',
     'navigationBarBackgroundColor': '#FACC4C'
   }
   data = {
-    name: null,
-    sex: null,
-    institutionName: null,
-    cardNum: null,
-    cardNo: null,
-    effectiveDate: null,
-    imgUrl: null
+    cerInfo: null,
+    touchDot: 0,
+    screenHeight: 0,
+    isOpen: false,
+    rightSlide: false,
+    imageUrl: '',
+    pageFromPersonalCenterEdit: true,
+    pageFromPersonalCenter: false
   }
   components = {
-    imagePicker: imagePicker
+    imagePicker: imagePicker,
+    drawer: drawer
   }
   methods = {
+    // 触摸开始事件
+    touchStart (e) {
+      this.touchDot = e.touches[0].pageX // 获取触摸时的原点
+    },
+    // 开始移动事件
+    touchMove(e) {
+      var touchMove = e.touches[0].pageX
+      // console.log("touchMove:" + touchMove + " touchDot:" + this.touchDot + " diff:" + (touchMove - this.touchDot));
+      // 向左滑动
+      // if (touchMove - this.touchDot <= -40) {
+      //   console.log(213)
+      // }
+      // 向右滑动
+      if (touchMove - this.touchDot >= 40) {
+        this.rightSlide = true
+      }
+    },
+    // 触摸结束事件
+    touchEnd (e) {
+      if (this.rightSlide) {
+        this.rightSlide = false
+        this.isOpen = true + ',' + new Date()
+      }
+      this.touchDot = 0
+      this.$apply()
+    },
+    clickAnyWay() {
+      this.isOpen = false + ',' + new Date()
+    },
     clickMan(e) {
-      if (this.sex === '男') {
-        this.sex = ''
+      if (this.cerInfo.sex === '男') {
+        this.cerInfo.sex = ''
       } else {
-        this.sex = '男'
+        this.cerInfo.sex = '男'
       }
     },
     clickWoman(e) {
-      if (this.sex === '女') {
-        this.sex = ''
+      if (this.cerInfo.sex === '女') {
+        this.cerInfo.sex = ''
       } else {
-        this.sex = '女'
+        this.cerInfo.sex = '女'
       }
     },
     nameInput(e) {
-      this.name = e.detail.value
+      this.cerInfo.name = e.detail.value
     },
     insInput(e) {
-      this.institutionName = e.detail.value
+      this.cerInfo.institutionName = e.detail.value
     },
     numInput(e) {
-      this.cardNum = e.detail.value
+      this.cerInfo.cardNum = e.detail.value
     },
     noInput(e) {
-      this.cardNo = e.detail.value
+      this.cerInfo.cardNo = e.detail.value
     },
     dateInput(e) {
-      this.effectiveDate = e.detail.value
-    },
-    getCardDetail(e, img) {
-      this.name = e.name
-      this.sex = e.sex
-      this.institutionName = e.institutionName
-      this.cardNum = e.cardNum
-      this.cardNo = e.cardNo
-      this.effectiveDate = e.effectiveDate
-      this.imgUrl = img
+      this.cerInfo.effectiveDate = e.detail.value
     },
     async toAuthentication() {
-      let userId = wx.wx.getStorageSync('login_user_info')
-      if (userId && this.imgUrl && this.name && this.sex && this.institutionName && this.cardNum && this.effectiveDate) {
-        let res = await Certification(userId, this.imgUrl, this.name, this.sex, this.institutionName, this.cardNum, this.effectiveDate)
-        if (res.status === 1) {
+      let userId = wx.getStorageSync('login_user_info').id
+      if (!this.pageFromPersonalCenterEdit) {
+        if (userId && this.cerInfo.imgUrl && this.cerInfo.name && this.cerInfo.sex && this.cerInfo.institutionName && this.cerInfo.cardNum && this.cerInfo.cardNo && this.cerInfo.effectiveDate) {
+          let res = await editCertification(userId, this.cerInfo)
+          if (res.status === 1) {
+            wx.showToast({
+              title: '修改成功!',
+              icon: 'none'
+            })
+          }
+        } else {
           wx.showToast({
-            title: '认证成功!',
+            title: '请完善相关信息后提交',
             icon: 'none'
-          })
-          wx.redirectTo({
-            url: './homePage'
           })
         }
       } else {
-        wx.showToast({
-          title: '请完善相关信息后提交',
-          icon: 'none'
-        })
+        if (userId && this.cerInfo.imgUrl && this.cerInfo.name && this.cerInfo.sex && this.cerInfo.institutionName && this.cerInfo.cardNum && this.cerInfo.cardNo && this.cerInfo.effectiveDate) {
+          let res = await Certification(userId, this.cerInfo)
+          if (res.status === 1) {
+            wx.showToast({
+              title: '认证成功!',
+              icon: 'none'
+            })
+            if (this.pageFromPersonalCenter) {
+              wx.redirectTo({
+                url: './office/personalCenter'
+              })
+            } else {
+              wx.redirectTo({
+                url: './homePage'
+              })
+            }
+          }
+        } else {
+          wx.showToast({
+            title: '请完善相关信息后提交',
+            icon: 'none'
+          })
+        }
       }
+    },
+    getCardDetail(e, img) {
+      this.cerInfo.name = e.name
+      this.cerInfo.sex = e.sex
+      this.cerInfo.institutionName = e.institutionName
+      this.cerInfo.cardNum = e.cardNum
+      this.cerInfo.cardNo = e.cardNo
+      this.cerInfo.effectiveDate = e.effectiveDate
+      this.cerInfo.imgUrl = img
     }
   }
   onLoad(options) {
-    console.log(options, '实名认证页面')
+    this.screenHeight = wx.getSystemInfoSync().screenHeight
+    this.cerInfo = JSON.parse(options.info)
+    if (this.cerInfo) {
+      this.imageUrl = this.cerInfo.imgUrl
+      this.pageFromPersonalCenterEdit = false
+    }
+    if (options.certificateState) {
+      this.pageFromPersonalCenter = true
+    }
+    this.$apply()
   }
 }
 </script>

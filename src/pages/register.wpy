@@ -88,10 +88,8 @@ checkbox .wx-checkbox-input {
         <image src="../images/login_icon_username.png" class="icon" style="padding-bottom: 6px;" />
         <input placeholder="请输入验证码" class="input" />
       </view>
-      <view class="input_icon">
-        <view>
-          <slider></slider>
-        </view>
+      <view class="input_icon" style="width: 80%;">
+        <slider></slider>
       </view>
       <view class="input_icon">
         <image src="../images/login_icon_password.png" class="icon" style="padding-bottom: 6px;" />

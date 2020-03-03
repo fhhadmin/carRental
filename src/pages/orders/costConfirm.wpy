@@ -282,7 +282,8 @@
 }
 </style>
 <template>
-  <view class="container">
+  <view bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" @tap="clickAnyWay" class="container">
+    <drawer :clientHeight.sync="screenHeight" :isOpen.sync="isOpen"></drawer>
     <view class="tip">
       <image src="../../images/notice.png" mode="widthFix" style="width: 50rpx; margin-right: 15rpx;" />
       <view style="font-size: 22rpx; color: #4C4C4C;">你好！请您接到用车信息反馈后及时对费用情况进行核对，发现有误的请及时联系我们进行修改。确认无误后请对费用及时确认并对服务质量进行客观评价。</view>
@@ -449,12 +450,12 @@
         <button class="confirmBtn" style="margin-top:40rpx;" @tap="confirmCost">费 用 确 认</button>
       </view>
     </block>
-
   </view>
 </template>
 <script>
 import wepy from 'wepy'
 import sign from '../../components/sign'
+import drawer from '../../components/drawer'
 import { confirmCostOrder, addFeedback, getOrderDetail } from '../../utils/api'
 export default class CostConfirm extends wepy.page {
   config = {
@@ -478,12 +479,46 @@ export default class CostConfirm extends wepy.page {
     // 承运公司id
     carrierId: '',
     isFeed: false,
-    feedBtn: true
+    feedBtn: true,
+    touchDot: 0,
+    screenHeight: 0,
+    isOpen: false,
+    rightSlide: false
   }
   components = {
-    sign: sign
+    sign: sign,
+    drawer: drawer
   }
   methods = {
+    // 触摸开始事件
+    touchStart (e) {
+      this.touchDot = e.touches[0].pageX // 获取触摸时的原点
+    },
+    // 开始移动事件
+    touchMove(e) {
+      var touchMove = e.touches[0].pageX
+      // console.log("touchMove:" + touchMove + " touchDot:" + this.touchDot + " diff:" + (touchMove - this.touchDot));
+      // 向左滑动
+      // if (touchMove - this.touchDot <= -40) {
+      //   console.log(213)
+      // }
+      // 向右滑动
+      if (touchMove - this.touchDot >= 40) {
+        this.rightSlide = true
+      }
+    },
+    // 触摸结束事件
+    touchEnd (e) {
+      if (this.rightSlide) {
+        this.rightSlide = false
+        this.isOpen = true + ',' + new Date()
+      }
+      this.touchDot = 0
+      this.$apply()
+    },
+    clickAnyWay() {
+      this.isOpen = false + ',' + new Date()
+    },
     // 反馈失去焦点
     feedbackFunction (e) {
       this.feedbackContent = e.detail.value
@@ -531,6 +566,7 @@ export default class CostConfirm extends wepy.page {
         })
       }
     },
+    // 图片预览
     preview(event) {
       let currentUrl = event.currentTarget.dataset.src
       wx.previewImage({
@@ -542,6 +578,7 @@ export default class CostConfirm extends wepy.page {
   }
   onLoad(options) {
     this.orderId = options.id
+    this.screenHeight = wx.getSystemInfoSync().screenHeight
     this.userId = wx.getStorageSync('login_user_info').id
     this.getOrderCostHandle(this.orderId)
   }

@@ -41,6 +41,12 @@ export default class GridImage extends wepy.component {
     imageUrl: '',
     hasPicture: false
   }
+  props = {
+    imgUrl: {
+      type: String,
+      default: ''
+    }
+  }
   chooseImage() {
     let self = this
     wx.chooseImage({
@@ -94,6 +100,10 @@ export default class GridImage extends wepy.component {
     }
   }
   onLoad() {
+    if (this.imgUrl) {
+      this.hasPicture = true
+      this.imageUrl = this.imgUrl
+    }
     this.$apply()
   }
 }

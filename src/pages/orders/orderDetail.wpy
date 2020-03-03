@@ -304,7 +304,8 @@
 }
 </style>
 <template>
-  <view class="container" style="height:{{clientHeight}}rpx;background-color:{{}}">
+  <view class="container" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" @tap="clickAnyWay" style="height:{{clientHeight}}rpx;background-color:{{}}">
+    <drawer :clientHeight.sync="screenHeight" :isOpen.sync="isOpen"></drawer>
     <view class="carInfo">
       <view class="carSelected">
         <image src="../../images/userCar.png" style="height: 50rpx; width: 50rpx;" />
@@ -459,6 +460,7 @@
 </template>
 <script>
 import wepy from 'wepy'
+import drawer from '../../components/drawer'
 import { getOrderDetail, editOrderState, rejectOrder } from '../../utils/api'
 export default class OrderDetail extends wepy.page {
   config = {
@@ -472,10 +474,43 @@ export default class OrderDetail extends wepy.page {
     rejectReason: null,
     isAudit: false,
     showDialog: false,
-    perAmount: 0
+    isOpen: false,
+    rightSlide: false,
+    perAmount: 0,
+    screenHeight: 0,
+    touchDot: 0
   }
-  components = {}
+  components = { drawer }
   methods = {
+    // 触摸开始事件
+    touchStart (e) {
+      this.touchDot = e.touches[0].pageX // 获取触摸时的原点
+    },
+    // 开始移动事件
+    touchMove(e) {
+      var touchMove = e.touches[0].pageX
+      // console.log("touchMove:" + touchMove + " touchDot:" + this.touchDot + " diff:" + (touchMove - this.touchDot));
+      // 向左滑动
+      // if (touchMove - this.touchDot <= -40) {
+      //   console.log(213)
+      // }
+      // 向右滑动
+      if (touchMove - this.touchDot >= 40) {
+        this.rightSlide = true
+      }
+    },
+    // 触摸结束事件
+    touchEnd (e) {
+      if (this.rightSlide) {
+        this.rightSlide = false
+        this.isOpen = true + ',' + new Date()
+      }
+      this.touchDot = 0
+      this.$apply()
+    },
+    clickAnyWay() {
+      this.isOpen = false + ',' + new Date()
+    },
     confirmCost() {
       wx.navigateTo({
         url: './costConfirm?orderId=' + this.currentOrderId
@@ -580,6 +615,7 @@ export default class OrderDetail extends wepy.page {
   }
   onLoad(options) {
     this.currentOrderId = options.id
+    this.screenHeight = wx.getSystemInfoSync().screenHeight
     // 查询申请单详情
     this.orderDtail(this.currentOrderId)
     // 当audit值为true时此页面为管理员对申请单的审核页面

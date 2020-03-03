@@ -22,11 +22,12 @@ setStore(store)
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/register',
       'pages/homePage',
       'pages/login',
       'pages/orders/costConfirm',
 
-      'pages/register',
+      // 'pages/register',
       'pages/orders/completeOrder',
       'pages/carApplication',
       'pages/orders/orders',
@@ -61,7 +62,6 @@ export default class extends wepy.app {
       console.log('onCheckForUpdate====', res)
       // 请求完新版本信息的回调
       if (res.hasUpdate) {
-        // console.log('res.hasUpdate====')
         updateManager.onUpdateReady(function() {
           wx.showModal({
             title: '更新提示',
